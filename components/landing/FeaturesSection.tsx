@@ -1,80 +1,63 @@
-import {
-  Box,
-  Braces,
-  Cpu,
-  Route,
-  ShieldCheck,
-  Terminal,
-} from 'lucide-react';
+import { CreateProjectCommand } from './CreateProjectCommand';
 
 const disciplines = [
   {
-    icon: Cpu,
-    title: 'Runtime discipline',
+    title: 'Compose',
     description:
-      'Use Bun and Elysia directly without placing a compatibility layer in the execution path.',
+      'Group controllers and providers around responsibilities that remain clear as the application grows.',
   },
   {
-    icon: Box,
-    title: 'Module boundaries',
+    title: 'Validate',
     description:
-      'Keep controllers and providers grouped around clear application responsibilities.',
+      'Resolve visibility, missing providers, and dependency cycles before the application starts.',
   },
   {
-    icon: Braces,
-    title: 'Type integrity',
+    title: 'Run',
     description:
-      'Carry types through injection tokens, metadata, routes, and responses.',
-  },
-  {
-    icon: Route,
-    title: 'Deterministic graph',
-    description:
-      'Detect missing providers, invalid visibility, and dependency cycles before boot.',
-  },
-  {
-    icon: Terminal,
-    title: 'Focused tooling',
-    description:
-      'Generate applications, modules, controllers, and services with Bun-native commands.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Production direction',
-    description:
-      'Cover security, observability, testing, and release quality through explicit extension points.',
+      'Keep Bun and Elysia in the execution path while TypeScript carries contracts from route to response.',
   },
 ];
 
-export function FeaturesSection() {
-  const groups = [disciplines.slice(0, 3), disciplines.slice(3)];
+const foundation = [
+  { label: 'Runtime', value: 'Bun' },
+  { label: 'Language', value: 'TypeScript' },
+  { label: 'HTTP layer', value: 'Elysia' },
+];
 
+export function FeaturesSection() {
   return (
-    <section className="discipline-section">
-      <div className="section-shell discipline-shell">
-        <div className="section-intro discipline-intro">
-          <h2>One system, clearly composed.</h2>
+    <section
+      id="manifesto"
+      className="mono-manifesto"
+      aria-labelledby="manifesto-title"
+    >
+      <div className="mono-manifesto-shell">
+        <div className="mono-manifesto-intro">
+          <h2 id="manifesto-title">
+            We compose, validate, and run.
+          </h2>
           <p>
-            Every layer exists to keep the application understandable from the
-            first provider to the final response.
+            AponiaJS gives Bun applications a modular structure without hiding
+            the runtime that makes them fast.
           </p>
+          <CreateProjectCommand />
         </div>
 
-        <div className="discipline-columns">
-          {groups.map((group, groupIndex) => (
-            <div key={groupIndex} className="discipline-column">
-              {group.map(({ icon: Icon, title, description }) => (
-                <article key={title} className="discipline-item">
-                  <div className="discipline-icon">
-                    <Icon aria-hidden="true" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h3>{title}</h3>
-                    <p>{description}</p>
-                  </div>
-                </article>
-              ))}
+        <dl className="mono-manifesto-meta">
+          {foundation.map(({ label, value }) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
             </div>
+          ))}
+        </dl>
+
+        <div className="mono-manifesto-list">
+          {disciplines.map(({ title, description }) => (
+            <article key={title} className="mono-manifesto-item">
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
           ))}
         </div>
       </div>

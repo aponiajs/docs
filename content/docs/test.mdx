@@ -1,0 +1,33 @@
+---
+title: Core concepts
+description: The building blocks of an AponiaJS application.
+---
+
+## Modules
+
+A module groups controllers and providers into an explicit application boundary.
+
+```ts
+import { Module } from '@aponiajs/common';
+import { CatsController } from './cats.controller';
+import { CatsService } from './cats.service';
+
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+})
+export class CatsModule {}
+```
+
+## Explore the architecture
+
+<Cards>
+  <Card
+    title="Controllers"
+    description="Map incoming requests to typed application handlers."
+  />
+  <Card
+    title="Providers"
+    description="Share services through the dependency injection container."
+  />
+</Cards>

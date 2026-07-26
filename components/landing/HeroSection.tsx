@@ -1,39 +1,45 @@
-import Link from 'next/link';
-import { ArrowRight, GitFork } from 'lucide-react';
-import { HeroMascot } from './HeroMascot';
+import Image from 'next/image';
+
+import { artworkSources } from './artworkSources';
 
 export function HeroSection() {
+  const artwork = artworkSources.storyStigmaWide;
+
   return (
-    <section className="hero-section">
-      <div className="aponia-atmosphere" aria-hidden="true" />
-      <div className="hero-shell">
-        <div className="hero-copy">
-          <p className="hero-eyebrow">Bun-first application framework</p>
-          <div>
-            <h1>
-              Built with <span>discipline.</span>
-            </h1>
-            <p className="hero-deck">
-              Familiar architecture, Elysia performance, and Bun at the core.
-            </p>
-          </div>
-          <div className="hero-actions">
-            <Link href="/docs" className="button button-primary">
-              Start building
-              <ArrowRight className="size-4" strokeWidth={1.8} />
-            </Link>
-            <a
-              href="https://github.com/aponiajs/aponiajs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="button button-secondary"
-            >
-              <GitFork className="size-4" strokeWidth={1.8} />
-              View source
-            </a>
-          </div>
+    <section id="top" className="mono-hero" aria-labelledby="hero-title">
+      <figure className="mono-hero-artwork">
+        <Image
+          src={artwork.src}
+          alt={artwork.alt}
+          fill
+          priority
+          quality={95}
+          sizes="100vw"
+          className="mono-hero-media"
+        />
+        <figcaption className="mono-hero-credit">
+          <span>{artwork.credit}</span>
+          <a
+            href={artwork.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {artwork.sourceLabel} <span aria-hidden="true">↗</span>
+          </a>
+        </figcaption>
+      </figure>
+      <div className="mono-hero-shade" aria-hidden="true" />
+      <div className="mono-hero-copy">
+        <h1 id="hero-title">
+          <span>Composed,</span>
+          <span>Unbound.</span>
+        </h1>
+        <div className="mono-hero-note">
+          <p>
+            A modular TypeScript framework built for Bun, Elysia, and
+            architecture you can inspect.
+          </p>
         </div>
-        <HeroMascot />
       </div>
     </section>
   );

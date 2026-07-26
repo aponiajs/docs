@@ -3,9 +3,9 @@
 import { Check, Clipboard, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 
-const command = 'bun add @aponiajs/core @aponiajs/common';
+const command = 'bun create aponia my-api';
 
-export function InstallCommand() {
+export function CreateProjectCommand() {
   const [status, setStatus] = useState<'idle' | 'copied' | 'error'>('idle');
 
   async function copyCommand() {
@@ -26,12 +26,16 @@ export function InstallCommand() {
         : Clipboard;
 
   return (
-    <div className="install-command">
-      <span aria-hidden="true" className="install-prompt">
+    <div className="project-command">
+      <span aria-hidden="true" className="project-prompt">
         $
       </span>
       <code>{command}</code>
-      <button type="button" onClick={copyCommand} aria-label="Copy install command">
+      <button
+        type="button"
+        onClick={copyCommand}
+        aria-label="Copy project creation command"
+      >
         <Icon aria-hidden="true" strokeWidth={1.8} />
         <span aria-live="polite">
           {status === 'copied'

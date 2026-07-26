@@ -1,64 +1,76 @@
 import Link from 'next/link';
-import { ArrowRight, GitFork } from 'lucide-react';
 import Image from 'next/image';
 
+import { artworkSources } from './artworkSources';
+
 export function CallToAction() {
+  const artwork = artworkSources.becauseOfAponiaFanArt;
+
   return (
-    <section className="cta-section">
-      <div className="cta-shell">
-        <div className="cta-panel">
-          <div className="cta-copy">
-            <h2>Build with intention.</h2>
-            <p>
-              Begin with the core concepts and keep every architectural choice
-              visible as the service grows.
-            </p>
-            <div className="cta-actions">
-              <Link href="/docs" className="button button-light">
-                Start building
-                <ArrowRight className="size-4" strokeWidth={1.8} />
-              </Link>
-              <a
-                href="https://github.com/aponiajs/aponiajs"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="button button-dark-ghost"
-              >
-                <GitFork className="size-4" strokeWidth={1.8} />
-                View source
-              </a>
+    <>
+      <section
+        id="namesake"
+        className="mono-namesake"
+        aria-labelledby="namesake-title"
+      >
+        <figure className="mono-namesake-media">
+          <div className="mono-namesake-frame">
+            <Image
+              src={artwork.src}
+              alt={artwork.alt}
+              fill
+              loading="lazy"
+              quality={95}
+              sizes="(max-width: 767px) calc(100vw - 2rem), 96vw"
+              className="mono-namesake-image"
+            />
+            <div className="mono-namesake-shade" aria-hidden="true" />
+            <div className="mono-namesake-copy">
+              <h2 id="namesake-title">
+                <span>Build</span>
+                <span>with</span>
+                <span>intention.</span>
+              </h2>
+              <p>
+                Start with the core concepts, then compose the application
+                around boundaries you can explain.
+              </p>
             </div>
           </div>
-          <div className="cta-portrait" aria-hidden="true">
-            <Image
-              src="/images/aponia-reference.webp"
-              alt=""
-              fill
-              sizes="(max-width: 767px) 100vw, 42vw"
-              className="object-cover object-[50%_24%]"
-            />
+          <figcaption className="mono-namesake-credit">
+            <span>{artwork.credit}</span>
+            <a
+              href={artwork.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {artwork.sourceLabel} <span aria-hidden="true">↗</span>
+            </a>
+          </figcaption>
+        </figure>
+      </section>
+
+      <footer className="mono-footer">
+        <div className="mono-footer-lead">
+          <p>Keep the architecture visible.</p>
+          <Link href="/docs">
+            Read docs <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+        <div className="mono-footer-meta">
+          <p>AponiaJS. Released under the MIT License.</p>
+          <div>
+            <a
+              href="https://github.com/aponiajs/aponiajs"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
           </div>
-          <span className="cta-monogram" aria-hidden="true">
-            A
-          </span>
+          <p>Aponia character artwork © HoYoverse.</p>
         </div>
-      </div>
-      <footer className="site-footer">
-        <p>AponiaJS. Released under the MIT License.</p>
-        <div>
-          <Link href="/docs">Documentation</Link>
-          <a
-            href="https://github.com/aponiajs/aponiajs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-        </div>
-        <p className="site-footer-credit">
-          Aponia character artwork © HoYoverse.
-        </p>
       </footer>
-    </section>
+    </>
   );
 }
