@@ -5,27 +5,21 @@ import { HeroMascot } from './HeroMascot';
 export function HeroSection() {
   return (
     <section className="hero-section">
-      <div className="landing-grid" aria-hidden="true" />
+      <div className="aponia-atmosphere" aria-hidden="true" />
       <div className="hero-shell">
         <div className="hero-copy">
-          <p className="hero-eyebrow">
-            Bun-first. Type-safe. Deliberate.
-          </p>
+          <p className="hero-eyebrow">Bun-first application framework</p>
           <div>
             <h1>
-              Architecture with <span>conviction.</span>
+              Built with <span>discipline.</span>
             </h1>
             <p className="hero-deck">
-              Build structured server applications with Nest-inspired patterns,
-              Elysia-native speed, and Bun at the core.
+              Familiar architecture, Elysia performance, and Bun at the core.
             </p>
           </div>
           <div className="hero-actions">
-            <Link
-              href="/docs"
-              className="button button-primary"
-            >
-              Read the docs
+            <Link href="/docs" className="button button-primary">
+              Start building
               <ArrowRight className="size-4" strokeWidth={1.8} />
             </Link>
             <a
@@ -35,7 +29,7 @@ export function HeroSection() {
               className="button button-secondary"
             >
               <GitFork className="size-4" strokeWidth={1.8} />
-              View GitHub
+              View source
             </a>
           </div>
         </div>

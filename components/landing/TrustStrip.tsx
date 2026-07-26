@@ -25,18 +25,15 @@ export function TrustStrip() {
       <div className="foundation-shell">
         <InstallCommand />
         <div className="foundation-items">
-        {foundations.map(({ icon: Icon, title, detail }) => (
-          <div
-            key={title}
-            className="foundation-item"
-          >
-            <Icon aria-hidden="true" strokeWidth={1.7} />
-            <div>
-              <p>{title}</p>
-              <span>{detail}</span>
+          {foundations.map(({ icon: Icon, title, detail }) => (
+            <div key={title} className="foundation-item">
+              <Icon aria-hidden="true" strokeWidth={1.7} />
+              <div>
+                <p>{title}</p>
+                <span>{detail}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
       </div>
     </section>

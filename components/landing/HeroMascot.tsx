@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 const sourceUrl =
-  'https://zh.moegirl.org.cn/%E9%98%BF%E6%B3%A2%E5%B0%BC%E4%BA%9A';
+  'https://www.hoyolab.com/article/4612171';
 
 export function HeroMascot() {
   const stageRef = useRef<HTMLElement>(null);
@@ -47,7 +47,9 @@ export function HeroMascot() {
         onPointerMove={handlePointerMove}
         onPointerLeave={resetPointer}
       >
-        <div className="mascot-signal" aria-hidden="true" />
+        <div className="aponia-ray" aria-hidden="true" />
+        <div className="aponia-wing aponia-wing-left" aria-hidden="true" />
+        <div className="aponia-wing aponia-wing-right" aria-hidden="true" />
         <div className="mascot-image-wrap">
           <Image
             src="/images/aponia-reference.webp"
@@ -58,14 +60,12 @@ export function HeroMascot() {
             className="mascot-image"
           />
         </div>
-        <span className="mascot-index" aria-hidden="true">
-          AP
-        </span>
+        <div className="aponia-portrait-vignette" aria-hidden="true" />
       </article>
       <figcaption className="mascot-credit">
         Aponia character artwork © HoYoverse.{' '}
         <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-          Source
+          Official reference
         </a>
       </figcaption>
     </figure>

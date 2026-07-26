@@ -1,0 +1,44 @@
+---
+title: Introduction
+description: Build structured, type-safe server applications with Bun and Elysia.
+---
+
+AponiaJS brings familiar modules, controllers, and dependency injection to a
+Bun-first runtime. It keeps application structure explicit while Elysia handles
+the HTTP layer.
+
+<Callout title="Project status">
+  AponiaJS is under active development. Review the source repository before
+  using it in production.
+</Callout>
+
+## Start here
+
+<Cards>
+  <Card
+    title="Core concepts"
+    description="Learn how modules, controllers, and providers fit together."
+    href="/docs/test"
+  />
+  <Card
+    title="Source repository"
+    description="Inspect the implementation and current project activity."
+    href="https://github.com/aponiajs/aponiajs"
+  />
+</Cards>
+
+## Install
+
+```bash
+bun add @aponiajs/core @aponiajs/common
+```
+
+## Create an application
+
+```ts
+import { AponiaFactory } from '@aponiajs/core';
+import { AppModule } from './app.module';
+
+const app = await AponiaFactory.create(AppModule);
+await app.listen(3000);
+```
