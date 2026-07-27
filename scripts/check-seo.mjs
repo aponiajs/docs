@@ -1,0 +1,123 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+const outputDirectory = resolve('out');
+const configuredSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.CF_PAGES_URL ??
+  'http://localhost:3000';
+const siteUrl = new URL(configuredSiteUrl);
+const baseUrl = siteUrl.toString().replace(/\/$/, '');
+const socialImageUrl = new URL(
+  process.env.NEXT_PUBLIC_OG_IMAGE ?? '/og-image.png',
+  `${baseUrl}/`,
+).toString();
+
+function assert(condition, message) {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
+function readOutput(path) {
+  const filePath = resolve(outputDirectory, path);
+  assert(existsSync(filePath), `Missing SEO output: out/${path}`);
+  return readFileSync(filePath, 'utf8');
+}
+
+const requiredFiles = [
+  'index.html',
+  'docs.html',
+  'robots.txt',
+  'sitemap.xml',
+  'manifest.webmanifest',
+  'llms.txt',
+  'llms-full.txt',
+];
+
+for (const file of requiredFiles) {
+  assert(
+    existsSync(resolve(outputDirectory, file)),
+    `Missing SEO output: out/${file}`,
+  );
+}
+
+for (const page of ['index.html', 'docs.html']) {
+  const html = readOutput(page);
+  const expectedImageUrl =
+    page === 'index.html'
+      ? socialImageUrl
+      : new URL('/og/docs/image.png', `${baseUrl}/`).toString();
+
+  assert(html.includes('rel="canonical"'), `${page} has no canonical URL`);
+  assert(html.includes('property="og:title"'), `${page} has no OG title`);
+  assert(
+    html.includes(`property="og:image" content="${expectedImageUrl}"`),
+    `${page} has the wrong OG image URL`,
+  );
+  assert(
+    html.includes('name="twitter:card"'),
+    `${page} has no Twitter card`,
+  );
+  assert(
+    html.includes(`name="twitter:image" content="${expectedImageUrl}"`),
+    `${page} has the wrong Twitter image URL`,
+  );
+  assert(
+    html.includes('application/ld+json'),
+    `${page} has no structured data`,
+  );
+}
+
+const robots = readOutput('robots.txt');
+assert(
+  robots.includes(
+    'Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference',
+  ),
+  'robots.txt is missing the Content-Signal policy',
+);
+for (const agent of [
+  'OAI-SearchBot',
+  'Claude-SearchBot',
+  'PerplexityBot',
+  'GPTBot',
+  'ClaudeBot',
+]) {
+  assert(robots.includes(`User-agent: ${agent}`), `Missing ${agent} rule`);
+}
+assert(
+  robots.includes(`Sitemap: ${baseUrl}/sitemap.xml`),
+  'robots.txt has the wrong sitemap URL',
+);
+
+const sitemap = readOutput('sitemap.xml');
+for (const path of ['/', '/docs', '/docs/test']) {
+  assert(
+    sitemap.includes(`<loc>${baseUrl}${path}</loc>`),
+    `sitemap.xml is missing ${path}`,
+  );
+}
+
+const llms = readOutput('llms.txt');
+assert(llms.startsWith('# AponiaJS'), 'llms.txt has the wrong heading');
+assert(
+  llms.includes(`${baseUrl}/llms-full.txt`),
+  'llms.txt is missing the absolute full-context URL',
+);
+assert(!llms.includes('](/'), 'llms.txt contains relative Markdown links');
+
+if (siteUrl.hostname === 'localhost') {
+  console.warn(
+    'SEO check used localhost. Set NEXT_PUBLIC_SITE_URL for production builds.',
+  );
+} else {
+  const outputFiles = requiredFiles
+    .filter((file) => file.endsWith('.html') || file.endsWith('.txt'))
+    .map(readOutput);
+  assert(
+    outputFiles.every((content) => !content.includes('localhost:3000')),
+    'Production SEO output contains localhost URLs',
+  );
+}
+
+console.log(`SEO and AI discovery output is valid for ${baseUrl}`);

@@ -15,9 +15,11 @@ concurrency:
 
 jobs:
   package:
-    name: Package production artifact
+    name: Package Cloudflare Pages artifact
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
 
     steps:
       - name: Checkout repository
@@ -31,26 +33,35 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Validate production site URL
+        run: bun scripts/require-site-url.mjs
+
       - name: Lint
         run: bun run lint
 
       - name: Check types
         run: bun run types:check
 
-      - name: Build standalone application
-        run: bunx next build --webpack
+      - name: Build static Pages application
+        run: bun run build
 
-      - name: Assemble runtime files
+      - name: Check SEO and AI discovery output
+        run: bun run seo:check
+
+      - name: Verify Pages output
         run: |
-          cp -r public .next/standalone/public
-          mkdir -p .next/standalone/.next
-          cp -r .next/static .next/standalone/.next/static
+          test -f out/index.html
+          test -f out/_headers
+          test -f out/robots.txt
+          test -f out/sitemap.xml
+          test -f out/llms.txt
+          test -f out/llms-full.txt
 
       - name: Upload production artifact
         uses: actions/upload-artifact@v4
         with:
-          name: aponiajs-docs-${{ github.sha }}
-          path: .next/standalone
+          name: aponiajs-docs-pages-${{ github.sha }}
+          path: out
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14

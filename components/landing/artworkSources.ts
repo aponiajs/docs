@@ -1,27 +1,15 @@
 export const artworkSources = {
-  storyStigmaWide: {
-    src: '/images/aponia-official-story-stigma-wide-2022.jpeg',
-    alt: 'Official Aponia Story Event Stigma landscape wallpaper from Honkai Impact 3rd',
-    credit:
-      'Official “Story Event Stigma” wallpaper by Honkai Impact 3rd. Aponia © HoYoverse.',
-    sourceLabel: 'Official source: HoYoLAB',
-    sourceUrl: 'https://www.hoyolab.com/article/5991090',
+  generatedHero: {
+    src: '/images/aponia-generated-hero.webp',
+    alt: 'Abstract modular architecture opening into suspended frames and visible connection lines',
   },
-  storyStigmaPortrait: {
-    src: '/images/aponia-official-story-stigma-portrait-2022.jpeg',
-    alt: 'Official portrait Aponia Story Event Stigma wallpaper from Honkai Impact 3rd',
-    credit:
-      'Official “Story Event Stigma” portrait wallpaper by Honkai Impact 3rd. Aponia © HoYoverse.',
-    sourceLabel: 'Official source: HoYoLAB',
-    sourceUrl: 'https://www.hoyolab.com/article/5991090',
+  generatedSystem: {
+    src: '/images/aponia-generated-system.webp',
+    alt: 'Circular runtime lens with transparent layers and a visible execution path',
   },
-  characterIntroduction: {
-    src: '/images/aponia-official-character-intro-2022.jpg',
-    alt: 'Official Aponia character introduction artwork from Honkai Impact 3rd',
-    credit:
-      'Official Aponia character introduction artwork by 崩壊3rd公式. Aponia © HoYoverse.',
-    sourceLabel: 'Official source: HoYoLAB',
-    sourceUrl: 'https://www.hoyolab.com/article/4612171',
+  generatedArchitecture: {
+    src: '/images/aponia-generated-architecture.webp',
+    alt: 'Vertical modular architecture tower connected by a visible routing line',
   },
   birthdayArtwork: {
     src: '/images/aponia-birthday-captain-naliu-2024.png',

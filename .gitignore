@@ -24,3 +24,10 @@ yarn-error.log*
 .env*.local
 .vercel
 next-env.d.ts
+
+# Cloudflare Pages local state
+.wrangler
+.dev.vars*
+!.dev.vars.example
+
+!.env.example

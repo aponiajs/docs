@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { artworkSources } from './artworkSources';
 
 export function HeroSection() {
-  const artwork = artworkSources.storyStigmaWide;
+  const artwork = artworkSources.generatedHero;
 
   return (
     <section id="top" className="mono-hero" aria-labelledby="hero-title">
@@ -17,16 +17,6 @@ export function HeroSection() {
           sizes="100vw"
           className="mono-hero-media"
         />
-        <figcaption className="mono-hero-credit">
-          <span>{artwork.credit}</span>
-          <a
-            href={artwork.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {artwork.sourceLabel} <span aria-hidden="true">↗</span>
-          </a>
-        </figcaption>
       </figure>
       <div className="mono-hero-shade" aria-hidden="true" />
       <div className="mono-hero-copy">

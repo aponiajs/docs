@@ -1,45 +1,64 @@
 # Artwork sources
 
-The landing page uses original-resolution artwork downloaded from its credited
-HoYoLAB source. No generative-AI artwork is referenced by the landing page.
-Cropping is handled non-destructively in CSS so the source files remain
-unchanged.
+The project artwork collection includes five original illustrations created
+for AponiaJS and two credited character artworks from HoYoLAB. Three original
+illustrations are currently used on the landing page, while the two
+ApoliaJS-chan assets documented below are not yet wired into it. The original
+illustrations were generated with OpenAI for AponiaJS. Cropping is handled
+non-destructively in CSS so the source files remain unchanged.
 
-## Official Aponia character introduction
+## AponiaJS hero illustration
 
-- Local asset: `public/images/aponia-official-character-intro-2022.jpg`
-- Used in: editorial work feature
-- Original size: 2208 × 1242
-- Publisher: 崩壊3rd公式 (official Japanese Honkai Impact 3rd account)
-- Rights holder: HoYoverse
-- Source post: https://www.hoyolab.com/article/4612171
-- Original file:
-  https://upload-os-bbs.hoyolab.com/upload/2022/05/04/138286772/145059a5b8141a8c940145941b045e78_7581444233388558548.jpg
-- Source status: original official post; repost allowed
-
-## “Story Event Stigma” landscape wallpaper
-
-- Local asset: `public/images/aponia-official-story-stigma-wide-2022.jpeg`
+- Local asset: `public/images/aponia-generated-hero.webp`
 - Used in: hero and mobile navigation
-- Original size: 1920 × 1080
-- Publisher: Honkai Impact 3rd (HI3rd Official)
-- Rights holder: HoYoverse
-- Source post: https://www.hoyolab.com/article/5991090
-- Original file:
-  https://upload-os-bbs.hoyolab.com/upload/2022/07/14/147839994/64b3eadd97c2e6326fcbcddfe34ee7be_3874388465038923874.jpeg
-- Source status: original official post; repost allowed
+- Original size: 1672 × 941
+- Source: original AI-generated illustration made with OpenAI for AponiaJS
+- Content: no characters, text, logos, or third-party artwork
 
-## “Story Event Stigma” portrait wallpaper
+## AponiaJS system illustration
 
-- Local asset: `public/images/aponia-official-story-stigma-portrait-2022.jpeg`
-- Used in: editorial work portrait
-- Original size: 1080 × 2340
-- Publisher: Honkai Impact 3rd (HI3rd Official)
-- Rights holder: HoYoverse
-- Source post: https://www.hoyolab.com/article/5991090
-- Original file:
-  https://upload-os-bbs.hoyolab.com/upload/2022/07/14/147839994/054c9c408fbad0bc99a6bf8faefbd7a5_8784357771756606140.jpeg
-- Source status: original official post; repost allowed
+- Local asset: `public/images/aponia-generated-system.webp`
+- Used in: Work feature
+- Original size: 1448 × 1086
+- Source: original AI-generated illustration made with OpenAI for AponiaJS
+- Content: no characters, text, logos, or third-party artwork
+
+## AponiaJS architecture illustration
+
+- Local asset: `public/images/aponia-generated-architecture.webp`
+- Used in: Work portrait
+- Original size: 957 × 1643
+- Source: original AI-generated illustration made with OpenAI for AponiaJS
+- Content: no characters, text, logos, or third-party artwork
+
+## ApoliaJS-chan character anchor
+
+- PNG master: `public/images/apoliajs-chan-character-anchor.png`
+- Optimized WebP: `public/images/apoliajs-chan-character-anchor.webp`
+- Size: 972 × 1619
+- Used in: not yet wired into the landing page
+- Source: original AponiaJS project artwork
+- Character concept: ApoliaJS-chan, an adult modular framework architect
+- Rights status: original design with no third-party character design
+- On-page credit: not required
+
+## ApoliaJS-chan runtime editorial
+
+- PNG master: `public/images/apoliajs-chan-runtime-editorial.png`
+- Optimized WebP: `public/images/apoliajs-chan-runtime-editorial.webp`
+- Size: 1672 × 941
+- Used in: not yet wired into the landing page
+- Source: original AponiaJS project artwork
+- Character concept: ApoliaJS-chan, an adult modular framework architect
+- Rights status: original design with no third-party character design
+- On-page credit: not required
+
+## Character-art attribution
+
+The two credited character artworks below appear separately in the
+product-principle interlude and the namesake call to action. The Namesake
+section states that AponiaJS is an independent open-source project and is not
+affiliated with, endorsed by, or sponsored by HoYoverse.
 
 ## Aponia birthday artwork
 

@@ -43,4 +43,7 @@ jobs:
         run: bun run types:check
 
       - name: Build
-        run: bunx next build --webpack
+        run: bun run build
+
+      - name: Check SEO and AI discovery output
+        run: bun run seo:check

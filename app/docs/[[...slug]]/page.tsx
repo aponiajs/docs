@@ -12,6 +12,8 @@ import { getMDXComponents } from '@/components/mdx';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { gitConfig } from '@/lib/shared';
+import { JsonLd } from '@/components/JsonLd';
+import { absoluteUrl, siteConfig } from '@/lib/site';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -20,6 +22,27 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
 
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page).url;
+  const imageUrl = getPageImageUrl(page).url;
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: page.data.title,
+    description: page.data.description,
+    url: absoluteUrl(page.url),
+    mainEntityOfPage: absoluteUrl(page.url),
+    inLanguage: siteConfig.language,
+    isPartOf: {
+      '@id': absoluteUrl('/#website'),
+    },
+    author: {
+      '@id': absoluteUrl('/#organization'),
+    },
+    publisher: {
+      '@id': absoluteUrl('/#organization'),
+    },
+    image: absoluteUrl(imageUrl),
+    isAccessibleForFree: true,
+  };
 
   return (
     <DocsPage
@@ -27,6 +50,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       full={page.data.full}
       className="aponia-docs-page"
     >
+      <JsonLd data={articleJsonLd} />
       <DocsTitle className="aponia-docs-title">{page.data.title}</DocsTitle>
       <DocsDescription className="aponia-docs-description">
         {page.data.description}
@@ -66,8 +90,37 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
   return {
     title: page.data.title,
     description: page.data.description,
+    alternates: {
+      canonical: page.url,
+      types: {
+        'text/markdown': [
+          {
+            url: getPageMarkdownUrl(page).url,
+            title: `${page.data.title} (Markdown)`,
+          },
+        ],
+      },
+    },
     openGraph: {
-      images: getPageImageUrl(page).url,
+      type: 'article',
+      url: page.url,
+      siteName: siteConfig.name,
+      title: page.data.title,
+      description: page.data.description,
+      images: [
+        {
+          url: getPageImageUrl(page).url,
+          width: 1200,
+          height: 630,
+          alt: `${page.data.title} — AponiaJS documentation`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page.data.title,
+      description: page.data.description,
+      images: [getPageImageUrl(page).url],
     },
   };
 }

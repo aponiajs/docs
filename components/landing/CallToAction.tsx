@@ -47,6 +47,10 @@ export function CallToAction() {
               {artwork.sourceLabel} <span aria-hidden="true">↗</span>
             </a>
           </figcaption>
+          <p className="mono-namesake-disclaimer" role="note">
+            AponiaJS is an independent open-source project and is not affiliated
+            with, endorsed by, or sponsored by HoYoverse.
+          </p>
         </figure>
       </section>
 
