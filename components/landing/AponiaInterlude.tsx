@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { artworkSources } from './artworkSources';
 
 export function AponiaInterlude() {
-  const artwork = artworkSources.mascotPortrait;
+  const artwork = artworkSources.birthdayArtwork;
 
   return (
     <section
@@ -20,6 +20,16 @@ export function AponiaInterlude() {
           sizes="100vw"
           className="mono-principle-image"
         />
+        <figcaption className="mono-principle-credit">
+          <span>{artwork.credit}</span>
+          <a
+            href={artwork.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {artwork.sourceLabel} <span aria-hidden="true">↗</span>
+          </a>
+        </figcaption>
       </figure>
       <div className="mono-principle-shade" aria-hidden="true" />
       <div className="mono-principle-copy">
