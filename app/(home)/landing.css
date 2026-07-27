@@ -118,6 +118,8 @@ body:has(.mono-root) ::selection {
 }
 
 .mono-nav-logo {
+  display: inline-flex;
+  align-items: center;
   justify-self: start;
   padding-left: 1.2rem;
   color: var(--mono-paper);
@@ -125,6 +127,23 @@ body:has(.mono-root) ::selection {
   font-weight: 620;
   letter-spacing: -0.045em;
   transition: none;
+}
+
+.aponia-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.58rem;
+  white-space: nowrap;
+}
+
+.aponia-brand-mark {
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+}
+
+.aponia-brand-name {
+  color: currentColor;
 }
 
 .mono-nav-logo:hover {
@@ -409,7 +428,7 @@ body:has(.mono-root) ::selection {
 .mono-hero-media {
   image-rendering: auto;
   object-fit: cover;
-  object-position: 50% 50%;
+  object-position: center center;
   transform: none;
 }
 
@@ -1577,7 +1596,7 @@ html.mono-menu-lock {
     z-index: -1;
     background:
       linear-gradient(90deg, rgb(11 12 10 / 0.58), rgb(11 12 10 / 0.9)),
-      url('/images/aponia-generated-hero.webp') 58% 50% / cover;
+      url('/images/aponiajs-chan-hero.webp') 58% 50% / cover;
     content: '';
     opacity: 0.68;
     transform: scale(1.025);

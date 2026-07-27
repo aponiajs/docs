@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { type KeyboardEvent, type SyntheticEvent, useRef } from 'react';
+import { AponiaLogo } from '@/components/brand/AponiaLogo';
 import { GooeyNav } from './GooeyNav';
 import {
   NavigationDropdown,
@@ -70,7 +71,7 @@ export function LandingNavigation() {
           className="mono-nav-logo"
           aria-label="AponiaJS home"
         >
-          aponiajs
+          <AponiaLogo />
         </Link>
 
         <div className="mono-nav-primary">

@@ -1,68 +1,61 @@
 <p align="center">
   <img
-    src="public/images/apoliajs-chan-runtime-editorial.webp"
-    alt="ApoliaJS-chan inspecting a visible dependency graph in the AponiaJS runtime world"
+    src="public/images/aponiajs-chan-hero.webp"
+    alt="AponiaJS-chan mapping a modular framework world"
     width="100%"
   />
 </p>
 
-<h1 align="center">AponiaJS Visual Identity</h1>
+<h1 align="center">AponiaJS Docs & Artwork</h1>
 
 <p align="center">
-  An experimental editorial system for visible, modular architecture.
+  Documentation, visual identity, and original artwork archive for AponiaJS.
 </p>
 
-This repository’s visual language presents AponiaJS as a framework whose
-structure can be inspected rather than hidden. Monumental typography, strict
-geometry, exposed connection paths, and cinematic architectural imagery turn
-modules and runtime boundaries into an editorial world.
+This repository houses the AponiaJS documentation website and its project-owned
+visual assets. The identity combines experimental editorial composition with a
+cute, original sci-fantasy RPG framework world: architecture stays modular,
+routes remain visible, and the mascot makes the system feel approachable
+without hiding its structure.
 
-## Visual concept
+## Visual direction
 
-**Experimental Editorial** defines the overall direction: large type behaves
-like an image, artwork is given full-bleed space, and asymmetric compositions
-create the pacing of a technical magazine. Interface decoration stays quiet so
-each visual statement can stand on its own.
+The system is built around two complementary ideas:
 
-**Modular / Visible Architecture** defines the subject matter. Frames, towers,
-transparent layers, routing lines, and separated planes make composition,
-validation, and execution feel tangible. Connections should remain legible;
-the system must never collapse into an anonymous futuristic texture.
+- **Experimental Editorial** — monumental type, asymmetric pacing, sharp
+  framing, generous negative space, and artwork treated as a primary
+  storytelling surface.
+- **Visible Architecture** — modules, dependency paths, runtime boundaries,
+  and composition rings remain exposed instead of dissolving into generic
+  futuristic scenery.
 
-The identity balances two modes:
+The imagery should feel designed rather than decorated. Technical structure is
+part of the composition: panels separate responsibilities, lines show routes,
+and rings establish boundaries or points of orchestration.
 
-- **Editorial restraint** — sharp edges, disciplined alignment, hairline
-  divisions, sparse labels, and deliberate negative space.
-- **Architectural atmosphere** — depth, translucent layers, suspended
-  structures, visible paths, and a restrained sense of scale.
+## Palette and materials
 
-## Palette and material language
+| Element | Direction |
+| --- | --- |
+| Navy | Primary structural field, clothing anchor, and technical depth. |
+| Ivory | Editorial paper, readable contrast, and calm open space. |
+| Mint | Framework signal, active route, and modular-system highlight. |
+| Seafoam | AponiaJS-chan’s canonical hair color and a softer bridge between ivory and mint. |
+| Amber | Eye color and a tightly controlled point of warmth. |
 
-| Role | Value | Intent |
-| --- | --- | --- |
-| Near-black canvas | `#0b0c0a` | Primary field; deep enough to hold layered imagery without becoming pure black. |
-| Dark surface | `#11120f` | Section and interface separation. |
-| Raised surface | `#171813` | Subtle hierarchy without decorative elevation. |
-| Editorial paper | `#e9eadf` | Warm, high-clarity type and line work. |
-| Muted notation | `#9a9c90` | Captions, metadata, and secondary technical detail. |
-| Signal accent | `#d7ff43` | A precise runtime or connection signal; use sparingly. |
+Materials combine matte editorial paper, deep painted panels, translucent
+interfaces, fine technical lines, and restrained luminous signals. Prefer
+crisp silhouettes and readable layers. Avoid unrelated logos, ornamental
+effects that obscure the route system, or colors that compete with the
+navy/ivory/mint foundation.
 
-The material system should feel like **ink, paper, smoked glass, and exposed
-technical assemblies**:
+## Original artwork gallery
 
-- favor square crops, hard edges, and fine structural lines;
-- use warm paper against near-black rather than sterile pure white;
-- use translucent surfaces only when they reveal depth or hierarchy;
-- keep grain subtle, like printed stock rather than a decorative noise effect;
-- reserve the acid signal color for state, focus, or a visible route;
-- avoid glossy card chrome, ornamental gradients, and arbitrary soft shapes.
+Every image embedded in this README is original AponiaJS project artwork
+generated in-house with OpenAI image generation. No third-party character
+artwork is displayed here.
 
-## Original artwork archive
-
-Every image embedded in this README is original AponiaJS project artwork. No
-HoYoverse artwork is displayed here.
-
-### Modular opening
+### Framework environments
 
 <p align="center">
   <img
@@ -72,92 +65,82 @@ HoYoverse artwork is displayed here.
   />
 </p>
 
-The hero establishes the world at landscape scale: modular frames open toward
-a visible route, with enough negative space to carry monumental editorial
-type.
-
-### System and architecture
-
 | Runtime system | Architecture tower |
 | --- | --- |
 | <img src="public/images/aponia-generated-system.webp" alt="Circular runtime lens with transparent layers and a visible execution path" width="640" /> | <img src="public/images/aponia-generated-architecture.webp" alt="Vertical modular architecture tower connected by a visible routing line" width="360" /> |
-| Transparent layers expose the execution path instead of disguising it. | A portrait composition turns modular boundaries into a vertical editorial structure. |
+| Transparent layers expose an execution path. | Modular boundaries become a vertical editorial structure. |
 
-### ApoliaJS-chan
+### AponiaJS-chan
 
-<p align="center">
-  <img
-    src="public/images/apoliajs-chan-character-anchor.webp"
-    alt="Original ApoliaJS-chan character anchor artwork"
-    width="420"
-  />
-</p>
+| Canonical portrait | Framework cartographer hero |
+| --- | --- |
+| <img src="public/images/aponiajs-chan-portrait.webp" alt="Canonical portrait of AponiaJS-chan" width="360" /> | <img src="public/images/aponiajs-chan-hero.webp" alt="AponiaJS-chan mapping a modular framework world" width="640" /> |
+| Full-character identity reference. | Landscape artwork connecting the mascot to the modular runtime world. |
 
-The character anchor is the stable full-character reference for the mascot
-identity. The landscape artwork at the top of this README connects the same
-character to the modular runtime world.
+## Mascot identity
 
-## Mascot concept
+**AponiaJS-chan** is the canonical original AponiaJS mascot: a cute sci-fantasy
+RPG framework cartographer who maps modules, dependency routes, and runtime
+boundaries.
 
-**ApoliaJS-chan** is the original AponiaJS project mascot: an adult modular
-framework architect. She represents composition, system boundaries,
-orchestration, and architecture that remains understandable under pressure.
-The character is an original design and does not use a third-party character
-design.
+Canonical traits:
 
-Identity guidelines:
+- seafoam hair and amber eyes;
+- mechanical Bun antenna panels;
+- a navy, ivory, and mint palette;
+- a modular ring representing composition and system boundaries;
+- a cartographer role that turns framework structure into a readable world;
+- an original silhouette and costume language with no third-party character
+  design.
 
-- always present ApoliaJS-chan as an adult technical architect;
-- preserve her relationship to modular systems, visible routes, and deliberate
-  structure;
-- use calm authority and precise posture rather than exaggerated mascot
-  comedy;
-- keep the silhouette, costume language, and project-specific identity
-  recognizable across crops;
-- do not label or redesign her as Aponia or as a Honkai character;
-- do not introduce third-party logos, costume elements, or character motifs;
-- pair her with the established near-black, warm-paper, and signal-accent
-  language.
+Keep AponiaJS-chan recognizable across crops and derivatives. Preserve the
+seafoam/amber color anchors, mechanical antenna panels, modular ring, and
+framework-cartographer role. Do not relabel her as a third-party character,
+introduce third-party costume motifs, or imply an external collaboration.
 
-The ApoliaJS-chan assets are retained as identity masters and are not yet wired
-into the landing page.
+The canonical name is **AponiaJS-chan**. The earlier “ApoliaJS-chan” spelling
+and its corresponding assets are superseded and must not be used as the
+current mascot identity.
 
 ## Asset usage
 
-| Asset | Archive / master | Delivery format | Dimensions |
+| Asset | PNG master | Optimized WebP | Dimensions |
 | --- | --- | --- | --- |
+| AponiaJS-chan portrait | `public/images/aponiajs-chan-portrait.png` | `public/images/aponiajs-chan-portrait.webp` | 972 × 1619 |
+| AponiaJS-chan hero | `public/images/aponiajs-chan-hero.png` | `public/images/aponiajs-chan-hero.webp` | 1672 × 941 |
 | Modular opening | — | `public/images/aponia-generated-hero.webp` | 1672 × 941 |
 | Runtime system | — | `public/images/aponia-generated-system.webp` | 1448 × 1086 |
 | Architecture tower | — | `public/images/aponia-generated-architecture.webp` | 957 × 1643 |
-| ApoliaJS-chan character anchor | `public/images/apoliajs-chan-character-anchor.png` | `public/images/apoliajs-chan-character-anchor.webp` | 972 × 1619 |
-| ApoliaJS-chan runtime editorial | `public/images/apoliajs-chan-runtime-editorial.png` | `public/images/apoliajs-chan-runtime-editorial.webp` | 1672 × 941 |
 
-- Keep the PNG files as lossless ApoliaJS-chan masters.
-- Use the optimized WebP files for websites, documentation, and previews.
-- Preserve the original aspect ratio; crop with layout containers rather than
-  destructively editing the source.
-- Do not upscale assets beyond a size where their original resolution remains
+- Keep PNG files as lossless source masters.
+- Use WebP files for websites, documentation, and repository previews.
+- Preserve the original aspect ratio and crop non-destructively in layout.
+- Do not overwrite a PNG master with an optimized derivative.
+- Keep the mascot’s defining traits visible when creating a tight crop.
+- Do not upscale an asset beyond a size where its source resolution remains
   visually clean.
-- Derivatives should preserve the core composition and must not imply a
-  third-party collaboration or endorsement.
 
 ## Sources and attribution
 
-The original generated illustrations and ApoliaJS-chan artwork do not require
-an on-page credit. Their provenance, dimensions, usage status, and master-file
-locations are recorded in
-[ARTWORK_SOURCES.md](./ARTWORK_SOURCES.md).
+Project-owned generated artwork does not require an on-page third-party credit.
+Its generation method, canonical status, dimensions, and file locations are
+recorded in [ARTWORK_SOURCES.md](./ARTWORK_SOURCES.md).
 
-That source record also documents separately credited third-party artwork used
-on the website. Those images are intentionally excluded from this README and
-must retain their specified source links and credits wherever they appear.
+That record also preserves the required provenance for historical third-party
+artwork files that remain in the repository. Those works are intentionally not
+embedded in this README and must keep their documented credits and source links
+wherever they are used.
+
+Documentation changes and artwork updates follow the repository policy in
+[CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Legal independence
 
 **AponiaJS is an independent open-source project. It is not affiliated with,
-endorsed by, or sponsored by HoYoverse.**
+endorsed by, or sponsored by HoYoverse or ElysiaJS.**
 
-HoYoverse, Honkai Impact 3rd, Aponia, and all associated names, characters,
-trademarks, and artwork remain the property of their respective rights
-holders. References and credited artwork do not imply an official
-relationship, partnership, or endorsement.
+HoYoverse, Honkai Impact 3rd, Aponia, Elysia, ElysiaJS, and all associated
+names, characters, trademarks, logos, and artwork remain the property of their
+respective rights holders. References, compatibility, dependencies, or
+credited historical artwork do not imply an official relationship,
+partnership, sponsorship, or endorsement.
