@@ -161,6 +161,30 @@ html > body[data-scroll-locked] {
   text-transform: uppercase;
 }
 
+.aponia-docs .aponia-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+
+.aponia-docs .aponia-brand-mark {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: none;
+}
+
+.aponia-docs .aponia-brand-context {
+  padding-left: 0.65rem;
+  border-left: 1px solid var(--color-fd-border);
+  color: var(--color-fd-primary);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 560;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .aponia-docs-page {
   max-width: 940px !important;
   gap: 1rem;

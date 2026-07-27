@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { artworkSources } from './artworkSources';
 
 export function HeroSection() {
-  const artwork = artworkSources.generatedHero;
+  const artwork = artworkSources.mascotHero;
 
   return (
     <section id="top" className="mono-hero" aria-labelledby="hero-title">

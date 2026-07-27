@@ -1,7 +1,11 @@
 export const artworkSources = {
-  generatedHero: {
-    src: '/images/aponia-generated-hero.webp',
-    alt: 'Abstract modular architecture opening into suspended frames and visible connection lines',
+  mascotHero: {
+    src: '/images/aponiajs-chan-hero.webp',
+    alt: 'AponiaJS-chan presenting a floating modular ring in a luminous sci-fantasy observatory',
+  },
+  mascotPortrait: {
+    src: '/images/aponiajs-chan-portrait.webp',
+    alt: 'Full-length portrait of AponiaJS-chan with seafoam hair, mechanical Bun antenna panels, and a modular ring companion',
   },
   generatedSystem: {
     src: '/images/aponia-generated-system.webp',

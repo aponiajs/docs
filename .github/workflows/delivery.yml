@@ -8,16 +8,18 @@ on:
 
 permissions:
   contents: read
+  deployments: write
 
 concurrency:
   group: delivery-production
   cancel-in-progress: true
 
 jobs:
-  package:
-    name: Package Cloudflare Pages artifact
+  deploy:
+    name: Deploy Cloudflare Pages production
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    environment: production
     env:
       NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
 
@@ -65,3 +67,13 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: '4.114.0'
+          command: pages deploy out --project-name=docs --branch=main

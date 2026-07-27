@@ -1,11 +1,15 @@
 # Artwork sources
 
-The project artwork collection includes five original illustrations created
-for AponiaJS and two credited character artworks from HoYoLAB. Three original
-illustrations are currently used on the landing page, while the two
-ApoliaJS-chan assets documented below are not yet wired into it. The original
-illustrations were generated with OpenAI for AponiaJS. Cropping is handled
-non-destructively in CSS so the source files remain unchanged.
+The current visual identity contains five canonical original illustrations:
+three framework environments and two AponiaJS-chan artworks. They were
+generated in-house with OpenAI image generation for AponiaJS and are
+project-owned artwork, so no on-page third-party credit is required. Cropping
+is handled non-destructively so source files remain unchanged.
+
+The repository also retains two superseded generated mascot assets and two
+historical third-party character artworks. Their records remain below for
+provenance. AponiaJS is an independent open-source project and is not
+affiliated with, endorsed by, or sponsored by HoYoverse or ElysiaJS.
 
 ## AponiaJS hero illustration
 
@@ -31,23 +35,52 @@ non-destructively in CSS so the source files remain unchanged.
 - Source: original AI-generated illustration made with OpenAI for AponiaJS
 - Content: no characters, text, logos, or third-party artwork
 
-## ApoliaJS-chan character anchor
+## AponiaJS-chan portrait
+
+- PNG master: `public/images/aponiajs-chan-portrait.png`
+- Optimized WebP: `public/images/aponiajs-chan-portrait.webp`
+- Size: 972 × 1619
+- Source: original AponiaJS project artwork generated in-house with OpenAI
+  image generation
+- Character concept: AponiaJS-chan, a cute original sci-fantasy RPG framework
+  cartographer
+- Canonical traits: seafoam hair, amber eyes, mechanical Bun antenna panels,
+  navy/ivory/mint palette, and modular ring
+- Rights status: project-owned original design with no third-party character
+  design
+- On-page third-party credit: not required
+
+## AponiaJS-chan hero
+
+- PNG master: `public/images/aponiajs-chan-hero.png`
+- Optimized WebP: `public/images/aponiajs-chan-hero.webp`
+- Size: 1672 × 941
+- Source: original AponiaJS project artwork generated in-house with OpenAI
+  image generation
+- Character concept: AponiaJS-chan mapping a modular framework world
+- Canonical traits: seafoam hair, amber eyes, mechanical Bun antenna panels,
+  navy/ivory/mint palette, and modular ring
+- Rights status: project-owned original design with no third-party character
+  design
+- On-page third-party credit: not required
+
+## Superseded ApoliaJS-chan character anchor
 
 - PNG master: `public/images/apoliajs-chan-character-anchor.png`
 - Optimized WebP: `public/images/apoliajs-chan-character-anchor.webp`
 - Size: 972 × 1619
-- Used in: not yet wired into the landing page
+- Status: superseded; not part of the canonical mascot identity
 - Source: original AponiaJS project artwork
 - Character concept: ApoliaJS-chan, an adult modular framework architect
 - Rights status: original design with no third-party character design
 - On-page credit: not required
 
-## ApoliaJS-chan runtime editorial
+## Superseded ApoliaJS-chan runtime editorial
 
 - PNG master: `public/images/apoliajs-chan-runtime-editorial.png`
 - Optimized WebP: `public/images/apoliajs-chan-runtime-editorial.webp`
 - Size: 1672 × 941
-- Used in: not yet wired into the landing page
+- Status: superseded; not part of the canonical mascot identity
 - Source: original AponiaJS project artwork
 - Character concept: ApoliaJS-chan, an adult modular framework architect
 - Rights status: original design with no third-party character design
@@ -55,10 +88,10 @@ non-destructively in CSS so the source files remain unchanged.
 
 ## Character-art attribution
 
-The two credited character artworks below appear separately in the
-product-principle interlude and the namesake call to action. The Namesake
-section states that AponiaJS is an independent open-source project and is not
-affiliated with, endorsed by, or sponsored by HoYoverse.
+The two historical credited character artworks below remain in the repository.
+Their source records must be retained while the files remain, and their
+specified credits must accompany any use. Their presence does not imply
+affiliation with, endorsement by, or sponsorship from HoYoverse.
 
 ## Aponia birthday artwork
 
