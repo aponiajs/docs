@@ -91,7 +91,13 @@ assert(
 );
 
 const sitemap = readOutput('sitemap.xml');
-for (const path of ['/', '/docs', '/docs/test']) {
+for (const path of [
+  '/',
+  '/docs',
+  '/docs/getting-started',
+  '/docs/concepts',
+  '/docs/api-reference',
+]) {
   assert(
     sitemap.includes(`<loc>${baseUrl}${path}</loc>`),
     `sitemap.xml is missing ${path}`,
