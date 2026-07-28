@@ -55,7 +55,7 @@ export default function HomePage() {
       <LandingNavigation />
       <main
         id="main-content"
-        className="aponia-landing mono-root min-h-[100dvh] overflow-hidden"
+        className="mono-root min-h-[100dvh] overflow-hidden"
       >
         <HeroSection />
         <TrustStrip />

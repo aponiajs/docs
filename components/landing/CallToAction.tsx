@@ -14,7 +14,7 @@ export function CallToAction() {
         aria-labelledby="namesake-title"
       >
         <figure className="mono-namesake-media">
-          <div className="mono-namesake-frame">
+          <div className="mono-namesake-frame mono-tick-frame">
             <Image
               src={artwork.src}
               alt={artwork.alt}
@@ -26,6 +26,9 @@ export function CallToAction() {
             />
             <div className="mono-namesake-shade" aria-hidden="true" />
             <div className="mono-namesake-copy">
+              <p className="mono-index-rail">
+                <b>05</b> Namesake
+              </p>
               <h2 id="namesake-title">
                 <span>Build</span>
                 <span>with</span>

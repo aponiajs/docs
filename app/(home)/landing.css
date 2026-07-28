@@ -24,6 +24,9 @@
   --mono-line: rgb(233 234 223 / 0.18);
   --mono-line-strong: rgb(233 234 223 / 0.42);
   --mono-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Instrument response: fast, linear, no easing theatre. */
+  --mono-fast: 120ms linear;
+  --mono-tick: 0.55rem;
   --mono-display: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
   --mono-code: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
   position: relative;
@@ -56,10 +59,104 @@ body:has(.mono-root) {
   --mono-line: rgb(233 234 223 / 0.18);
   --mono-line-strong: rgb(233 234 223 / 0.42);
   --mono-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --mono-fast: 120ms linear;
+  --mono-tick: 0.55rem;
   --mono-display: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
   --mono-code: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
   color: var(--mono-paper);
   background: var(--mono-bg);
+}
+
+/*
+ * Technician layer
+ * Registry marks, caliper ticks, and tabular figures. Palette, type, and the
+ * square-cornered geometry stay as they are.
+ */
+
+.mono-root .mono-index-rail {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: none;
+  margin: 0;
+  padding-bottom: 1.4rem;
+  color: var(--mono-muted);
+  font-family: var(--mono-code);
+  font-size: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Inside a grid heading the row gap already separates the rail. */
+.mono-root .mono-work-heading .mono-index-rail,
+.mono-root .mono-manifesto-intro .mono-index-rail,
+.mono-root .mono-benchmark-heading .mono-index-rail {
+  padding-bottom: 0;
+}
+
+.mono-root .mono-index-rail::before {
+  width: 1.75rem;
+  height: 1px;
+  flex: none;
+  background: var(--mono-accent);
+  content: '';
+}
+
+.mono-root .mono-index-rail b {
+  color: var(--mono-paper);
+  font-weight: 500;
+}
+
+.mono-root .mono-benchmark .mono-index-rail {
+  color: rgb(11 12 10 / 0.62);
+}
+
+.mono-root .mono-benchmark .mono-index-rail::before {
+  background: var(--mono-bg);
+}
+
+.mono-root .mono-benchmark .mono-index-rail b {
+  color: var(--mono-bg);
+}
+
+/* Caliper ticks: four corner registration marks on framed media. */
+.mono-tick-frame::before,
+.mono-tick-frame::after {
+  position: absolute;
+  z-index: 3;
+  width: var(--mono-tick);
+  height: var(--mono-tick);
+  content: '';
+  pointer-events: none;
+}
+
+.mono-tick-frame::before {
+  top: 0.5rem;
+  left: 0.5rem;
+  border-top: 1px solid var(--mono-accent);
+  border-left: 1px solid var(--mono-accent);
+}
+
+.mono-tick-frame::after {
+  right: 0.5rem;
+  bottom: 0.5rem;
+  border-right: 1px solid var(--mono-accent);
+  border-bottom: 1px solid var(--mono-accent);
+}
+
+/* Figures align column to column wherever a number carries meaning. */
+.mono-manifesto-meta dd,
+.mono-benchmark-heading h2,
+.mono-benchmark-bar-meta,
+.mono-benchmark-bar-meta strong,
+.mono-benchmark-context dd,
+.mono-benchmark-metric strong,
+.mono-benchmark-delta,
+.mono-benchmark-metric h3 {
+  font-variant-numeric: tabular-nums;
 }
 
 body:has(.mono-root) ::selection {
@@ -126,7 +223,7 @@ body:has(.mono-root) ::selection {
   font-size: 1.1rem;
   font-weight: 620;
   letter-spacing: -0.045em;
-  transition: none;
+  transition: color var(--mono-fast);
 }
 
 .aponia-brand {
@@ -200,7 +297,11 @@ body:has(.mono-root) ::selection {
   color: rgb(233 234 223 / 0.64);
   background: transparent;
   font: inherit;
-  transition: none;
+  transition: color var(--mono-fast);
+}
+
+.mono-nav-dropdown-trigger:active {
+  transform: translateY(1px);
 }
 
 .mono-nav-dropdown-trigger > span {
@@ -305,7 +406,7 @@ body:has(.mono-root) ::selection {
   gap: 0.24rem;
   padding: 0.9rem 0.85rem;
   color: var(--mono-paper);
-  transition: none;
+  transition: color var(--mono-fast);
 }
 
 .mono-nav-dropdown-panel a > span {
@@ -355,12 +456,19 @@ body:has(.mono-root) ::selection {
   border-radius: 0;
   color: var(--mono-bg);
   background: var(--mono-accent);
-  transition: none;
+  transition:
+    background-color var(--mono-fast),
+    border-color var(--mono-fast);
 }
 
 .mono-nav-docs:hover {
   color: var(--mono-bg);
-  background: var(--mono-accent);
+  border-color: var(--mono-paper);
+  background: var(--mono-paper);
+}
+
+.mono-nav-docs:active {
+  transform: translateY(1px);
 }
 
 .mono-gooey-nav {
@@ -385,6 +493,7 @@ body:has(.mono-root) ::selection {
 }
 
 .mono-gooey-nav a {
+  position: relative;
   display: block;
   padding: 0.73rem 0.9rem;
   border-radius: 0;
@@ -393,16 +502,35 @@ body:has(.mono-root) ::selection {
   font-size: 0.67rem;
   font-weight: 520;
   line-height: 1;
-  transition: none;
+  transition: color var(--mono-fast);
+}
+
+/* Position readout: a 1px tick under the section currently in view. */
+.mono-gooey-nav a::after {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.42rem;
+  left: 0.9rem;
+  height: 1px;
+  background: var(--mono-accent);
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 140ms linear;
 }
 
 .mono-gooey-nav a:hover {
   color: var(--mono-paper);
   background: transparent;
-  text-decoration-line: underline;
-  text-decoration-color: var(--mono-accent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.42rem;
+}
+
+.mono-gooey-nav a:hover::after,
+.mono-gooey-nav a[aria-current='true']::after {
+  transform: scaleX(1);
+}
+
+.mono-gooey-nav a[aria-current='true'] {
+  color: var(--mono-paper);
 }
 
 .mono-nav-mobile {
@@ -741,11 +869,19 @@ body:has(.mono-root) ::selection {
   background: var(--mono-accent);
   font-family: var(--mono-code);
   font-size: 0.64rem;
-  transition: background-color 220ms ease;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color var(--mono-fast),
+    border-color var(--mono-fast);
 }
 
 .mono-root .project-command button:hover {
+  border-color: var(--mono-paper);
   background: var(--mono-paper);
+}
+
+.mono-root .project-command button:active {
+  transform: translateY(1px);
 }
 
 .mono-root .project-command button svg {
@@ -857,14 +993,6 @@ body:has(.mono-root) ::selection {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 1.5rem clamp(1.5rem, 3vw, 3rem);
   align-items: end;
-}
-
-.mono-benchmark-kicker {
-  grid-column: 1 / -1;
-  font-family: var(--mono-code);
-  font-size: 0.64rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
 }
 
 .mono-benchmark-heading h2 {
@@ -1538,7 +1666,10 @@ html.mono-menu-lock {
     font-size: 0.61rem;
     list-style: none;
     text-transform: uppercase;
-    transition: none;
+    transition:
+      color var(--mono-fast),
+      border-color var(--mono-fast),
+      background-color var(--mono-fast);
   }
 
   .mono-nav-mobile summary::-webkit-details-marker {

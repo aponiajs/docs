@@ -33,6 +33,9 @@ export function FeaturesSection() {
     >
       <div className="mono-manifesto-shell">
         <div className="mono-manifesto-intro">
+          <p className="mono-index-rail">
+            <b>02</b> Method
+          </p>
           <h2 id="manifesto-title">
             We compose, validate, and run.
           </h2>

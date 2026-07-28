@@ -33,6 +33,9 @@ export function AponiaInterlude() {
       </figure>
       <div className="mono-principle-shade" aria-hidden="true" />
       <div className="mono-principle-copy">
+        <p className="mono-index-rail">
+          <b>04</b> Principle
+        </p>
         <h2 id="principle-title">
           <span>Boundaries</span>
           <span>over</span>
