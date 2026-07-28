@@ -6,11 +6,11 @@ const socialImage = process.env.NEXT_PUBLIC_OG_IMAGE ?? '/og-image.png';
 
 export const siteConfig = {
   name: 'AponiaJS',
-  title: 'AponiaJS — Modular TypeScript Framework for Bun',
+  title: 'AponiaJS | TypeScript Framework for Bun and Elysia',
   description:
-    'Build structured, type-safe Bun applications with Nest-inspired modules, controllers, providers, dependency injection, and Elysia.',
+    'Bun-first TypeScript framework powered by Elysia, with modules, dependency injection, decorators, validation, plugin composition, and CLI schematics.',
   shortDescription:
-    'A Bun-first, Nest-inspired TypeScript application framework powered by Elysia.',
+    'Bun-first TypeScript framework for modular Elysia applications with dependency injection, decorators, validation, plugins, and CLI schematics.',
   url: siteUrl.toString().replace(/\/$/, ''),
   socialImage,
   language: 'en',
@@ -19,14 +19,17 @@ export const siteConfig = {
   organization: 'https://github.com/aponiajs',
   keywords: [
     'AponiaJS',
-    'Bun framework',
-    'TypeScript framework',
+    'Bun TypeScript framework',
     'Elysia framework',
-    'dependency injection',
-    'modular architecture',
-    'backend framework',
-    'NestJS alternative',
-    'Bun server',
+    'Elysia dependency injection',
+    'TypeScript decorators',
+    'modular application framework',
+    'Standard Schema validation',
+    'request parameter decorators',
+    'Elysia plugin composition',
+    'Bun CLI',
+    'TypeScript schematics',
+    'Nest-inspired TypeScript framework',
   ],
 } as const;
 

@@ -277,6 +277,116 @@ html > body[data-scroll-locked] {
   outline-offset: 3px;
 }
 
+/* Not found: same instrument surface as the landing page, no illustration. */
+
+.aponia-404 {
+  display: grid;
+  min-height: 100dvh;
+  flex: 1;
+  align-items: center;
+  color: #e9eadf;
+  background:
+    linear-gradient(rgb(233 234 223 / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(233 234 223 / 0.03) 1px, transparent 1px),
+    #0b0c0a;
+  background-size: 3rem 3rem;
+  font-family: var(--font-sans);
+}
+
+.aponia-404-shell {
+  width: min(calc(100% - 3.5rem), 68rem);
+  margin-inline: auto;
+  padding-block: clamp(5rem, 12vw, 9rem);
+}
+
+.aponia-404-rail {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #9a9c90;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.aponia-404-rail::before {
+  width: 1.75rem;
+  height: 1px;
+  flex: none;
+  background: #d7ff43;
+  content: '';
+}
+
+.aponia-404-rail b {
+  color: #e9eadf;
+  font-weight: 500;
+}
+
+.aponia-404 h1 {
+  max-width: 14ch;
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 430;
+  letter-spacing: -0.07em;
+  line-height: 0.86;
+  text-wrap: balance;
+}
+
+.aponia-404-copy {
+  max-width: 34rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  color: #9a9c90;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.aponia-404-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  border-top: 1px solid rgb(233 234 223 / 0.18);
+  border-left: 1px solid rgb(233 234 223 / 0.18);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.aponia-404-actions :is(a) {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  gap: 0.4rem;
+  padding-inline: 1.15rem;
+  border-right: 1px solid rgb(233 234 223 / 0.18);
+  border-bottom: 1px solid rgb(233 234 223 / 0.18);
+  color: #e9eadf;
+  transition:
+    color 120ms linear,
+    background-color 120ms linear;
+}
+
+.aponia-404-actions a:first-child {
+  color: #d7ff43;
+}
+
+.aponia-404-actions a:hover {
+  color: #d7ff43;
+  background: rgb(215 255 67 / 0.06);
+}
+
+.aponia-404-actions a:active {
+  transform: translateY(1px);
+}
+
+.aponia-404-actions a:focus-visible {
+  outline: 2px solid #d7ff43;
+  outline-offset: -2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

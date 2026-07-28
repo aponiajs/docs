@@ -1,37 +1,49 @@
 # Artwork sources
 
-The current visual identity contains five canonical original illustrations:
-three framework environments and two AponiaJS-chan artworks. They were
-generated in-house with OpenAI image generation for AponiaJS and are
-project-owned artwork, so no on-page third-party credit is required. Cropping
-is handled non-destructively so source files remain unchanged.
+The landing page uses a code-native, scroll-driven SVG hero and a written
+architecture note alongside two credited character artworks. The repository
+also retains project-owned generated illustrations as an artwork archive.
+Those generated files were made in-house with OpenAI image generation for
+AponiaJS and do not require third-party credit.
 
-The repository also retains two superseded generated mascot assets and two
-historical third-party character artworks. Their records remain below for
-provenance. AponiaJS is an independent open-source project and is not
-affiliated with, endorsed by, or sponsored by HoYoverse or ElysiaJS.
+The repository also retains four superseded framework illustrations, two
+superseded generated mascot assets, and two historical third-party character
+artworks. Their records remain below for provenance. AponiaJS is an independent
+open-source project and is not affiliated with, endorsed by, or sponsored by
+HoYoverse or ElysiaJS.
 
-## AponiaJS hero illustration
+## AponiaJS technical assembly illustration
 
-- Local asset: `public/images/aponia-generated-hero.webp`
-- Used in: hero and mobile navigation
+- Local asset: `public/images/aponia-technical-landscape.webp`
+- Status: superseded by the code-native SVG flow effect
 - Original size: 1672 × 941
 - Source: original AI-generated illustration made with OpenAI for AponiaJS
-- Content: no characters, text, logos, or third-party artwork
+- Content: exploded gear assembly with layered plates and a visible connector
+  path; no characters, text, logos, or third-party artwork
 
 ## AponiaJS system illustration
 
 - Local asset: `public/images/aponia-generated-system.webp`
-- Used in: Work feature
-- Original size: 1448 × 1086
+- Status: superseded by the written architecture note
+- Original size: 1672 × 941
 - Source: original AI-generated illustration made with OpenAI for AponiaJS
-- Content: no characters, text, logos, or third-party artwork
+- Content: stacked mechanical module plates joined by a visible pin; no
+  characters, text, logos, or third-party artwork
 
 ## AponiaJS architecture illustration
 
 - Local asset: `public/images/aponia-generated-architecture.webp`
-- Used in: Work portrait
-- Original size: 957 × 1643
+- Status: superseded by the written architecture note
+- Original size: 1254 × 1254
+- Source: original AI-generated illustration made with OpenAI for AponiaJS
+- Content: exposed gear train routing a signal between separate modules; no
+  characters, text, logos, or third-party artwork
+
+## Superseded AponiaJS modular opening
+
+- Local asset: `public/images/aponia-generated-hero.webp`
+- Size: 1672 × 941
+- Status: superseded; retained for provenance
 - Source: original AI-generated illustration made with OpenAI for AponiaJS
 - Content: no characters, text, logos, or third-party artwork
 
@@ -96,7 +108,7 @@ affiliation with, endorsement by, or sponsorship from HoYoverse.
 ## Aponia birthday artwork
 
 - Local asset: `public/images/aponia-birthday-captain-naliu-2024.png`
-- Used in: product-principle interlude
+- Used in: runtime-strategy interlude
 - Original size: 2036 × 2037
 - Artist: Captain 那流
 - Publisher: Honkai Impact 3rd (HI3rd Official)

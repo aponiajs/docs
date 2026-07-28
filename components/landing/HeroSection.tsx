@@ -1,34 +1,53 @@
-import Image from 'next/image';
+'use client';
 
-import { artworkSources } from './artworkSources';
+import { useScroll, useTransform } from 'motion/react';
+import { useRef } from 'react';
+
+import { AponiaFlowEffect } from './AponiaFlowEffect';
 
 export function HeroSection() {
-  const artwork = artworkSources.mascotHero;
+  const section = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: section,
+    offset: ['start start', 'end start'],
+  });
+  const first = useTransform(scrollYProgress, [0, 0.62], [0.04, 1]);
+  const second = useTransform(scrollYProgress, [0, 0.66], [0.02, 1]);
+  const third = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
+  const fourth = useTransform(scrollYProgress, [0.04, 0.74], [0, 1]);
+  const fifth = useTransform(scrollYProgress, [0.08, 0.78], [0, 1]);
+  const targetOpacity = useTransform(
+    scrollYProgress,
+    [0.45, 0.72],
+    [0.28, 1],
+  );
 
   return (
-    <section id="top" className="mono-hero" aria-labelledby="hero-title">
-      <figure className="mono-hero-artwork">
-        <Image
-          src={artwork.src}
-          alt={artwork.alt}
-          fill
-          priority
-          quality={95}
-          sizes="100vw"
-          className="mono-hero-media"
-        />
-      </figure>
-      <div className="mono-hero-shade" aria-hidden="true" />
-      <div className="mono-hero-copy">
-        <h1 id="hero-title">
-          <span>Composed,</span>
-          <span>Unbound.</span>
-        </h1>
-        <div className="mono-hero-note">
-          <p>
-            A modular TypeScript framework built for Bun, Elysia, and
-            architecture you can inspect.
-          </p>
+    <section
+      ref={section}
+      id="top"
+      className="mono-hero mono-flow-hero"
+      aria-labelledby="hero-title"
+    >
+      <div className="mono-hero-sticky">
+        <figure className="mono-hero-artwork">
+          <AponiaFlowEffect
+            pathLengths={[first, second, third, fourth, fifth]}
+            targetOpacity={targetOpacity}
+          />
+        </figure>
+        <div className="mono-hero-shade" aria-hidden="true" />
+        <div className="mono-hero-copy">
+          <h1 id="hero-title">
+            <span>AponiaJS</span>
+            <span>for Bun.</span>
+          </h1>
+          <div className="mono-hero-note">
+            <p>
+              Modular TypeScript for Bun, with singleton dependency injection
+              and direct access to native Elysia.
+            </p>
+          </div>
         </div>
       </div>
     </section>

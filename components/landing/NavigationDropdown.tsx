@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import {
   type FocusEvent,
@@ -34,6 +34,7 @@ export function NavigationDropdown({
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastPointerType = useRef<string | null>(null);
   const panelId = useId();
 
   function clearCloseTimer() {
@@ -56,7 +57,7 @@ export function NavigationDropdown({
   function scheduleClose() {
     clearCloseTimer();
     closeTimer.current = setTimeout(() => {
-      if (dropdown.current?.contains(document.activeElement)) {
+      if (panel.current?.contains(document.activeElement)) {
         closeTimer.current = null;
         return;
       }
@@ -122,17 +123,28 @@ export function NavigationDropdown({
 
   function handleTriggerClick(event: ReactMouseEvent<HTMLButtonElement>) {
     const openedWithKeyboard = event.detail === 0;
+    const openedWithDirectTouch =
+      lastPointerType.current !== null &&
+      lastPointerType.current !== 'mouse';
     const canHover = window.matchMedia(
       '(hover: hover) and (pointer: fine)',
     ).matches;
 
-    if (openedWithKeyboard || !canHover) {
+    lastPointerType.current = null;
+
+    if (openedWithKeyboard || openedWithDirectTouch || !canHover) {
       clearCloseTimer();
       setOpen((current) => !current);
       return;
     }
 
     openDropdown();
+  }
+
+  function handleTriggerPointerDown(
+    event: ReactPointerEvent<HTMLButtonElement>,
+  ) {
+    lastPointerType.current = event.pointerType;
   }
 
   function handleTriggerKeyDown(
@@ -206,8 +218,8 @@ export function NavigationDropdown({
         type="button"
         className="mono-nav-dropdown-trigger"
         aria-expanded={open}
-        aria-haspopup="true"
         aria-controls={panelId}
+        onPointerDown={handleTriggerPointerDown}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
       >
@@ -235,15 +247,30 @@ export function NavigationDropdown({
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`${item.label} (opens in a new tab)`}
                     onClick={closeDropdown}
                   >
-                    <span>{item.label}</span>
-                    <small>{item.description}</small>
+                    <span className="mono-nav-dropdown-copy">
+                      <strong>{item.label}</strong>
+                      <small>{item.description}</small>
+                    </span>
+                    <ArrowUpRight
+                      size={14}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                    />
                   </a>
                 ) : (
                   <Link href={item.href} onClick={closeDropdown}>
-                    <span>{item.label}</span>
-                    <small>{item.description}</small>
+                    <span className="mono-nav-dropdown-copy">
+                      <strong>{item.label}</strong>
+                      <small>{item.description}</small>
+                    </span>
+                    <ArrowRight
+                      size={14}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                    />
                   </Link>
                 )}
               </li>

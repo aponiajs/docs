@@ -1,27 +1,21 @@
 import { CreateProjectCommand } from './CreateProjectCommand';
 
-const disciplines = [
+const experiencePillars = [
   {
-    title: 'Compose',
+    title: 'Familiar',
     description:
-      'Group controllers and providers around responsibilities that remain clear as the application grows.',
+      'Move from NestJS with familiar modules, controllers, decorators, constructor injection, and CLI conventions.',
   },
   {
-    title: 'Validate',
+    title: 'Native',
     description:
-      'Resolve visibility, missing providers, and dependency cycles before the application starts.',
+      'Controllers compile into native Elysia plugins, keeping request execution on Elysia without a second HTTP layer.',
   },
   {
-    title: 'Run',
+    title: 'Bun-first',
     description:
-      'Keep Bun and Elysia in the execution path while TypeScript carries contracts from route to response.',
+      'Generate, install, test, and run TypeScript projects with Bun-native commands from the first file.',
   },
-];
-
-const foundation = [
-  { label: 'Runtime', value: 'Bun' },
-  { label: 'Language', value: 'TypeScript' },
-  { label: 'HTTP layer', value: 'Elysia' },
 ];
 
 export function FeaturesSection() {
@@ -34,29 +28,20 @@ export function FeaturesSection() {
       <div className="mono-manifesto-shell">
         <div className="mono-manifesto-intro">
           <p className="mono-index-rail">
-            <b>02</b> Method
+            <b>Developer experience</b>
           </p>
           <h2 id="manifesto-title">
-            We compose, validate, and run.
+            Familiar. Native. Bun-first.
           </h2>
           <p>
-            AponiaJS gives Bun applications a modular structure without hiding
-            the runtime that makes them fast.
+            Keep the application structure you know from NestJS while targeting
+            Bun and Elysia with an explicit, lightweight runtime model.
           </p>
           <CreateProjectCommand />
         </div>
 
-        <dl className="mono-manifesto-meta">
-          {foundation.map(({ label, value }) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-
         <div className="mono-manifesto-list">
-          {disciplines.map(({ title, description }) => (
+          {experiencePillars.map(({ title, description }) => (
             <article key={title} className="mono-manifesto-item">
               <h3>{title}</h3>
               <p>{description}</p>
