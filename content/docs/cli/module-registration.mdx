@@ -1,0 +1,55 @@
+---
+title: Module Registration
+description: Understand how generated declarations are added to the nearest AponiaJS module.
+---
+
+The generator can update an existing `@Module()` declaration after creating a
+file.
+
+## Registration rules
+
+| Generated shape | Module field |
+| --- | --- |
+| Controller | `controllers` |
+| Service or provider | `providers` |
+| Gateway or resolver scaffold | `providers` |
+| Module | `imports` |
+| Resource module | `imports` |
+
+Other schematic shapes are created without module registration.
+
+## Nearest module
+
+By default, the CLI searches from the generated file directory toward the
+configured source root and selects a nearby `*.module.ts` file:
+
+```bash
+aponia g service users
+```
+
+Use `--module` when the intended owner is not the nearest module:
+
+```bash
+aponia g service users --module app
+```
+
+The selector accepts a module path or name without the `.module.ts` suffix. It
+fails when no matching module exists or when the name matches more than one
+module.
+
+## Skip registration
+
+Create files without changing a module:
+
+```bash
+aponia g controller users --skip-import
+```
+
+The module update is computed before any file is written. If a create target
+already exists, the command stops rather than applying a partial update.
+
+<Callout title="Registration does not add runtime capabilities">
+  Registering a generated guard, gateway, resolver, or other scaffold as a
+  provider does not make its Nest-style method run. Only implemented AponiaJS
+  runtime contracts are discovered and executed.
+</Callout>

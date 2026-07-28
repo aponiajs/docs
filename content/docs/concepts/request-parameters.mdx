@@ -1,0 +1,127 @@
+---
+title: Request parameters
+description: Inject the body, query, path parameters, headers, cookies, request, or response settings into a handler.
+---
+
+Parameter decorators inject one piece of the request into a route handler. Each
+accepts an optional property name that selects a single value instead of the
+whole part.
+
+| Decorator | Injects |
+| --- | --- |
+| `@Body()` | The validated request body. |
+| `@Query("term")` | The parsed query string, or one entry. |
+| `@Param("id")` | Path parameters, or one named parameter. |
+| `@Headers("x-tenant")` | Request headers, or one named header. |
+| `@Cookie("session")` | Cookies, or one cookie's value. |
+| `@Req()` | The native `Request`. |
+| `@Res()` | The mutable response settings. |
+| `@Ctx()` | The whole platform request context. |
+
+All eight are exported from `@aponiajs/common`.
+
+```ts
+import { Body, Controller, Get, Headers, Param, Post, Query } from "@aponiajs/common";
+
+@Controller("users")
+export class UserController {
+  @Post()
+  create(@Body() body: { name: string }, @Headers("x-tenant") tenant: string) {
+    return { tenant, name: body.name };
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string, @Query("expand") expand: string | undefined) {
+    return { id, expand };
+  }
+}
+```
+
+## Named and whole forms
+
+A decorator without a name injects the whole part; with a name it selects one
+property. Both forms can appear in the same handler:
+
+```ts
+@Post("body", createItemSchema)
+readBody(@Body() body: CreateItem, @Body("name") name: string) {
+  return { body, name };
+}
+```
+
+`@Cookie("session")` is the one special case: it returns the cookie's `value`
+rather than the cookie object Elysia stores.
+
+## Response settings
+
+`@Res()` injects the mutable response settings — status, headers, and redirect —
+rather than a Node-style response object:
+
+```ts
+import { Controller, Get, Res, type RouteResponseSettings } from "@aponiajs/common";
+
+@Controller("reports")
+export class ReportController {
+  @Get()
+  read(@Res() response: RouteResponseSettings) {
+    response.headers["x-source"] = "reports";
+    response.status = 201;
+    return { written: true };
+  }
+}
+```
+
+```ts
+interface RouteResponseSettings {
+  status?: number | string;
+  headers: Record<string, string | number | undefined>;
+  redirect?: string;
+}
+```
+
+## The whole context
+
+A handler with no parameter decorators receives the context as its only
+argument. `@Ctx()` does the same explicitly, which is useful when other
+parameters are present.
+
+Annotate the context with `RouteContext<typeof schema>` from
+`@aponiajs/common` to stay platform-neutral, or with `ElysiaRouteContext` from
+`@aponiajs/platform-elysia` to keep Elysia's own `status`, `set`, `cookie`,
+`store`, and `redirect` typed:
+
+```ts
+import { Controller, Ctx, Post } from "@aponiajs/common";
+import { type ElysiaRouteContext } from "@aponiajs/platform-elysia";
+import { z } from "zod";
+
+const createUser = { body: z.object({ name: z.string().min(2) }) };
+
+@Controller("users")
+export class UserController {
+  @Post("/", createUser)
+  create(@Ctx() context: ElysiaRouteContext<typeof createUser>) {
+    context.set.headers["x-created"] = "1";
+    return context.body.name === "root"
+      ? context.status(403, "forbidden")
+      : { name: context.body.name };
+  }
+}
+```
+
+The platform-neutral `RouteContext<TSchema>` exposes `body`, `query`, `params`,
+`headers`, `request`, `path`, and `set`. Slots covered by a validator are typed
+from that validator's output; uncovered slots fall back to string records.
+
+To type what a native Elysia plugin adds to the context, see
+[typed plugin context](/docs/guides/plugin-context-types).
+
+## Argument binding rules
+
+- Arguments are placed at the decorated parameter index, so decorators may be
+  applied in any order.
+- An undecorated parameter beside decorated ones receives `undefined`.
+- A named selection on a non-object part resolves to `undefined` rather than
+  throwing.
+- Parameter decorators may only decorate route handler parameters; using one on
+  a constructor parameter throws a `TypeError`.

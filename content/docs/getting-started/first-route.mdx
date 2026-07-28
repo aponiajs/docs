@@ -1,0 +1,125 @@
+---
+title: Your First Route
+description: Add an injectable service, a decorated controller, request parameters, and route validation.
+---
+
+Create a service for application behavior:
+
+```ts title="src/greeting/greeting.service.ts"
+import { Injectable } from "@aponiajs/common";
+
+@Injectable()
+export class GreetingService {
+  createGreeting(name: string): string {
+    return `Hello, ${name}!`;
+  }
+}
+```
+
+Create a controller:
+
+```ts title="src/greeting/greeting.controller.ts"
+import { Controller, Get, Param } from "@aponiajs/common";
+import { GreetingService } from "./greeting.service.ts";
+
+@Controller("greetings")
+export class GreetingController {
+  constructor(private readonly greetingService: GreetingService) {}
+
+  @Get(":name")
+  getGreeting(@Param("name") name: string): string {
+    return this.greetingService.createGreeting(name);
+  }
+}
+```
+
+Register both classes in a feature module:
+
+```ts title="src/greeting/greeting.module.ts"
+import { Module } from "@aponiajs/common";
+import { GreetingController } from "./greeting.controller.ts";
+import { GreetingService } from "./greeting.service.ts";
+
+@Module({
+  controllers: [GreetingController],
+  providers: [GreetingService],
+})
+export class GreetingModule {}
+```
+
+Import the feature from the root module:
+
+```ts title="src/app.module.ts"
+import { Module } from "@aponiajs/common";
+import { GreetingModule } from "./greeting/greeting.module.ts";
+
+@Module({
+  imports: [GreetingModule],
+})
+export class AppModule {}
+```
+
+Start the application and request the route:
+
+```bash
+curl http://localhost:3000/greetings/Ada
+```
+
+The response is:
+
+```text
+Hello, Ada!
+```
+
+## Take one piece of the request
+
+A handler declares what it needs with parameter decorators. Each accepts an
+optional name that selects a single property:
+
+```ts
+import { Body, Controller, Get, Headers, Post, Query } from "@aponiajs/common";
+
+@Controller("greetings")
+export class GreetingController {
+  @Get()
+  list(@Query("term") term: string | undefined) {
+    return { term };
+  }
+
+  @Post()
+  create(@Body() body: { name: string }, @Headers("x-tenant") tenant: string) {
+    return { tenant, name: body.name };
+  }
+}
+```
+
+A handler declared without parameter decorators receives the whole request
+context as its only argument. See
+[request parameters](/docs/concepts/request-parameters).
+
+## Reject invalid requests
+
+Pass a schema to the route decorator and an invalid request answers `422`
+without reaching the handler:
+
+```ts
+import { Body, Controller, Post } from "@aponiajs/common";
+import { z } from "zod";
+
+const createGreeting = { body: z.object({ name: z.string().min(2) }) };
+type CreateGreeting = z.infer<(typeof createGreeting)["body"]>;
+
+@Controller("greetings")
+export class GreetingController {
+  @Post("/", createGreeting)
+  create(@Body() body: CreateGreeting) {
+    return body;
+  }
+}
+```
+
+See [route validation](/docs/concepts/route-validation) for the accepted
+validators and the available slots.
+
+The implemented method decorators are `@Get()`, `@Post()`, `@Put()`,
+`@Patch()`, `@Delete()`, `@Head()`, and `@Options()`.

@@ -1,0 +1,12 @@
+{
+  "title": "Guides",
+  "pages": [
+    "native-elysia-access",
+    "elysia-plugin-modules",
+    "plugin-context-types",
+    "logging",
+    "application-lifecycle",
+    "in-process-requests",
+    "low-level-descriptors"
+  ]
+}

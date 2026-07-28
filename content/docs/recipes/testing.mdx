@@ -1,0 +1,87 @@
+---
+title: Testing
+description: Unit-test services directly and exercise HTTP routes in process with Bun.
+---
+
+## Unit-test a controller
+
+```ts
+import { describe, expect, test } from "bun:test";
+import { GreetingController } from "./greeting.controller.ts";
+import { GreetingService } from "./greeting.service.ts";
+
+describe("GreetingController", () => {
+  test("returns a greeting from the service", () => {
+    const controller = new GreetingController(new GreetingService());
+
+    expect(controller.getGreeting()).toBe("Hello, AponiaJS!");
+  });
+});
+```
+
+Direct construction keeps unit tests independent of the container.
+
+## Test the complete route
+
+```ts
+import { expect, test } from "bun:test";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "../src/app.module.ts";
+
+test("GET /greetings", async () => {
+  const application = await AponiaFactory.create(AppModule, {
+    logger: false,
+  });
+
+  const response = await application.handle(
+    new Request("http://localhost/greetings"),
+  );
+
+  expect(response.status).toBe(200);
+  expect(await response.text()).toBe("Hello, AponiaJS!");
+
+  await application.close();
+});
+```
+
+## Assert a validation failure
+
+A schema rejects the request before the handler runs, so the test asserts the
+status rather than a message body:
+
+```ts
+const rejected = await application.handle(
+  new Request("http://localhost/users", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ name: "A" }),
+  }),
+);
+
+expect(rejected.status).toBe(422);
+```
+
+## Assert a graph failure
+
+Graph and container failures happen while the application is being created.
+Assert the `code`, never the message:
+
+```ts
+import { AponiaError } from "@aponiajs/common";
+
+await expect(AponiaFactory.create(BrokenModule, { logger: false })).rejects.toMatchObject({
+  code: "MISSING_PROVIDER",
+});
+```
+
+The complete list is in [error codes](/docs/api-reference/error-codes).
+
+Run tests with:
+
+```bash
+bun test
+```
+
+`handle()` never binds a port, so nothing needs to be closed; call
+`application.close()` only after `application.listen(port)`. There is no
+testing module or provider override API yet.

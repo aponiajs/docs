@@ -1,0 +1,91 @@
+---
+title: From NestJS
+description: Map familiar Nest structure onto the smaller AponiaJS feature set.
+---
+
+AponiaJS borrows structural vocabulary from NestJS, but it is not a drop-in
+replacement.
+
+| Nest concept | AponiaJS `0.6.0-alpha.12` |
+| --- | --- |
+| Modules | Implemented with imports, controllers, providers, and exports. |
+| Singleton providers | Implemented. |
+| Class/value/factory/alias providers | Implemented synchronously. |
+| Decorated controllers | Implemented for all seven HTTP methods. |
+| Request parameter decorators | Implemented, including named selection. |
+| Validation | Implemented as route schemas, not pipes. |
+| Platform adapter | Elysia only. |
+| Guards/interceptors/filters/middleware runtime | Not implemented. |
+| Provider scopes and lifecycle hooks | Not implemented. |
+| Testing module and overrides | Not implemented. |
+| OpenAPI/auth/WebSockets/microservices | Not implemented. |
+
+## Bootstrap
+
+```ts
+const application = await AponiaFactory.create(AppModule);
+await application.listen(3000);
+```
+
+The factory shape is familiar, but imports come from
+`@aponiajs/platform-elysia`.
+
+## Controllers
+
+Method and parameter decorators keep their Nest names and are all imported from
+`@aponiajs/common`:
+
+```ts
+import { Body, Controller, Get, Param, Post } from "@aponiajs/common";
+
+@Controller("users")
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.userService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() body: CreateUser) {
+    return this.userService.create(body);
+  }
+}
+```
+
+Two differences matter when porting code:
+
+- there is no `@Injectable()`-driven metadata for method decorators;
+  `@Injectable()` exists only so TypeScript emits constructor parameter types;
+- handler parameter types come from your annotations, not from schema
+  inference, so keep the schema in a `const` and derive with `z.infer` or
+  `Static<typeof …>`.
+
+## Validation instead of pipes
+
+Nest validation pipes become a schema on the route decorator:
+
+```ts
+const createUser = { body: z.object({ name: z.string().min(2) }) };
+
+@Post("/", createUser)
+create(@Body() body: z.infer<(typeof createUser)["body"]>) {
+  return body;
+}
+```
+
+A rejected request answers `422` before the handler runs. There is no
+`class-validator`, `class-transformer`, or `ValidationPipe` equivalent. See
+[route validation](/docs/concepts/route-validation).
+
+## Application layout
+
+Generated applications keep `AppModule`, controller, service, and `main.ts`
+directly under `src`. Generated features live under `src/<feature>`.
+
+Do not migrate guards, interceptors, filters, or middleware yet — rewrite that
+behavior as Elysia hooks through
+[native access](/docs/guides/native-elysia-access) or a
+[plugin module](/docs/guides/elysia-plugin-modules) until the equivalent runtime
+contracts land.

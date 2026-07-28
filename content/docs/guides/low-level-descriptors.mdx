@@ -1,0 +1,50 @@
+---
+title: Low-level descriptors
+description: Build immutable modules and Elysia controllers without decorator metadata.
+---
+
+Decorators are the default application API. Low-level descriptors are useful
+for platform adapters, integration libraries, or standalone containers.
+
+## Define a module
+
+```ts
+import {
+  defineModule,
+  provideValue,
+  createToken,
+} from "@aponiajs/common";
+
+const APP_NAME = createToken<string>("APP_NAME");
+
+const AppModule = defineModule({
+  id: "AppModule",
+  providers: [provideValue(APP_NAME, "AponiaJS")],
+  exports: [APP_NAME],
+});
+```
+
+`defineModule()` freezes copied imports, controllers, providers, and exports.
+
+## Define an Elysia controller
+
+```ts
+import { defineElysiaController } from "@aponiajs/platform-elysia";
+import { Elysia } from "elysia";
+
+class HealthController {
+  health() {
+    return { ok: true };
+  }
+}
+
+const healthController = defineElysiaController(HealthController, {
+  inject: [],
+  buildPlugin: (controller) =>
+    new Elysia().get("/health", () => controller.health()),
+});
+```
+
+The `buildPlugin` result must be an Elysia instance. Low-level controller
+definitions are platform-specific; module and provider descriptors remain
+platform-neutral.

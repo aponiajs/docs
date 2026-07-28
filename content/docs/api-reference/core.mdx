@@ -1,0 +1,60 @@
+---
+title: "@aponiajs/core"
+description: Public module graph compiler and singleton dependency injection container APIs.
+---
+
+Most HTTP applications receive `@aponiajs/core` transitively through the
+Elysia platform. Install it directly for platform adapters or standalone
+container usage.
+
+## createContainer
+
+```ts
+function createContainer(root: ModuleDefinition): AponiaContainer;
+```
+
+Compiles and validates the module graph, then creates an empty instance cache.
+
+## AponiaContainer
+
+| Member | Purpose |
+| --- | --- |
+| `graph` | The compiled `ModuleGraph`. |
+| `get<T>(token)` | Resolve a token through root-module visibility. |
+| `initializeModule(module)` | Eagerly resolve all providers owned by a module. |
+| `instantiateController(module, controller)` | Construct and cache a controller. |
+| `resolveModuleProvider(module, token)` | Internal platform SPI despite being callable. |
+
+Providers and controllers are cached per owning module.
+
+## compileModuleGraph
+
+```ts
+function compileModuleGraph(root: ModuleDefinition): ModuleGraph;
+```
+
+Compilation orders imported modules before consumers and validates the complete
+graph.
+
+## ModuleGraph
+
+| Member | Purpose |
+| --- | --- |
+| `root` | Root module definition. |
+| `modules` | Frozen dependency-first module list. |
+| `locate(module, token)` | Find the unique visible provider location. |
+| `inspect()` | Return a serializable graph summary. |
+
+`inspect()` returns `GraphInspection`, containing the root ID and an array of
+`ModuleInspection` values with import, controller, provider, and export names.
+
+## Exported types
+
+- `GraphInspection`
+- `ModuleInspection`
+- `ProviderLocation`
+
+<Callout type="warning" title="Runtime boundary">
+  `@aponiajs/core` has no HTTP behavior, async providers, lifecycle hooks, or
+  request scopes.
+</Callout>

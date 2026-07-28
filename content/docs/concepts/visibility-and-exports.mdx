@@ -1,0 +1,51 @@
+---
+title: Visibility and exports
+description: Control which provider tokens cross module boundaries.
+---
+
+Providers are visible:
+
+1. inside their owning module; and
+2. to an importing module only when the owning module exports their token.
+
+```ts
+@Module({
+  providers: [GreetingService],
+  exports: [GreetingService],
+})
+class GreetingModule {}
+
+@Module({
+  imports: [GreetingModule],
+  controllers: [AppController],
+})
+class AppModule {}
+```
+
+Removing `exports: [GreetingService]` makes the controller dependency fail with
+`MISSING_PROVIDER`.
+
+## Re-exporting
+
+A module can export a token resolved through one of its imports:
+
+```ts
+@Module({
+  imports: [GreetingModule],
+  exports: [GreetingService],
+})
+class SharedModule {}
+```
+
+## Ambiguous providers
+
+If multiple imported source modules export the same token, AponiaJS throws
+`AMBIGUOUS_PROVIDER` rather than selecting one implicitly. Export a distinct
+token, restructure the imports, or provide an explicit alias in the consuming
+boundary.
+
+## Root visibility
+
+`AponiaContainer.get()` resolves from the root module and therefore respects
+root visibility. The lower-level `resolveModuleProvider()` method is internal
+platform SPI and should not be used by application code.

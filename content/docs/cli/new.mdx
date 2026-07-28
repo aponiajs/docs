@@ -1,0 +1,60 @@
+---
+title: New Command
+description: Create an AponiaJS application with deterministic safety behavior.
+---
+
+## Usage
+
+```text
+aponia new <name> [options]
+aponia n <name> [options]
+```
+
+Create and start an application:
+
+```bash
+aponia new my-api
+cd my-api
+bun run dev
+```
+
+The equivalent Bun create command delegates to the same generator:
+
+```bash
+bun create aponia my-api
+```
+
+## Naming and destination
+
+Names must use lowercase kebab-case:
+
+```text
+users-api
+commerce-service
+internal-tools
+```
+
+The destination is resolved under the current working directory. The generator
+does not merge into an existing target directory.
+
+## Options
+
+| Option | Alias | Behavior |
+| --- | --- | --- |
+| `--dry-run` | `-d` | Validate and list output without creating the project. |
+| `--skip-install` | `-s` | Create files without running `bun install`. |
+
+Examples:
+
+```bash
+aponia new my-api --dry-run
+aponia new my-api --skip-install
+```
+
+## Version alignment
+
+The generated manifest pins `@aponiajs/common` and
+`@aponiajs/platform-elysia` to the CLI version. It also installs the compatible
+Elysia dependency used by the current template.
+
+Do not mix AponiaJS package versions inside the generated project.

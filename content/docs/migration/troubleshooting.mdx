@@ -1,0 +1,68 @@
+---
+title: Troubleshooting
+description: Resolve common module graph, decorator, CLI, Elysia, and version errors.
+---
+
+## A provider cannot be resolved
+
+Check that the provider exists, its owning module exports the same token object,
+and the consuming module imports that module.
+
+## A token with the same description is missing
+
+`createToken("NAME")` creates a fresh identity every time. Export and reuse one
+constant.
+
+## Constructor metadata cannot be resolved
+
+Enable `experimentalDecorators` and `emitDecoratorMetadata`. Use
+`@Inject(token)` for interfaces and other non-class types.
+
+## A route handler argument is undefined
+
+Every handler argument must carry a parameter decorator. A handler with no
+decorators receives the whole request context as its only argument; a handler
+that mixes decorated and undecorated parameters receives `undefined` for the
+undecorated ones. A named selection such as `@Query("term")` is also
+`undefined` when the request omits it.
+
+## A request answers 422
+
+A route schema rejected the request before the handler ran. Check the slot the
+validator covers — `body`, `query`, `params`, `headers`, or `response` — and
+remember that query and header values arrive as strings unless the validator
+coerces them, for example with Elysia's `t.Numeric()`.
+
+## A plugin value is untyped in a handler
+
+Compiling a controller erases its module imports, so plugin types must be named:
+`ElysiaRouteContext<clock>`. The value is present at runtime either way. See
+[typed plugin context](/docs/guides/plugin-context-types).
+
+## configureNative throws INVALID_NATIVE_APPLICATION
+
+Return the received Elysia instance:
+
+```ts
+configureNative: (elysia) => elysia.get("/health", () => "ok");
+```
+
+Do not return `new Elysia()`.
+
+## The CLI cannot find aponia.json
+
+Run `aponia generate` from the generated project root or pass a valid project
+configuration. Generation outside an Aponia project is rejected.
+
+## A module name is ambiguous
+
+`--module` must resolve to exactly one `.module.ts` under the selected source
+root. Pass a more specific relative module name.
+
+## Generated output exists already
+
+The CLI does not overwrite existing target files or merge an existing project
+directory. Rename/remove the target deliberately or generate under a new name.
+
+See [Error codes](/docs/api-reference/error-codes) for structured runtime
+diagnostics.

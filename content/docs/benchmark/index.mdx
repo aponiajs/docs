@@ -1,0 +1,28 @@
+---
+title: Benchmark archive
+description: Understand the historical benchmark data without treating it as a current universal performance guarantee.
+---
+
+The benchmark suite was removed from AponiaJS `main` during the `0.3.22` cycle
+and has not returned as of `0.6.0-alpha.12`. Existing raw results and the
+landing-page `0.3.17` overhead snapshot are historical records, not an actively
+maintained performance program.
+
+<Callout type="warning" title="Historical evidence">
+  Do not describe archived numbers as the latest benchmark, reproduce commands
+  that no longer exist on `main`, or use one CI observation as a capacity
+  guarantee.
+</Callout>
+
+## Available historical datasets
+
+- `0.3.17`: an in-process Elysia overhead snapshot used by the landing page;
+- `0.3.21`: an upstream Bun HTTP framework benchmark protocol with raw
+  Ping/Query/Body observations;
+- `0.3.22` onward: benchmark execution and publication removed from the
+  repository, with no replacement in the current source.
+
+The most reliable current statement is that AponiaJS adds measurable framework
+overhead and historical results depend on their exact protocol and environment.
+
+See [Interpreting results](/docs/benchmark/interpreting-results).

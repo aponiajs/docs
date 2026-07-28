@@ -1,0 +1,58 @@
+---
+title: Configure a plugin with DI
+description: Build an Elysia plugin from a provider visible through module imports.
+---
+
+Define a typed configuration token:
+
+```ts
+import {
+  Inject,
+  Injectable,
+  Module,
+  createToken,
+  provideValue,
+} from "@aponiajs/common";
+
+interface AuthConfig {
+  readonly secret: string;
+}
+
+const AUTH_CONFIG = createToken<AuthConfig>("AUTH_CONFIG");
+
+@Injectable()
+class ConfigService {
+  constructor(@Inject(AUTH_CONFIG) readonly auth: AuthConfig) {}
+}
+
+@Module({
+  providers: [
+    provideValue(AUTH_CONFIG, { secret: Bun.env.JWT_SECRET ?? "development" }),
+    ConfigService,
+  ],
+  exports: [ConfigService],
+})
+class ConfigModule {}
+```
+
+Use it in plugin registration:
+
+```ts
+ElysiaPluginModule.registerAsync({
+  key: "jwt",
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (config: ConfigService) =>
+    jwt({
+      name: "jwt",
+      secret: config.auth.secret,
+    }),
+});
+```
+
+<Callout type="warning" title="Use real secret management in deployed apps">
+  This example demonstrates DI. AponiaJS does not yet ship a configuration or
+  secrets package, and the framework is not recommended for production.
+</Callout>
+
+The factory must return synchronously.

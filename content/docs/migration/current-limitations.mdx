@@ -1,0 +1,54 @@
+---
+title: Current limitations
+description: Separate implemented AponiaJS behavior from CLI scaffolds and roadmap features.
+---
+
+<Callout type="warning" title="Not recommended for production">
+  AponiaJS is experimental pre-1.0 software. Evaluate the source and current
+  issue tracker before adopting it for a long-lived workload.
+</Callout>
+
+Reviewed against `0.6.0-alpha.12`.
+
+## Implemented
+
+- decorated modules, controllers, and the seven HTTP method decorators;
+- request parameter decorators — `@Body`, `@Query`, `@Param`, `@Headers`,
+  `@Cookie`, `@Ctx`, `@Req`, and `@Res` — in whole and named forms;
+- route validation with Standard Schema validators (Zod, ArkType, Valibot) and
+  platform-native TypeBox or Elysia `t` validators across the `body`, `query`,
+  `params`, `headers`, and `response` slots;
+- singleton class, value, factory, and alias providers;
+- class and explicit-token constructor injection;
+- module imports, exports, re-exports, and graph diagnostics;
+- Elysia application creation, in-process handling, listening, URL access, and
+  closing;
+- native Elysia configuration and low-level controller escape hatches;
+- static and DI-configured Elysia plugin modules, plus `defineElysiaPlugin` and
+  the typed `ElysiaRouteContext`;
+- system, JSON, filtered, and custom logging;
+- project and component generation.
+
+## Not implemented
+
+- runtime guards, interceptors, exception filters, or middleware;
+- framework-owned error mapping, Problem Details bodies, or serialization —
+  validation failures come from Elysia as `422`;
+- async provider factories, lifecycle hooks, and non-singleton scopes;
+- testing modules or provider overrides;
+- OpenAPI generation and Eden Treaty integration;
+- built-in configuration, secrets, authentication, authorization, or rate
+  limiting;
+- GraphQL, WebSocket, or microservice platform packages.
+
+## CLI scaffolds are not runtime features
+
+The CLI can create files named guard, filter, interceptor, middleware, pipe,
+gateway, resolver, and non-REST resource transports. These are standalone
+scaffolds, not classes wired into an implemented runtime contract.
+
+REST resources are the exception: their generated controller, service, module,
+route schema, DTOs, and entity run against the implemented runtime.
+
+See [status and roadmap](/docs/project/status-and-roadmap) for the milestone
+each planned capability belongs to.

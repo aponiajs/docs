@@ -1,0 +1,12 @@
+{
+  "title": "CLI",
+  "pages": [
+    "index",
+    "new",
+    "generate",
+    "schematics",
+    "configuration",
+    "module-registration",
+    "safety-and-errors"
+  ]
+}

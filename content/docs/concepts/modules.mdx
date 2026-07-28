@@ -1,0 +1,76 @@
+---
+title: Modules
+description: Group controllers and providers into explicit dependency and visibility boundaries.
+---
+
+`@Module()` accepts four arrays:
+
+```ts
+import { Module } from "@aponiajs/common";
+
+@Module({
+  imports: [],
+  controllers: [],
+  providers: [],
+  exports: [],
+})
+export class FeatureModule {}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `imports` | Other decorated, dynamic, or low-level modules this module consumes. |
+| `controllers` | Decorated controller classes owned by this module. |
+| `providers` | Class providers or explicit provider descriptors. |
+| `exports` | Provider tokens visible to importing modules. |
+
+Metadata arrays are copied and frozen when the decorator runs.
+
+## Import only what you consume
+
+```ts
+@Module({
+  providers: [GreetingService],
+  exports: [GreetingService],
+})
+export class GreetingModule {}
+
+@Module({
+  imports: [GreetingModule],
+  controllers: [AppController],
+})
+export class AppModule {}
+```
+
+An import alone does not expose every provider. The imported module must list
+the consumed token in `exports`.
+
+## Validation before startup
+
+The graph compiler rejects:
+
+- module import cycles;
+- different module definitions with the same identity;
+- duplicate provider tokens inside one module;
+- missing or ambiguous dependencies;
+- exports that cannot be resolved;
+- duplicate controllers and missing controller dependencies.
+
+This validation happens before the application begins listening.
+
+## Low-level definitions
+
+Framework adapters can use `defineModule()` instead of decorators:
+
+```ts
+import { defineModule } from "@aponiajs/common";
+
+const AppModule = defineModule({
+  id: "AppModule",
+  providers: [],
+  controllers: [],
+});
+```
+
+Application code should normally prefer `@Module()`. See
+[Low-level descriptors](/docs/guides/low-level-descriptors).

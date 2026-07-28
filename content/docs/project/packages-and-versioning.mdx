@@ -1,0 +1,89 @@
+---
+title: Packages and Versioning
+description: Public AponiaJS packages, installation roles, and synchronized version policy.
+---
+
+## Public packages
+
+AponiaJS publishes five usable packages:
+
+| Package | Role |
+| --- | --- |
+| `@aponiajs/common` | Decorators, contracts, tokens, providers, errors, and logging. |
+| `@aponiajs/core` | Module graph and singleton dependency injection runtime. |
+| `@aponiajs/platform-elysia` | Elysia adapter, application lifecycle, routes, and native plugins. |
+| `@aponiajs/cli` | `aponia` project and schematic generator. |
+| `create-aponia` | `bun create aponia` entrypoint. |
+
+The unscoped `aponiajs` facade is private in the workspace and is not
+published. It intentionally exports nothing until it can re-export a settled
+framework API, so do not install it.
+
+## HTTP applications
+
+Install:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia
+```
+
+Import the authoring API and platform factory from their owning packages:
+
+```ts
+import { Controller, Get, Injectable, Module } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+```
+
+Most HTTP applications receive `@aponiajs/core` through the platform package.
+
+## Standalone core
+
+Install core directly only for low-level module graph, dependency container, or
+platform-adapter work:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/core@alpha
+```
+
+Core does not export `AponiaFactory`, HTTP routing, or Elysia integration.
+
+## CLI packages
+
+Install the global CLI:
+
+```bash
+bun add --global @aponiajs/cli@alpha
+aponia new my-api
+```
+
+Or invoke the matching project generator:
+
+```bash
+bun create aponia my-api
+```
+
+See the [CLI reference](../cli) for command behavior and runtime limitations.
+
+## Synchronized versions
+
+All five public packages use the same release version and publish to the npm
+`alpha` distribution tag; `latest` is reserved for the first stable release. Do
+not combine different AponiaJS versions in one application.
+
+The audited source baseline is `0.6.0-alpha.12`. Because `0.y.z` releases are initial
+development versions, minor releases may contain breaking API changes. Check
+the package registry and source release notes for the version you install
+instead of assuming this page describes a future release.
+
+<Cards>
+  <Card
+    title="Current status"
+    description="Review implemented and planned capabilities."
+    href="./status-and-roadmap"
+  />
+  <Card
+    title="Getting started"
+    description="Create a project or configure an existing application."
+    href="../getting-started"
+  />
+</Cards>

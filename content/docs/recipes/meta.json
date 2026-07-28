@@ -1,0 +1,11 @@
+{
+  "title": "Recipes",
+  "pages": [
+    "testing",
+    "validated-resource",
+    "cors-plugin",
+    "configured-plugin",
+    "custom-logger",
+    "standalone-container"
+  ]
+}

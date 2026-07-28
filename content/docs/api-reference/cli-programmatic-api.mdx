@@ -1,0 +1,69 @@
+---
+title: CLI programmatic API
+description: Use the public parser and project or schematic generators from @aponiajs/cli.
+---
+
+Most users should call the `aponia` binary. Tooling integrations can import the
+same public functions.
+
+## Argument parsing
+
+Exports:
+
+- `parseArguments`
+- `generateSchematics`
+- `CliCommand`
+- `GenerateCommandOptions`
+- `GenerateSchematic`
+- `ResourceTransport`
+
+```ts
+import { parseArguments } from "@aponiajs/cli";
+
+const command = parseArguments(["generate", "service", "users"]);
+```
+
+Parsing throws on unknown commands, options, missing values, or extra
+positionals.
+
+## Project generation
+
+```ts
+import { generateProject } from "@aponiajs/cli";
+
+const result = await generateProject({
+  name: "my-api",
+  cwd: process.cwd(),
+  dryRun: true,
+  skipInstall: false,
+});
+```
+
+Exports include `GenerateProjectOptions` and `GenerateProjectResult`.
+
+## Schematic generation
+
+```ts
+import { generateSchematic } from "@aponiajs/cli";
+
+const result = await generateSchematic({
+  command: "generate",
+  schematic: "service",
+  name: "users",
+  dryRun: true,
+  skipImport: false,
+  crud: true,
+  type: "rest",
+});
+```
+
+Exports include `GenerateSchematicOptions`, `GenerateSchematicResult`, and
+`SchematicChange`.
+
+## runCli
+
+```ts
+runCli(arguments_: readonly string[]): Promise<number>
+```
+
+Returns `0` on success and `1` after printing a normalized CLI error.

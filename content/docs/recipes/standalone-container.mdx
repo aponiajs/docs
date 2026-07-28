@@ -1,0 +1,39 @@
+---
+title: Standalone container
+description: Use the low-level module graph and DI container without HTTP or Elysia.
+---
+
+Install the core packages:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/core@alpha
+```
+
+Define providers and a root module:
+
+```ts
+import {
+  createToken,
+  defineModule,
+  provideFactory,
+  provideValue,
+} from "@aponiajs/common";
+import { createContainer } from "@aponiajs/core";
+
+const NAME = createToken<string>("NAME");
+const GREETING = createToken<string>("GREETING");
+
+const AppModule = defineModule({
+  id: "AppModule",
+  providers: [
+    provideValue(NAME, "AponiaJS"),
+    provideFactory(GREETING, [NAME], (name) => `Hello, ${name}!`),
+  ],
+});
+
+const container = createContainer(AppModule);
+console.log(container.get(GREETING));
+```
+
+This path has no server, controllers, or Elysia integration. Factories remain
+synchronous and providers remain singleton-scoped.

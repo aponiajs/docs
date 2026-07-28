@@ -1,0 +1,128 @@
+---
+title: Controllers and routes
+description: Map the seven HTTP method decorators to controller handlers and joined route paths.
+---
+
+Controllers own HTTP routes and delegate application behavior to injected
+services.
+
+```ts
+import { Controller, Get, Post } from "@aponiajs/common";
+
+@Controller("greetings")
+export class GreetingController {
+  @Get()
+  list(): string[] {
+    return ["Hello"];
+  }
+
+  @Post("refresh")
+  refresh(): string {
+    return "Refreshed";
+  }
+}
+```
+
+Paths are normalized and joined:
+
+| Controller | Method | Final route |
+| --- | --- | --- |
+| `@Controller("greetings")` | `@Get()` | `/greetings` |
+| `@Controller("/greetings/")` | `@Post("/refresh/")` | `/greetings/refresh` |
+| `@Controller()` | `@Get()` | `/` |
+
+Leading and trailing slashes are trimmed from both segments before they are
+joined, so `"greetings"` and `"/greetings/"` are equivalent.
+
+## Supported methods
+
+The implemented decorators are:
+
+- `@Get(path?)`
+- `@Post(path?)`
+- `@Put(path?)`
+- `@Patch(path?)`
+- `@Delete(path?)`
+- `@Head(path?)`
+- `@Options(path?)`
+
+Each decorator has three call signatures:
+
+```ts
+@Get()                       // path defaults to ""
+@Get(":id")                  // path only
+@Get(":id", findUserSchema)  // path and route schema
+@Get(findUserSchema)         // route schema only
+```
+
+The schema form is described in [route validation](./route-validation).
+
+## Handler arguments
+
+A handler declares what it needs with
+[request parameter decorators](./request-parameters):
+
+```ts
+import { Body, Controller, Get, Param, Post, Query } from "@aponiajs/common";
+
+@Controller("users")
+export class UserController {
+  @Get(":id")
+  findOne(@Param("id") id: string, @Query("expand") expand: string | undefined) {
+    return { id, expand };
+  }
+
+  @Post()
+  create(@Body() body: { name: string }) {
+    return body;
+  }
+}
+```
+
+A handler declared with no parameter decorators receives the whole request
+context as its only argument:
+
+```ts
+import { Controller, Get } from "@aponiajs/common";
+import { type ElysiaRouteContext } from "@aponiajs/platform-elysia";
+
+@Controller("health")
+export class HealthController {
+  @Get()
+  read(context: ElysiaRouteContext) {
+    return { path: context.path };
+  }
+}
+```
+
+<Callout type="info" title="Types come from your annotations">
+  TypeScript cannot contextually type a decorated method's parameters, so the
+  types are whatever the handler declares — exactly as in NestJS. Keep a schema
+  in a `const` and derive the type from it with `z.infer` or `Static<typeof …>`
+  rather than expecting inference from the decorator.
+</Callout>
+
+## Controller construction
+
+Controllers are instantiated once per owning module. Constructor dependencies
+follow the same visibility rules as providers.
+
+```ts
+@Controller("greetings")
+export class GreetingController {
+  constructor(private readonly greetings: GreetingService) {}
+
+  @Get()
+  getGreeting(): string {
+    return this.greetings.createGreeting();
+  }
+}
+```
+
+Each controller is compiled into one Elysia plugin whose routes are registered
+on the application. A controller missing `@Controller()` fails with
+`INVALID_CONTROLLER` before the server listens.
+
+For Elysia hooks, macros, or a route that needs Elysia's complete handler
+signature, use [native Elysia access](/docs/guides/native-elysia-access) or
+`defineElysiaController()`.

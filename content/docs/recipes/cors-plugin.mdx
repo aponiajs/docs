@@ -1,0 +1,30 @@
+---
+title: Add CORS
+description: Import the native Elysia CORS plugin through an Aponia module.
+---
+
+Install the plugin:
+
+```bash
+bun add @elysiajs/cors
+```
+
+Register it in the root or a shared infrastructure module:
+
+```ts
+import { cors } from "@elysiajs/cors";
+import { Module } from "@aponiajs/common";
+import { ElysiaPluginModule } from "@aponiajs/platform-elysia";
+
+@Module({
+  imports: [
+    ElysiaPluginModule.register(cors(), {
+      key: "cors",
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+The stable key prevents duplicate installation when the configured module is
+reused through multiple import paths.

@@ -1,0 +1,69 @@
+---
+title: Dynamic modules
+description: Create configured module instances with stable identities and injected factories.
+---
+
+A dynamic module combines a decorated module class with additional imports,
+providers, exports, and a distinct instance identity.
+
+The public platform example is `ElysiaPluginModule`:
+
+```ts
+import { Module } from "@aponiajs/common";
+import { ElysiaPluginModule } from "@aponiajs/platform-elysia";
+import { cors } from "@elysiajs/cors";
+
+@Module({
+  imports: [
+    ElysiaPluginModule.register(cors(), {
+      key: "cors",
+    }),
+  ],
+})
+class AppModule {}
+```
+
+The `key` produces a stable identity. Reusing the same key through a diamond
+import installs the same configured module once. Different definitions that
+claim the same stable identity are rejected as `DUPLICATE_MODULE`.
+
+## DI-configured registration
+
+```ts
+ElysiaPluginModule.registerAsync({
+  key: "configured-plugin",
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (config: ConfigService) =>
+    createPlugin({ secret: config.get("SECRET") }),
+});
+```
+
+<Callout type="warning" title="registerAsync is not an async provider">
+  Despite its name, `useFactory` currently returns the plugin synchronously.
+  Promise-based provider initialization is not implemented.
+</Callout>
+
+## Plugin imports that carry their type
+
+`defineElysiaPlugin(plugin, { key })` returns the same dynamic module with the
+plugin attached, so one export both mounts the plugin and names its type:
+
+```ts
+import { defineElysiaPlugin } from "@aponiajs/platform-elysia";
+import { Elysia } from "elysia";
+
+export const clock = defineElysiaPlugin(
+  new Elysia({ name: "clock" }).decorate("now", () => new Date().toISOString()),
+  { key: "clock" },
+);
+export type clock = typeof clock;
+```
+
+```ts
+@Module({ imports: [clock] })
+export class AppModule {}
+```
+
+See [Elysia plugin modules](/docs/guides/elysia-plugin-modules) and
+[typed plugin context](/docs/guides/plugin-context-types).

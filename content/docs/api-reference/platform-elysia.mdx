@@ -1,0 +1,104 @@
+---
+title: "@aponiajs/platform-elysia"
+description: Public Elysia application, controller, compilation, plugin module, and route context APIs.
+---
+
+Install with the Elysia peer:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia
+```
+
+## Application exports
+
+- `AponiaFactory`
+- `AponiaElysiaApplication`
+- `AponiaApplicationOptions`
+- `ConfiguredAponiaApplicationOptions`
+- `NativeElysiaConfigurator`
+
+See [Application API](/docs/api-reference/application).
+
+## Root module compilation
+
+```ts
+compileRootModule(rootModule: AponiaRootModule): ModuleDefinition
+```
+
+`AponiaRootModule` accepts a decorated module class, a `DynamicModule`, or an
+existing low-level `ModuleDefinition`.
+
+## Low-level controllers
+
+Exports:
+
+- `ELYSIA_CONTROLLER`
+- `defineElysiaController`
+- `ElysiaControllerDefinition`
+
+```ts
+defineElysiaController(ControllerClass, {
+  inject: [TOKEN],
+  buildPlugin: (controller) => new Elysia(),
+});
+```
+
+The built plugin must be an Elysia instance; anything else fails with
+`UNSUPPORTED_CONTROLLER`.
+
+## Plugin modules
+
+Exports:
+
+- `ElysiaPluginModule`
+- `defineElysiaPlugin`
+- `ElysiaPluginModuleOptions`
+- `AsyncElysiaPluginModuleOptions`
+- `ElysiaPluginImport`
+- `NativeElysiaPlugin`
+
+```ts
+ElysiaPluginModule.register(plugin, { key: "plugin-key" });
+
+ElysiaPluginModule.registerAsync({
+  key: "configured-plugin",
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (config) => createPlugin(config),
+});
+```
+
+The `registerAsync` factory must return synchronously.
+
+```ts
+defineElysiaPlugin<TPlugin>(
+  plugin: TPlugin,
+  options?: ElysiaPluginModuleOptions,
+): ElysiaPluginImport<TPlugin>
+```
+
+`ElysiaPluginImport` is the dynamic module with the plugin attached, so one
+export mounts the plugin and names its type. See
+[Elysia plugin modules](/docs/guides/elysia-plugin-modules).
+
+## Route context types
+
+Exports:
+
+- `ElysiaRouteContext`
+- `ElysiaInputSchema`
+- `ElysiaPluginSource`
+- `ElysiaPluginTypes`
+
+```ts
+type ElysiaRouteContext<
+  TSchemaOrPlugins extends InputSchema | ElysiaPluginTypes = {},
+  TPlugins extends ElysiaPluginTypes = never,
+>;
+```
+
+The first argument accepts either a route schema or the plugins whose types the
+handler reads. `ElysiaInputSchema` is Elysia's own `InputSchema`, re-exported so
+an application can declare its own context alias without importing `elysia`.
+
+See [typed plugin context](/docs/guides/plugin-context-types).

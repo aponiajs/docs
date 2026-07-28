@@ -1,0 +1,156 @@
+---
+title: "@aponiajs/common"
+description: Public decorators, route parameters, schemas, contracts, providers, tokens, errors, and logger APIs.
+---
+
+`@aponiajs/common` is platform-neutral. It depends on `reflect-metadata` and
+the `@standard-schema/spec` types.
+
+## Class and method decorators
+
+| Export | Signature or purpose |
+| --- | --- |
+| `Module` | `(metadata: ModuleMetadata) => ClassDecorator` |
+| `Controller` | `(path?: string) => ClassDecorator` |
+| `Injectable` | `() => ClassDecorator` |
+| `Inject` | `(token: Token<unknown>) => ParameterDecorator` |
+| `Get` | `RouteDecoratorFactory` |
+| `Post` | `RouteDecoratorFactory` |
+| `Put` | `RouteDecoratorFactory` |
+| `Patch` | `RouteDecoratorFactory` |
+| `Delete` | `RouteDecoratorFactory` |
+| `Head` | `RouteDecoratorFactory` |
+| `Options` | `RouteDecoratorFactory` |
+
+Every route decorator shares one factory type with three overloads:
+
+```ts
+interface RouteDecoratorFactory {
+  (path: string, schema: RouteSchema): RouteMethodDecorator;
+  (schema: RouteSchema): RouteMethodDecorator;
+  (path?: string): RouteMethodDecorator;
+}
+```
+
+`RequestMethod` is the union of the seven supported methods.
+
+Metadata readers are also public:
+
+- `getModuleMetadata()`
+- `getControllerMetadata()`
+- `getRouteMetadata()`
+- `getConstructorDependencies()`
+- `getRouteParameterMetadata()`
+
+## Request parameter decorators
+
+| Export | Injects |
+| --- | --- |
+| `Body(property?)` | The validated request body. |
+| `Query(property?)` | The parsed query string. |
+| `Param(property?)` | Path parameters. |
+| `Headers(property?)` | Request headers. |
+| `Cookie(property?)` | Cookies, or one cookie's value. |
+| `Ctx()` | The whole platform request context. |
+| `Req()` | The native `Request`. |
+| `Res()` | The mutable response settings. |
+
+Supporting exports are `routeParameterKinds`, `RouteParameterKind`, and
+`RouteParameterMetadata`. The kinds are `body`, `query`, `params`, `headers`,
+`cookie`, `context`, `request`, and `set`.
+
+See [request parameters](/docs/concepts/request-parameters).
+
+## Route schemas
+
+```ts
+interface RouteSchema {
+  readonly body?: RouteValidator;
+  readonly query?: RouteValidator;
+  readonly params?: RouteValidator;
+  readonly headers?: RouteValidator;
+  readonly response?: RouteValidator;
+}
+
+type RouteValidator = StandardSchemaV1 | NativeSchema;
+```
+
+| Export | Purpose |
+| --- | --- |
+| `routeSchemaSlots` | The five slot names as a readonly tuple. |
+| `isStandardSchema(validator)` | Narrow a validator to its Standard Schema form. |
+| `RouteSchemaSlot` | Union of the slot names. |
+| `NativeSchema` | Structural contract for TypeBox and Elysia `t`. |
+| `InferValidatorOutput<T>` | Output type of either validator kind. |
+| `RouteContext<TSchema>` | Platform-neutral request context typed by a schema. |
+| `RouteResponseSettings` | Mutable `status`, `headers`, and `redirect`. |
+
+`RouteContext` exposes `body`, `query`, `params`, `headers`, `request`, `path`,
+and `set`. See [route validation](/docs/concepts/route-validation).
+
+## Module contracts
+
+```ts
+interface ModuleMetadata {
+  readonly imports?: readonly ModuleImport[];
+  readonly controllers?: readonly ClassToken<unknown>[];
+  readonly providers?: readonly ModuleProvider[];
+  readonly exports?: readonly Token<unknown>[];
+}
+```
+
+Public types include `DynamicModule`, `ModuleClass`, `ModuleImport`,
+`ModuleProvider`, `ControllerMetadata`, `RouteMetadata`, `RouteMethodDecorator`,
+and `RequestMethod`.
+
+The low-level module API exports `defineModule`, `ModuleDefinition`, and
+`ModuleOptions`. `ControllerDefinition` is the platform controller contract.
+
+## Provider helpers
+
+| Export | Purpose |
+| --- | --- |
+| `provideValue(token, value)` | Register a constant value. |
+| `provideFactory(token, inject, factory)` | Register a synchronous typed factory. |
+| `provideClass(class, inject)` | Register a class with explicit tokens. |
+| `provideAlias(token, existing)` | Resolve an existing provider under another token. |
+
+Provider types are `Provider`, `ValueProvider`, `FactoryProvider`,
+`ClassProvider`, `AliasProvider`, and `ProviderScope`. The only scope value is
+currently `"singleton"`.
+
+## Tokens
+
+| Export | Purpose |
+| --- | --- |
+| `createToken<T>(description)` | Create a fresh explicit token. |
+| `tokenName(token)` | Return a class name or token description for diagnostics. |
+
+Public token types are `InjectionToken`, `ClassToken`, `Constructor`, `Token`,
+`TokenValue`, and `TokenValues`.
+
+## Errors
+
+`AponiaError` extends `Error` with:
+
+```ts
+readonly code: AponiaErrorCode;
+readonly details: Readonly<Record<string, unknown>>;
+```
+
+See [Error codes](/docs/api-reference/error-codes).
+
+## Logging
+
+Exports:
+
+- `ConsoleLogger`
+- `Logger`
+- `ConsoleLoggerOptions`
+- `LoggerService`
+- `LogLevel`
+
+`Logger` extends `ConsoleLogger` with no additional behavior.
+`ConsoleLoggerOptions` includes `logLevels`, `timestamp`, `prefix`, `json`,
+`colors`, `context`, `compact`, and `depth`. `ConsoleLogger` also exposes
+`setContext()`, `resetContext()`, and `isLevelEnabled(level)`.

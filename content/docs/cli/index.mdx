@@ -1,0 +1,58 @@
+---
+title: Aponia CLI
+description: Use the Bun-native AponiaJS project and schematic generators.
+---
+
+The CLI is published as `@aponiajs/cli` and exposes the `aponia` binary.
+`create-aponia` provides the matching `bun create` entrypoint.
+
+## Install
+
+```bash
+bun add --global @aponiajs/cli@alpha
+aponia --version
+```
+
+Every public package is published to the npm `alpha` distribution tag; `latest`
+is reserved for the first stable release.
+
+## Commands
+
+```text
+aponia new <name> [options]
+aponia n <name> [options]
+aponia generate <schematic> <name> [options]
+aponia g <schematic> <name> [options]
+aponia help
+aponia version
+```
+
+<Cards>
+  <Card
+    title="New applications"
+    description="Create the standard Bun-first project layout."
+    href="./new"
+  />
+  <Card
+    title="Generate files"
+    description="Add components, modules, resources, applications, and libraries."
+    href="./generate"
+  />
+  <Card
+    title="Schematic catalog"
+    description="Review aliases, output shapes, and current runtime boundaries."
+    href="./schematics"
+  />
+  <Card
+    title="Configuration"
+    description="Control source roots, projects, specs, and flat output."
+    href="./configuration"
+  />
+</Cards>
+
+<Callout title="Generator support is not runtime support">
+  The CLI can generate familiar Nest-style file shapes for capabilities the
+  runtime does not execute yet. Guards, interceptors, middleware, filters,
+  GraphQL, WebSockets, and microservices are scaffolds only. Modules,
+  controllers, services, providers, and REST resources are runnable.
+</Callout>

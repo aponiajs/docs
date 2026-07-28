@@ -1,0 +1,63 @@
+---
+title: Providers and dependency injection
+description: Construct singleton class, value, factory, and alias providers.
+---
+
+A class listed in `providers` becomes a class provider. Constructor parameter
+types are read from TypeScript decorator metadata.
+
+```ts
+import { Injectable, Module } from "@aponiajs/common";
+
+@Injectable()
+class GreetingService {}
+
+@Module({
+  providers: [GreetingService],
+})
+class GreetingModule {}
+```
+
+`@Injectable()` currently acts as an authoring marker. Constructor resolution is
+driven by emitted metadata and explicit `@Inject()` overrides.
+
+## Provider kinds
+
+```ts
+import {
+  createToken,
+  provideAlias,
+  provideClass,
+  provideFactory,
+  provideValue,
+} from "@aponiajs/common";
+
+const APP_NAME = createToken<string>("APP_NAME");
+const PUBLIC_NAME = createToken<string>("PUBLIC_NAME");
+const LEGACY_NAME = createToken<string>("LEGACY_NAME");
+
+const providers = [
+  provideValue(APP_NAME, "AponiaJS"),
+  provideFactory(PUBLIC_NAME, [APP_NAME], (name) => `${name} API`),
+  provideClass(GreetingService, [PUBLIC_NAME]),
+  provideAlias(LEGACY_NAME, PUBLIC_NAME),
+];
+```
+
+Each `provide` token must be unique inside one module. Registering the same
+token twice — including through an alias — fails with `DUPLICATE_PROVIDER`.
+
+| Kind | Helper | Behavior |
+| --- | --- | --- |
+| Value | `provideValue()` | Returns one supplied value. |
+| Factory | `provideFactory()` | Calls a synchronous factory with resolved dependencies. |
+| Class | `provideClass()` | Constructs a class from explicit dependencies. |
+| Alias | `provideAlias()` | Resolves the existing token instance. |
+
+<Callout type="warning" title="Singleton and synchronous only">
+  `ProviderScope` currently contains only `singleton`. Async factories,
+  request/transient scopes, and lifecycle hooks are not implemented.
+</Callout>
+
+Providers are initialized eagerly during `AponiaFactory.create()` and cached by
+their owning module.

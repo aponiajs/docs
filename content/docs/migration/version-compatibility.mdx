@@ -1,0 +1,58 @@
+---
+title: Version compatibility
+description: Align Bun, Elysia, TypeScript, and synchronized AponiaJS package versions.
+---
+
+The `0.6.0-alpha.12` source and generated application template use:
+
+| Dependency | Documented baseline |
+| --- | --- |
+| Bun | `1.3.14` |
+| Elysia | `^1.4.29`, a peer dependency of the platform package |
+| TypeScript | `^7.0.2` in the generated template |
+| reflect-metadata | `^0.2.2`, installed through `@aponiajs/common` |
+| @standard-schema/spec | `^1.1.0`, installed through `@aponiajs/common` |
+
+All public AponiaJS packages are versioned together and published to the npm
+`alpha` distribution tag. Avoid mixing versions:
+
+```json
+{
+  "dependencies": {
+    "@aponiajs/common": "0.6.0-alpha.12",
+    "@aponiajs/platform-elysia": "0.6.0-alpha.12",
+    "elysia": "^1.4.29"
+  }
+}
+```
+
+Install with the channel when you want the newest alpha:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia
+```
+
+Use the version actually published for every Aponia package when npm lags
+behind the source branch.
+
+## TypeScript requirements
+
+```json
+{
+  "compilerOptions": {
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strict": true
+  }
+}
+```
+
+The generated project is ESM (`"type": "module"`) and uses explicit `.ts`
+extensions for local imports.
+
+<Callout type="info" title="Pre-1.0 policy">
+  AponiaJS uses `0.y.z` for initial development. Version `1.0.0` will mark the
+  first stable public API, and `latest` on npm is reserved for it.
+</Callout>
