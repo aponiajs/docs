@@ -158,6 +158,40 @@ export function NavigationDropdown({
     }
   }
 
+  function handlePanelKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (
+      event.key !== 'ArrowDown' &&
+      event.key !== 'ArrowUp' &&
+      event.key !== 'Home' &&
+      event.key !== 'End'
+    ) {
+      return;
+    }
+
+    const links = [...(panel.current?.querySelectorAll('a') ?? [])];
+    if (links.length === 0) return;
+
+    event.preventDefault();
+    const currentIndex = links.findIndex(
+      (link) => link === document.activeElement,
+    );
+    let nextIndex = currentIndex;
+
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = links.length - 1;
+    if (event.key === 'ArrowDown') {
+      nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % links.length;
+    }
+    if (event.key === 'ArrowUp') {
+      nextIndex =
+        currentIndex < 0
+          ? links.length - 1
+          : (currentIndex - 1 + links.length) % links.length;
+    }
+
+    links[nextIndex]?.focus();
+  }
+
   return (
     <div
       ref={dropdown}
@@ -165,7 +199,6 @@ export function NavigationDropdown({
       data-open={open}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
-      onFocusCapture={openDropdown}
       onBlur={closeWhenFocusLeaves}
     >
       <button
@@ -173,6 +206,7 @@ export function NavigationDropdown({
         type="button"
         className="mono-nav-dropdown-trigger"
         aria-expanded={open}
+        aria-haspopup="true"
         aria-controls={panelId}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
@@ -188,7 +222,11 @@ export function NavigationDropdown({
         aria-hidden={!open}
         inert={!open}
       >
-        <div ref={panel} className="mono-nav-dropdown-panel">
+        <div
+          ref={panel}
+          className="mono-nav-dropdown-panel"
+          onKeyDown={handlePanelKeyDown}
+        >
           <ul>
             {items.map((item) => (
               <li key={item.href}>

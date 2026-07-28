@@ -136,8 +136,10 @@ html > body[data-scroll-locked] {
 
 .aponia-docs #nd-subnav {
   border-color: var(--color-fd-border);
-  background: rgb(11 12 10 / 0.92);
+  background: rgb(11 12 10 / 0.8);
   box-shadow: none;
+  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
 }
 
 .aponia-docs .aponia-wordmark {
@@ -145,8 +147,8 @@ html > body[data-scroll-locked] {
   align-items: center;
   gap: 0.65rem;
   color: var(--color-fd-foreground);
-  font-size: 0.96rem;
-  font-weight: 650;
+  font-size: 1.05rem;
+  font-weight: 680;
   letter-spacing: -0.035em;
 }
 
@@ -155,8 +157,8 @@ html > body[data-scroll-locked] {
   border-left: 1px solid var(--color-fd-border);
   color: var(--color-fd-primary);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 560;
+  font-size: 0.7rem;
+  font-weight: 620;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -179,8 +181,8 @@ html > body[data-scroll-locked] {
   border-left: 1px solid var(--color-fd-border);
   color: var(--color-fd-primary);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 560;
+  font-size: 0.7rem;
+  font-weight: 620;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }

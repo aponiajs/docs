@@ -1,7 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { type KeyboardEvent, type SyntheticEvent, useRef } from 'react';
+import {
+  type KeyboardEvent,
+  type SyntheticEvent,
+  useEffect,
+  useRef,
+} from 'react';
 import { AponiaLogo } from '@/components/brand/AponiaLogo';
 import { GooeyNav } from './GooeyNav';
 import {
@@ -39,6 +44,13 @@ const resourceLinks: NavigationDropdownItem[] = [
 
 export function LandingNavigation() {
   const mobileMenu = useRef<HTMLDetailsElement>(null);
+
+  useEffect(
+    () => () => {
+      document.documentElement.classList.remove('mono-menu-lock');
+    },
+    [],
+  );
 
   function closeMobileMenu() {
     mobileMenu.current?.removeAttribute('open');
