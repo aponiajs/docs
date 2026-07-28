@@ -13,41 +13,40 @@
 </p>
 
 This repository houses the AponiaJS documentation website and its project-owned
-visual assets. The identity combines experimental editorial composition with a
-cute, original sci-fantasy RPG framework world: architecture stays modular,
-routes remain visible, and the mascot makes the system feel approachable
-without hiding its structure.
+visual assets. The website combines experimental editorial composition with
+scroll-driven SVG paths and a written architecture note grounded in the
+framework implementation. AponiaJS-chan remains a separate, original mascot
+identity.
 
 ## Visual direction
 
 The system is built around two complementary ideas:
 
-- **Experimental Editorial** — monumental type, asymmetric pacing, sharp
+- **Experimental Editorial** - monumental type, asymmetric pacing, sharp
   framing, generous negative space, and artwork treated as a primary
   storytelling surface.
-- **Visible Architecture** — modules, dependency paths, runtime boundaries,
-  and composition rings remain exposed instead of dissolving into generic
-  futuristic scenery.
+- **Visible Architecture** - module compilation, graph validation, singleton
+  resolution, plugin registration, and Elysia execution remain distinct.
 
 The imagery should feel designed rather than decorated. Technical structure is
-part of the composition: panels separate responsibilities, lines show routes,
-and rings establish boundaries or points of orchestration.
+part of the composition: panels separate bootstrap phases, lines show only
+verified relationships, and providers remain dependencies rather than request
+pipeline stages.
 
 ## Palette and materials
 
 | Element | Direction |
 | --- | --- |
-| Navy | Primary structural field, clothing anchor, and technical depth. |
-| Ivory | Editorial paper, readable contrast, and calm open space. |
-| Mint | Framework signal, active route, and modular-system highlight. |
-| Seafoam | AponiaJS-chan’s canonical hair color and a softer bridge between ivory and mint. |
-| Amber | Eye color and a tightly controlled point of warmth. |
+| Charcoal | Primary website field and technical-grid background. |
+| Off-white | Mechanical outlines, typography, and readable contrast. |
+| Lime | Active route and framework signal. |
+| Graphite | Hairline rules, routing lines, and structural depth. |
+| Seafoam and amber | Reserved for the AponiaJS-chan mascot identity. |
 
-Materials combine matte editorial paper, deep painted panels, translucent
-interfaces, fine technical lines, and restrained luminous signals. Prefer
-crisp silhouettes and readable layers. Avoid unrelated logos, ornamental
-effects that obscure the route system, or colors that compete with the
-navy/ivory/mint foundation.
+Website motion fields use matte black grids, off-white paths, and restrained
+lime routing accents. The architecture note uses hairline rules, numbered
+sections, and tabular figures. Mascot artwork keeps its separate navy, ivory, seafoam, mint, and
+amber palette. Avoid motion that does not communicate execution or composition.
 
 ## Original artwork gallery
 
@@ -55,20 +54,24 @@ Every image embedded in this README is original AponiaJS project artwork
 generated in-house with OpenAI image generation. No third-party character
 artwork is displayed here.
 
-### Framework environments
+### Superseded framework image studies
+
+These generated studies remain in the artwork archive but are no longer used
+by the landing page. The live interface now uses a scroll-driven SVG hero and
+an implementation-grounded architecture note.
 
 <p align="center">
   <img
-    src="public/images/aponia-generated-hero.webp"
-    alt="Abstract modular architecture opening into suspended frames and visible connection lines"
+    src="public/images/aponia-technical-landscape.webp"
+    alt="Exploded precision gear assembly with layered plates and a visible lime connector path"
     width="100%"
   />
 </p>
 
-| Runtime system | Architecture tower |
+| Module layers | Runtime routing |
 | --- | --- |
-| <img src="public/images/aponia-generated-system.webp" alt="Circular runtime lens with transparent layers and a visible execution path" width="640" /> | <img src="public/images/aponia-generated-architecture.webp" alt="Vertical modular architecture tower connected by a visible routing line" width="360" /> |
-| Transparent layers expose an execution path. | Modular boundaries become a vertical editorial structure. |
+| <img src="public/images/aponia-generated-system.webp" alt="Four stacked module plates joined by a visible lime pin" width="640" /> | <img src="public/images/aponia-generated-architecture.webp" alt="Exposed gear train routing a lime signal between four modules" width="360" /> |
+| Separate plates make module boundaries explicit. | A visible route passes directly through the runtime. |
 
 ### AponiaJS-chan
 
@@ -108,9 +111,9 @@ current mascot identity.
 | --- | --- | --- | --- |
 | AponiaJS-chan portrait | `public/images/aponiajs-chan-portrait.png` | `public/images/aponiajs-chan-portrait.webp` | 972 × 1619 |
 | AponiaJS-chan hero | `public/images/aponiajs-chan-hero.png` | `public/images/aponiajs-chan-hero.webp` | 1672 × 941 |
-| Modular opening | — | `public/images/aponia-generated-hero.webp` | 1672 × 941 |
-| Runtime system | — | `public/images/aponia-generated-system.webp` | 1448 × 1086 |
-| Architecture tower | — | `public/images/aponia-generated-architecture.webp` | 957 × 1643 |
+| Technical assembly | Not applicable | `public/images/aponia-technical-landscape.webp` | 1672 × 941 |
+| Runtime system | Not applicable | `public/images/aponia-generated-system.webp` | 1672 × 941 |
+| Runtime routing | Not applicable | `public/images/aponia-generated-architecture.webp` | 1254 × 1254 |
 
 - Keep PNG files as lossless source masters.
 - Use WebP files for websites, documentation, and repository previews.

@@ -1,7 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { type KeyboardEvent, type SyntheticEvent, useRef } from 'react';
+import {
+  type KeyboardEvent,
+  type SyntheticEvent,
+  useEffect,
+  useRef,
+} from 'react';
 import { AponiaLogo } from '@/components/brand/AponiaLogo';
 import { GooeyNav } from './GooeyNav';
 import {
@@ -10,9 +15,9 @@ import {
 } from './NavigationDropdown';
 
 const sectionLinks = [
-  { href: '#top', label: 'Home' },
-  { href: '#work', label: 'Work' },
-  { href: '#manifesto', label: 'Manifesto' },
+  { href: '#top', label: 'Overview' },
+  { href: '#work', label: 'Architecture' },
+  { href: '#manifesto', label: 'Experience' },
   { href: '#benchmark', label: 'Benchmark' },
   { href: '#namesake', label: 'Namesake' },
 ];
@@ -21,24 +26,48 @@ const resourceLinks: NavigationDropdownItem[] = [
   {
     href: 'https://github.com/aponiajs/aponiajs',
     label: 'Source code',
-    description: 'Core framework and packages',
+    description: 'Packages, examples, tests, and implementation',
     external: true,
   },
   {
     href: 'https://github.com/aponiajs/aponiajs/issues',
-    label: 'Issues',
-    description: 'Report or follow project work',
+    label: 'Issue tracker',
+    description: 'Bugs, feature requests, and active work',
     external: true,
   },
   {
     href: '/llms.txt',
-    label: 'AI index',
-    description: 'Machine-readable documentation',
+    label: 'LLM index',
+    description: 'Plain-text documentation routes for AI tools',
   },
 ];
 
 export function LandingNavigation() {
   const mobileMenu = useRef<HTMLDetailsElement>(null);
+
+  useEffect(
+    () => () => {
+      document.documentElement.classList.remove('mono-menu-lock');
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const mobileViewport = window.matchMedia('(max-width: 980px)');
+
+    function handleViewportChange(event: MediaQueryListEvent) {
+      if (event.matches) return;
+
+      mobileMenu.current?.removeAttribute('open');
+      document.documentElement.classList.remove('mono-menu-lock');
+    }
+
+    mobileViewport.addEventListener('change', handleViewportChange);
+
+    return () => {
+      mobileViewport.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
 
   function closeMobileMenu() {
     mobileMenu.current?.removeAttribute('open');

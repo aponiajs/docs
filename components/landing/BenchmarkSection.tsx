@@ -49,16 +49,15 @@ export function BenchmarkSection() {
       <div className="mono-benchmark-shell">
         <header className="mono-benchmark-heading">
           <p className="mono-index-rail">
-            <b>03</b> Elysia overhead · archived v0.3.17
+            <b>Historical benchmark</b> Archived v0.3.17
           </p>
           <h2 id="benchmark-title">
-            <span>75%</span>
+            <span>74.57%</span>
             <span>throughput retained.</span>
           </h2>
           <p>
-            Measured against bare Elysia in CI. The framework keeps three
-            quarters of baseline throughput while adding its application
-            structure.
+            A historical Bun 1.3.14 CI comparison with bare Elysia. It is not a
+            current capacity claim.
           </p>
         </header>
 
@@ -66,7 +65,7 @@ export function BenchmarkSection() {
           <div
             className="mono-benchmark-chart"
             role="img"
-            aria-label="Throughput comparison: Elysia 1,598,654 requests per second; Aponia 1,192,128 requests per second"
+            aria-label="Throughput comparison: Elysia 1,598,654 requests per second; AponiaJS 1,192,128 requests per second"
           >
             <div className="mono-benchmark-chart-head">
               <h3>Throughput</h3>
@@ -85,7 +84,7 @@ export function BenchmarkSection() {
               </div>
               <div className="mono-benchmark-bar-row">
                 <div className="mono-benchmark-bar-meta">
-                  <span>Aponia</span>
+                  <span>AponiaJS</span>
                   <strong>1,192,128</strong>
                 </div>
                 <div className="mono-benchmark-track" aria-hidden="true">
@@ -95,8 +94,8 @@ export function BenchmarkSection() {
             </div>
           </div>
 
-          <aside className="mono-benchmark-context" aria-label="Test context">
-            <p>Test context</p>
+          <aside className="mono-benchmark-context" aria-label="Archived test context">
+            <p>Archived test context</p>
             <dl>
               <div>
                 <dt>Runtime</dt>
@@ -104,11 +103,11 @@ export function BenchmarkSection() {
               </div>
               <div>
                 <dt>Trials</dt>
-                <dd>6 / CI</dd>
+                <dd>6 CI runs</dd>
               </div>
               <div>
-                <dt>Measured</dt>
-                <dd>5,999,976</dd>
+                <dt>Artifact</dt>
+                <dd>v0.3.17</dd>
               </div>
               <div>
                 <dt>Retained</dt>
@@ -122,7 +121,7 @@ export function BenchmarkSection() {
           <div className="mono-benchmark-table-head" aria-hidden="true">
             <span>Metric · lower is better</span>
             <span>Elysia</span>
-            <span>Aponia</span>
+            <span>AponiaJS</span>
             <span>Delta</span>
           </div>
           {latencyMetrics.map(({ label, unit, elysia, aponia, note }) => (
@@ -134,8 +133,8 @@ export function BenchmarkSection() {
                 <span>Elysia</span>
                 <strong>{elysia}</strong>
               </p>
-              <p aria-label={`Aponia ${aponia} ${unit}`}>
-                <span>Aponia</span>
+              <p aria-label={`AponiaJS ${aponia} ${unit}`}>
+                <span>AponiaJS</span>
                 <strong>{aponia}</strong>
               </p>
               <p className="mono-benchmark-delta">{note}</p>
@@ -145,15 +144,14 @@ export function BenchmarkSection() {
 
         <footer className="mono-benchmark-source">
           <p>
-            Results are environment-specific and should be read as measured
-            overhead, not a universal performance guarantee.
+            Results vary by runtime, hardware, and workload.
           </p>
           <a
             href={benchmarkSource}
             target="_blank"
             rel="noopener noreferrer"
           >
-            Source benchmark SVG <span aria-hidden="true">↗</span>
+            Open archived benchmark artifact <span aria-hidden="true">↗</span>
           </a>
         </footer>
       </div>

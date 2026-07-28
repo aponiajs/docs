@@ -16,11 +16,11 @@ export const metadata: Metadata = {
       'text/plain': [
         {
           url: '/llms.txt',
-          title: 'AponiaJS AI documentation index',
+          title: 'AponiaJS documentation index for LLMs',
         },
         {
           url: '/llms-full.txt',
-          title: 'Complete AponiaJS documentation for AI tools',
+          title: 'Complete AponiaJS documentation for LLMs',
         },
       ],
     },
@@ -41,6 +41,7 @@ const softwareJsonLd = {
   },
   runtimePlatform: 'Bun',
   applicationCategory: 'DeveloperApplication',
+  keywords: siteConfig.keywords.join(', '),
   license: 'https://opensource.org/license/mit',
   isAccessibleForFree: true,
 };

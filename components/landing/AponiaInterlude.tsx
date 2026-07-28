@@ -34,7 +34,7 @@ export function AponiaInterlude() {
       <div className="mono-principle-shade" aria-hidden="true" />
       <div className="mono-principle-copy">
         <p className="mono-index-rail">
-          <b>04</b> Principle
+          <b>Runtime strategy</b>
         </p>
         <h2 id="principle-title">
           <span>Boundaries</span>
@@ -42,8 +42,7 @@ export function AponiaInterlude() {
           <span>boilerplate.</span>
         </h2>
         <p>
-          Keep modules explicit, validate dependencies before startup, and
-          leave Bun and Elysia in plain sight.
+          Validate module boundaries before Elysia starts.
         </p>
       </div>
     </section>

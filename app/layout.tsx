@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         url: siteConfig.socialImage,
         width: 1200,
         height: 630,
-        alt: `${siteConfig.name} — ${siteConfig.shortDescription}`,
+        alt: `${siteConfig.name}: ${siteConfig.shortDescription}`,
       },
     ],
   },

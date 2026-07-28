@@ -7,14 +7,6 @@ export const artworkSources = {
     src: '/images/aponiajs-chan-portrait.webp',
     alt: 'Full-length portrait of AponiaJS-chan with seafoam hair, mechanical Bun antenna panels, and a modular ring companion',
   },
-  generatedSystem: {
-    src: '/images/aponia-generated-system.webp',
-    alt: 'Circular runtime lens with transparent layers and a visible execution path',
-  },
-  generatedArchitecture: {
-    src: '/images/aponia-generated-architecture.webp',
-    alt: 'Vertical modular architecture tower connected by a visible routing line',
-  },
   birthdayArtwork: {
     src: '/images/aponia-birthday-captain-naliu-2024.png',
     alt: 'Aponia birthday artwork by Captain 那流, published by Honkai Impact 3rd',

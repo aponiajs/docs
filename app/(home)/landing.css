@@ -111,18 +111,6 @@ body:has(.mono-root) {
   font-weight: 500;
 }
 
-.mono-root .mono-benchmark .mono-index-rail {
-  color: rgb(11 12 10 / 0.62);
-}
-
-.mono-root .mono-benchmark .mono-index-rail::before {
-  background: var(--mono-bg);
-}
-
-.mono-root .mono-benchmark .mono-index-rail b {
-  color: var(--mono-bg);
-}
-
 /* Caliper ticks: four corner registration marks on framed media. */
 .mono-tick-frame {
   position: relative;
@@ -152,8 +140,19 @@ body:has(.mono-root) {
   border-bottom: 1px solid var(--mono-accent);
 }
 
+.mono-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 /* Figures align column to column wherever a number carries meaning. */
-.mono-manifesto-meta dd,
 .mono-benchmark-heading h2,
 .mono-benchmark-bar-meta,
 .mono-benchmark-bar-meta strong,
@@ -200,7 +199,8 @@ body:has(.mono-root) ::selection {
   font-family: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
   font-synthesis: none;
   pointer-events: none;
-  text-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .mono-nav-shell {
@@ -225,8 +225,8 @@ body:has(.mono-root) ::selection {
   justify-self: start;
   padding-left: 1.2rem;
   color: var(--mono-paper);
-  font-size: 1.1rem;
-  font-weight: 620;
+  font-size: 1.18rem;
+  font-weight: 680;
   letter-spacing: -0.045em;
   transition: color var(--mono-fast);
 }
@@ -265,8 +265,9 @@ body:has(.mono-root) ::selection {
   gap: 0.85rem;
   padding-right: 0.45rem;
   font-family: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
-  font-size: 0.66rem;
-  letter-spacing: -0.02em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .mono-nav-dropdown {
@@ -277,11 +278,11 @@ body:has(.mono-root) ::selection {
   position: absolute;
   top: 100%;
   right: 0;
-  width: 18rem;
+  width: 20rem;
   padding-top: 0.62rem;
   pointer-events: none;
   visibility: hidden;
-  transition: visibility 0s linear 260ms;
+  transition: visibility 0s linear 160ms;
 }
 
 .mono-nav-dropdown-panel-shell[data-open='true'] {
@@ -299,14 +300,10 @@ body:has(.mono-root) ::selection {
   padding-inline: 0.82rem;
   border: 1px solid transparent;
   border-radius: 0;
-  color: rgb(233 234 223 / 0.64);
+  color: rgb(233 234 223 / 0.82);
   background: transparent;
   font: inherit;
   transition: color var(--mono-fast);
-}
-
-.mono-nav-dropdown-trigger:active {
-  transform: translateY(1px);
 }
 
 .mono-nav-dropdown-trigger > span {
@@ -331,11 +328,13 @@ body:has(.mono-root) ::selection {
 }
 
 .mono-nav-dropdown-trigger:hover,
+.mono-nav-dropdown-trigger:focus-visible,
 .mono-nav-dropdown-trigger[aria-expanded='true'] {
   color: var(--mono-paper);
 }
 
 .mono-nav-dropdown-trigger:hover > span::after,
+.mono-nav-dropdown-trigger:focus-visible > span::after,
 .mono-nav-dropdown-trigger[aria-expanded='true'] > span::after {
   transform: scaleX(1);
 }
@@ -352,23 +351,17 @@ body:has(.mono-root) ::selection {
   border-left: 2px solid var(--mono-accent);
   border-radius: 0;
   color: var(--mono-paper);
-  background: var(--mono-bg);
+  background: rgb(11 12 10 / 0.96);
   box-shadow: 0 18px 48px rgb(0 0 0 / 0.34);
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
   opacity: 0;
-  transform: translate3d(0, -0.6rem, 0);
-  transition:
-    opacity 180ms ease,
-    transform 260ms var(--mono-ease);
-  will-change: transform, opacity;
+  transition: opacity 160ms ease;
 }
 
 .mono-nav-dropdown-panel-shell[data-open='true']
   .mono-nav-dropdown-panel {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
-  transition:
-    opacity 180ms ease,
-    transform 320ms var(--mono-ease);
 }
 
 .mono-nav-dropdown-panel ul {
@@ -381,74 +374,57 @@ body:has(.mono-root) ::selection {
   border-top: 1px solid var(--mono-line);
 }
 
-.mono-nav-dropdown-panel li {
-  opacity: 0;
-  transform: translate3d(0, -0.4rem, 0);
-  transition:
-    opacity 140ms ease,
-    transform 240ms var(--mono-ease);
-}
-
-.mono-nav-dropdown-panel-shell[data-open='true'] li {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
-.mono-nav-dropdown-panel-shell[data-open='true'] li:nth-child(1) {
-  transition-delay: 45ms;
-}
-
-.mono-nav-dropdown-panel-shell[data-open='true'] li:nth-child(2) {
-  transition-delay: 85ms;
-}
-
-.mono-nav-dropdown-panel-shell[data-open='true'] li:nth-child(3) {
-  transition-delay: 125ms;
-}
-
 .mono-nav-dropdown-panel a {
   display: grid;
-  gap: 0.24rem;
-  padding: 0.9rem 0.85rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 0.9rem;
   color: var(--mono-paper);
-  transition: color var(--mono-fast);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition:
+    color var(--mono-fast),
+    background-color var(--mono-fast);
 }
 
-.mono-nav-dropdown-panel a > span {
-  position: relative;
-  width: max-content;
+.mono-nav-dropdown-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.26rem;
 }
 
-.mono-nav-dropdown-panel a > span::after {
-  position: absolute;
-  right: 0;
-  bottom: -0.18rem;
-  left: 0;
-  height: 1px;
-  background: currentColor;
-  content: '';
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 240ms var(--mono-ease);
+.mono-nav-dropdown-copy strong {
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.25;
 }
 
-.mono-nav-dropdown-panel a:hover {
+.mono-nav-dropdown-panel a:hover,
+.mono-nav-dropdown-panel a:focus-visible {
   color: var(--mono-accent);
-}
-
-.mono-nav-dropdown-panel a:hover > span {
-  text-decoration: none;
-}
-
-.mono-nav-dropdown-panel a:hover > span::after {
-  transform: scaleX(1);
+  background: rgb(215 255 67 / 0.06);
 }
 
 .mono-nav-dropdown-panel small {
-  color: var(--mono-muted);
-  font-size: 0.58rem;
-  font-weight: 430;
-  line-height: 1.4;
+  color: rgb(233 234 223 / 0.64);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.mono-nav-dropdown-panel a:hover small,
+.mono-nav-dropdown-panel a:focus-visible small {
+  color: rgb(233 234 223 / 0.78);
+}
+
+.mono-nav-dropdown-panel a > svg {
+  color: rgb(233 234 223 / 0.48);
+}
+
+.mono-nav-dropdown-panel a:hover > svg,
+.mono-nav-dropdown-panel a:focus-visible > svg {
+  color: var(--mono-accent);
 }
 
 .mono-nav-docs {
@@ -502,10 +478,10 @@ body:has(.mono-root) ::selection {
   display: block;
   padding: 0.73rem 0.9rem;
   border-radius: 0;
-  color: rgb(233 234 223 / 0.58);
+  color: rgb(233 234 223 / 0.78);
   font-family: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
-  font-size: 0.67rem;
-  font-weight: 520;
+  font-size: 0.75rem;
+  font-weight: 600;
   line-height: 1;
   transition: color var(--mono-fast);
 }
@@ -540,7 +516,7 @@ body:has(.mono-root) ::selection {
 
 .mono-hero {
   position: relative;
-  min-height: 100dvh;
+  min-height: min(88dvh, 54rem);
   overflow: hidden;
   color: var(--mono-paper);
   background: var(--mono-bg);
@@ -555,7 +531,7 @@ body:has(.mono-root) ::selection {
 .mono-hero-media {
   image-rendering: auto;
   object-fit: cover;
-  object-position: center center;
+  object-position: 50% 46%;
   transform: none;
 }
 
@@ -604,12 +580,12 @@ body:has(.mono-root) ::selection {
   z-index: 2;
   display: grid;
   width: min(calc(100% - 3.5rem), 96rem);
-  min-height: 100dvh;
+  min-height: min(88dvh, 54rem);
   grid-template-columns: repeat(12, minmax(0, 1fr));
   align-content: end;
   gap: clamp(1.5rem, 3vw, 3rem);
   margin-inline: auto;
-  padding-block: 7rem 2.5rem;
+  padding-block: 6rem 2.25rem;
 }
 
 .mono-hero h1 {
@@ -656,7 +632,115 @@ body:has(.mono-root) ::selection {
   text-wrap: pretty;
 }
 
-/* Editorial work spread */
+.mono-flow-hero {
+  height: 150dvh;
+  min-height: 0;
+  overflow: clip;
+}
+
+.mono-hero-sticky {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.mono-flow-hero .mono-hero-copy {
+  min-height: 100dvh;
+}
+
+.mono-flow-effect {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(rgb(233 234 223 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(233 234 223 / 0.035) 1px, transparent 1px),
+    var(--mono-bg);
+  background-size: 3rem 3rem;
+}
+
+.mono-flow-effect svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mono-flow-ghosts {
+  opacity: 0.12;
+}
+
+.mono-flow-source-labels {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  color: rgb(233 234 223 / 0.48);
+  font-family: var(--mono-code);
+  font-size: 0.56rem;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+.mono-flow-source-labels span {
+  position: absolute;
+  left: max(1.75rem, calc((100vw - 96rem) / 2));
+  padding-left: 0.55rem;
+  border-left: 1px solid var(--mono-line-strong);
+}
+
+.mono-flow-source-labels span:nth-child(1) {
+  top: 18%;
+}
+
+.mono-flow-source-labels span:nth-child(2) {
+  top: 28%;
+}
+
+.mono-flow-source-labels span:nth-child(3) {
+  top: 38%;
+  border-color: var(--mono-accent);
+  color: var(--mono-paper);
+}
+
+.mono-flow-source-labels span:nth-child(4) {
+  top: 48%;
+}
+
+.mono-flow-source-labels span:nth-child(5) {
+  top: 58%;
+}
+
+.mono-flow-target {
+  position: absolute;
+  top: 52%;
+  right: max(1.75rem, calc((100vw - 96rem) / 2));
+  z-index: 2;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem 0 0.75rem 1rem;
+  border-left: 2px solid var(--mono-accent);
+  color: var(--mono-paper);
+  background: rgb(11 12 10 / 0.74);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.mono-flow-target span {
+  color: var(--mono-muted);
+  font-family: var(--mono-code);
+  font-size: 0.54rem;
+  text-transform: uppercase;
+}
+
+.mono-flow-target strong {
+  font-size: clamp(1.25rem, 2.2vw, 2.35rem);
+  font-weight: 470;
+  letter-spacing: -0.05em;
+}
+
+/* Architecture note */
 
 .mono-work,
 .mono-manifesto,
@@ -675,7 +759,7 @@ body:has(.mono-root) ::selection {
 .mono-work-shell {
   width: min(calc(100% - 3.5rem), 96rem);
   margin-inline: auto;
-  padding-block: clamp(7rem, 11vw, 11rem);
+  padding-block: clamp(4rem, 6vw, 6rem);
 }
 
 .mono-work-heading {
@@ -683,7 +767,7 @@ body:has(.mono-root) ::selection {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: clamp(1.5rem, 3vw, 3rem);
   align-items: end;
-  margin-bottom: clamp(4.5rem, 8vw, 8rem);
+  margin-bottom: clamp(2.75rem, 4vw, 4rem);
 }
 
 .mono-work-heading h2 {
@@ -701,85 +785,189 @@ body:has(.mono-root) ::selection {
   grid-column: 9 / -1;
   max-width: 25rem;
   padding-bottom: 0.55rem;
-  color: var(--mono-muted);
-  font-size: 0.9rem;
+  color: rgb(233 234 223 / 0.78);
+  font-size: 0.98rem;
+  font-weight: 450;
   line-height: 1.55;
   text-wrap: pretty;
 }
 
-.mono-work-spread {
+/*
+ * Architecture reads as a short technical note: a metadata rail, an abstract,
+ * numbered sections. No cards, no diagrams — the prose carries it.
+ */
+
+.mono-paper {
+  --mono-prose-secondary: rgb(233 234 223 / 0.78);
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(1.5rem, 3vw, 3rem);
-  align-items: start;
-}
-
-.mono-work-feature {
-  grid-column: 1 / 9;
-}
-
-.mono-work-structure {
-  grid-column: 9 / -1;
-  margin-top: clamp(8rem, 14vw, 15rem);
-}
-
-.mono-work-media {
-  position: relative;
-  overflow: hidden;
-  background: var(--mono-surface-raised);
-}
-
-.mono-work-media-feature {
-  aspect-ratio: 1.34 / 1;
-}
-
-.mono-work-media-structure {
-  aspect-ratio: 0.78 / 1;
-  background: var(--mono-bg);
-}
-
-.mono-work-image {
-  image-rendering: auto;
-  object-fit: cover;
-}
-
-.mono-work-media-feature .mono-work-image {
-  object-position: 52% 50%;
-  filter: saturate(0.9) contrast(1.03);
-}
-
-.mono-work-media-structure .mono-work-image {
-  object-position: 50% 50%;
-  object-fit: contain;
-  filter: saturate(0.92) contrast(1.03);
-}
-
-.mono-work-caption {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.48fr);
-  gap: 2rem;
-  align-items: start;
-  padding-top: 1.15rem;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-top: clamp(2rem, 3vw, 3rem);
   border-top: 1px solid var(--mono-line-strong);
 }
 
-.mono-work-caption h3 {
-  max-width: 17ch;
-  font-size: clamp(1.55rem, 2.5vw, 2.75rem);
-  font-weight: 440;
-  letter-spacing: -0.055em;
-  line-height: 0.98;
+.mono-paper-meta {
+  align-self: start;
+  position: sticky;
+  top: 7rem;
+  font-family: var(--mono-code);
+  font-size: 0.62rem;
 }
 
-.mono-work-caption p {
+.mono-paper-meta dl {
+  display: grid;
+  border-top: 1px solid var(--mono-line);
+}
+
+.mono-paper-meta dl > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.62rem;
+  border-bottom: 1px solid var(--mono-line);
+}
+
+.mono-paper-meta dt {
   color: var(--mono-muted);
-  font-size: 0.73rem;
-  line-height: 1.55;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mono-paper-meta dd {
+  color: var(--mono-paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.mono-paper-body {
+  max-width: 68ch;
+  min-width: 0;
+}
+
+.mono-paper-abstract {
+  padding-left: clamp(1rem, 2vw, 1.5rem);
+  border-left: 2px solid var(--mono-accent);
+  color: var(--mono-paper);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  font-weight: 420;
+  letter-spacing: -0.015em;
+  line-height: 1.52;
   text-wrap: pretty;
 }
 
-.mono-work-structure .mono-work-caption {
-  grid-template-columns: 1fr;
+.mono-paper-body section {
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+}
+
+.mono-paper-body h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--mono-line);
+  color: var(--mono-paper);
+  font-family: var(--mono-code);
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mono-paper-body h3 span {
+  color: var(--mono-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.mono-paper-body section > p {
+  margin-top: 1.25rem;
+  color: var(--mono-prose-secondary);
+  font-size: 0.98rem;
+  line-height: 1.72;
+  text-wrap: pretty;
+}
+
+.mono-paper-body code {
+  color: var(--mono-paper);
+  font-family: var(--mono-code);
+  font-size: 0.85em;
+}
+
+.mono-paper-list {
+  display: grid;
+  margin-top: 0.5rem;
+}
+
+.mono-paper-list > div {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 2rem);
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--mono-line);
+}
+
+.mono-paper-list dt {
+  color: var(--mono-paper);
+  font-family: var(--mono-code);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mono-paper-list dd {
+  color: var(--mono-prose-secondary);
+  font-size: 0.94rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.mono-paper-limits,
+.mono-paper-references {
+  margin-top: 1.25rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: note;
+}
+
+.mono-paper-limits li,
+.mono-paper-references li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  counter-increment: note;
+  padding-block: 0.7rem;
+  color: var(--mono-prose-secondary);
+  font-size: 0.94rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.mono-paper-limits li::before,
+.mono-paper-references li::before {
+  color: var(--mono-muted);
+  content: '[' counter(note) ']';
+  font-family: var(--mono-code);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.9;
+}
+
+.mono-paper-references a {
+  color: var(--mono-paper);
+  border-bottom: 1px solid var(--mono-line-strong);
+  padding-bottom: 0.1rem;
+  transition:
+    color var(--mono-fast),
+    border-color var(--mono-fast);
+}
+
+.mono-paper-references a:hover {
+  color: var(--mono-accent);
+  border-color: var(--mono-accent);
+}
+
+.mono-paper-references a:focus-visible {
+  outline: 2px solid var(--mono-accent);
+  outline-offset: 3px;
 }
 
 /* Manifesto */
@@ -796,7 +984,7 @@ body:has(.mono-root) ::selection {
 }
 
 .mono-manifesto-shell {
-  padding-block: clamp(7rem, 11vw, 11rem);
+  padding-block: clamp(4rem, 6vw, 6rem);
 }
 
 .mono-manifesto-intro {
@@ -810,7 +998,7 @@ body:has(.mono-root) ::selection {
   grid-column: 1 / 9;
   max-width: 9.6ch;
   color: var(--mono-paper);
-  font-size: clamp(4.5rem, 9vw, 9.5rem);
+  font-size: clamp(4rem, 7vw, 7.5rem);
   font-weight: 390;
   letter-spacing: -0.074em;
   line-height: 0.78;
@@ -863,7 +1051,7 @@ body:has(.mono-root) ::selection {
   gap: 0.42rem;
   padding-inline: 0.8rem;
   border: 1px solid var(--mono-line-strong);
-  border-radius: 999px;
+  border-radius: 0;
   color: var(--mono-bg);
   background: var(--mono-accent);
   font-family: var(--mono-code);
@@ -888,103 +1076,80 @@ body:has(.mono-root) ::selection {
   height: 0.9rem;
 }
 
-.mono-manifesto-meta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: clamp(5rem, 9vw, 9rem);
-  border-block: 1px solid var(--mono-line);
-}
-
-.mono-manifesto-meta > div {
-  display: grid;
-  min-height: 9rem;
-  align-content: space-between;
-  padding: 1rem 1.25rem 1.25rem;
-  border-right: 1px solid var(--mono-line);
-}
-
-.mono-manifesto-meta > div:first-child {
-  padding-left: 0;
-}
-
-.mono-manifesto-meta > div:last-child {
-  padding-right: 0;
-  border-right: 0;
-}
-
-.mono-manifesto-meta dt {
-  color: var(--mono-muted);
-  font-family: var(--mono-code);
-  font-size: 0.62rem;
-}
-
-.mono-manifesto-meta dd {
-  color: var(--mono-accent);
-  font-size: clamp(2.2rem, 4.2vw, 4.6rem);
-  font-weight: 440;
-  letter-spacing: -0.07em;
-  line-height: 0.8;
-}
-
+/*
+ * Pillars read as a numbered spec ledger rather than three equal cards: one
+ * row per pillar, hairline rules, index left, definition right.
+ */
 .mono-manifesto-list {
   display: grid;
-  margin-top: clamp(5rem, 9vw, 9rem);
+  counter-reset: pillar;
+  margin-top: clamp(2.75rem, 4vw, 4rem);
+  border-top: 1px solid var(--mono-line);
 }
 
 .mono-manifesto-item {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  min-width: 0;
+  grid-template-columns: 4rem minmax(0, 0.9fr) minmax(0, 1fr);
+  align-items: baseline;
   gap: clamp(1.5rem, 3vw, 3rem);
-  align-items: center;
-  min-height: clamp(11rem, 18vw, 17rem);
-  padding-block: 2rem;
-  border-top: 1px solid var(--mono-line);
+  counter-increment: pillar;
+  padding-block: clamp(1.75rem, 2.6vw, 2.5rem);
+  border-bottom: 1px solid var(--mono-line);
+  transition: background-color var(--mono-fast);
 }
 
-.mono-manifesto-item:last-child {
-  border-bottom: 1px solid var(--mono-line);
+.mono-manifesto-item::before {
+  color: var(--mono-muted);
+  content: counter(pillar, decimal-leading-zero);
+  font-family: var(--mono-code);
+  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  transition: color var(--mono-fast);
+}
+
+.mono-manifesto-item:hover {
+  background: rgb(233 234 223 / 0.03);
+}
+
+.mono-manifesto-item:hover::before {
+  color: var(--mono-accent);
 }
 
 .mono-manifesto-item h3 {
-  grid-column: 1 / 8;
   color: var(--mono-paper);
-  font-size: clamp(5rem, 10vw, 10rem);
+  font-size: clamp(2.75rem, 4.4vw, 4.75rem);
   font-weight: 380;
   letter-spacing: -0.078em;
-  line-height: 0.68;
+  line-height: 0.82;
 }
 
 .mono-manifesto-item p {
-  grid-column: 9 / -1;
-  max-width: 28rem;
+  max-width: 30rem;
   color: var(--mono-muted);
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   line-height: 1.58;
   text-wrap: pretty;
 }
 
-.mono-manifesto-item:nth-child(2) h3 {
-  grid-column: 2 / 9;
-  color: var(--mono-accent);
-}
-
-.mono-manifesto-item:nth-child(2) p {
-  grid-column: 9 / -1;
-}
-
 /* Benchmark */
 
+/*
+ * The benchmark reads as an instrument panel, not a highlight band: the page
+ * tone carries through and the accent stays reserved for measured values.
+ */
 .mono-benchmark {
   position: relative;
-  border-top: 1px solid rgb(11 12 10 / 0.28);
-  color: var(--mono-bg);
-  background: var(--mono-accent);
+  border-top: 1px solid var(--mono-line);
+  color: var(--mono-paper);
+  background: var(--mono-bg);
 }
 
 .mono-benchmark-shell {
   width: min(calc(100% - 3.5rem), 96rem);
   margin-inline: auto;
-  padding-block: clamp(7rem, 11vw, 11rem);
+  padding-block: clamp(5rem, 8vw, 7rem);
 }
 
 .mono-benchmark-heading {
@@ -1005,6 +1170,7 @@ body:has(.mono-root) ::selection {
 }
 
 .mono-benchmark-heading h2 span:first-child {
+  color: var(--mono-accent);
   font-size: 1.18em;
   font-weight: 650;
 }
@@ -1017,6 +1183,7 @@ body:has(.mono-root) ::selection {
   grid-column: 9 / -1;
   max-width: 27rem;
   padding-bottom: 0.45rem;
+  color: var(--mono-muted);
   font-size: 0.9rem;
   line-height: 1.55;
   text-wrap: pretty;
@@ -1025,9 +1192,9 @@ body:has(.mono-root) ::selection {
 .mono-benchmark-stage {
   display: grid;
   grid-template-columns: minmax(0, 2.2fr) minmax(18rem, 0.8fr);
-  margin-top: clamp(5rem, 8vw, 8rem);
-  border: 1px solid var(--mono-bg);
-  background: var(--mono-bg);
+  margin-top: clamp(3.5rem, 5vw, 5rem);
+  border: 1px solid var(--mono-line-strong);
+  background: var(--mono-surface);
 }
 
 .mono-benchmark-chart {
@@ -1041,7 +1208,7 @@ body:has(.mono-root) ::selection {
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  padding-bottom: clamp(3rem, 6vw, 6rem);
+  padding-bottom: clamp(2.5rem, 4vw, 4rem);
 }
 
 .mono-benchmark-chart-head h3 {
@@ -1058,7 +1225,7 @@ body:has(.mono-root) ::selection {
 
 .mono-benchmark-bars {
   display: grid;
-  gap: clamp(2rem, 4vw, 4rem);
+  gap: clamp(1.75rem, 3vw, 3rem);
 }
 
 .mono-benchmark-bar-row {
@@ -1095,7 +1262,7 @@ body:has(.mono-root) ::selection {
       transparent 0 calc(25% - 1px),
       var(--mono-line) calc(25% - 1px) 25%
     ),
-    var(--mono-surface);
+    var(--mono-bg);
 }
 
 .mono-benchmark-fill {
@@ -1159,8 +1326,8 @@ body:has(.mono-root) ::selection {
 }
 
 .mono-benchmark-latency {
-  margin-top: clamp(4rem, 7vw, 7rem);
-  border-top: 1px solid var(--mono-bg);
+  margin-top: clamp(3rem, 5vw, 5rem);
+  border-top: 1px solid var(--mono-line-strong);
 }
 
 .mono-benchmark-table-head,
@@ -1173,18 +1340,25 @@ body:has(.mono-root) ::selection {
 
 .mono-benchmark-table-head {
   padding-block: 0.8rem;
+  color: var(--mono-muted);
   font-family: var(--mono-code);
   font-size: 0.57rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .mono-benchmark-metric {
-  padding-block: clamp(1.5rem, 2.4vw, 2.5rem);
-  border-top: 1px solid rgb(11 12 10 / 0.38);
+  padding-block: clamp(1.15rem, 1.8vw, 1.75rem);
+  border-top: 1px solid var(--mono-line);
+  transition: background-color var(--mono-fast);
+}
+
+.mono-benchmark-metric:hover {
+  background: rgb(233 234 223 / 0.03);
 }
 
 .mono-benchmark-metric:last-child {
-  border-bottom: 1px solid var(--mono-bg);
+  border-bottom: 1px solid var(--mono-line-strong);
 }
 
 .mono-benchmark-metric h3 {
@@ -1207,6 +1381,7 @@ body:has(.mono-root) ::selection {
 
 .mono-benchmark-metric > p span {
   display: none;
+  color: var(--mono-muted);
   font-family: var(--mono-code);
   font-size: 0.56rem;
   text-transform: uppercase;
@@ -1219,12 +1394,17 @@ body:has(.mono-root) ::selection {
   font-weight: 560;
 }
 
+.mono-benchmark-delta {
+  color: var(--mono-muted);
+}
+
 .mono-benchmark-source {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 2rem;
   padding-top: 1.25rem;
+  color: var(--mono-muted);
   font-family: var(--mono-code);
   font-size: 0.58rem;
   line-height: 1.5;
@@ -1237,11 +1417,16 @@ body:has(.mono-root) ::selection {
 .mono-benchmark-source a {
   flex: none;
   padding-bottom: 0.15rem;
-  border-bottom: 1px solid var(--mono-bg);
+  border-bottom: 1px solid var(--mono-line-strong);
+  color: var(--mono-paper);
+  transition:
+    color var(--mono-fast),
+    border-color var(--mono-fast);
 }
 
 .mono-benchmark-source a:hover {
-  border-color: transparent;
+  border-color: var(--mono-accent);
+  color: var(--mono-accent);
 }
 
 /* Product principle */
@@ -1249,7 +1434,7 @@ body:has(.mono-root) ::selection {
 .mono-principle {
   position: relative;
   display: grid;
-  min-height: min(96dvh, 70rem);
+  min-height: min(72dvh, 50rem);
   overflow: hidden;
   align-items: end;
   border-top: 1px solid var(--mono-line);
@@ -1291,7 +1476,7 @@ body:has(.mono-root) ::selection {
   z-index: 2;
   width: min(calc(100% - 3.5rem), 96rem);
   margin-inline: auto;
-  padding-block: clamp(7rem, 10vw, 10rem);
+  padding-block: clamp(4.5rem, 7vw, 7rem);
 }
 
 .mono-principle-copy h2 {
@@ -1331,7 +1516,7 @@ body:has(.mono-root) ::selection {
   position: relative;
   border-top: 1px solid var(--mono-line);
   background: var(--mono-surface);
-  padding-block: clamp(7rem, 10vw, 10rem);
+  padding-block: clamp(4.5rem, 7vw, 7rem);
 }
 
 .mono-namesake-media {
@@ -1453,41 +1638,9 @@ body:has(.mono-root) ::selection {
 /* Footer */
 
 .mono-footer {
-  padding-block: clamp(6rem, 10vw, 10rem) 2.25rem;
+  padding-block: 2rem;
   color: var(--mono-paper);
   background: var(--mono-bg);
-}
-
-.mono-footer-lead {
-  padding-bottom: clamp(5rem, 8vw, 8rem);
-  border-bottom: 1px solid var(--mono-line);
-}
-
-.mono-footer-lead p {
-  color: var(--mono-muted);
-  font-family: var(--mono-code);
-  font-size: 0.66rem;
-}
-
-.mono-footer-lead a {
-  display: inline-block;
-  margin-top: 1rem;
-  color: var(--mono-paper);
-  font-size: clamp(5.5rem, 13vw, 13rem);
-  font-weight: 390;
-  letter-spacing: -0.075em;
-  line-height: 0.76;
-  transition: color 280ms ease;
-}
-
-.mono-footer-lead a span {
-  color: var(--mono-accent);
-  font-size: 0.5em;
-  vertical-align: top;
-}
-
-.mono-footer-lead a:hover {
-  color: var(--mono-accent);
 }
 
 .mono-footer-meta {
@@ -1495,7 +1648,6 @@ body:has(.mono-root) ::selection {
   grid-template-columns: 1fr auto 1fr;
   align-items: end;
   gap: 2rem;
-  padding-top: 2rem;
   color: var(--mono-muted);
   font-family: var(--mono-code);
   font-size: 0.62rem;
@@ -1580,10 +1732,8 @@ body:has(.mono-root) ::selection {
 
   @supports (animation-timeline: view()) {
     .mono-work-heading,
-    .mono-work-feature,
-    .mono-work-structure,
+    .mono-paper,
     .mono-manifesto-intro,
-    .mono-manifesto-meta,
     .mono-benchmark-heading,
     .mono-benchmark-stage,
     .mono-benchmark-latency,
@@ -1593,15 +1743,13 @@ body:has(.mono-root) ::selection {
       animation-timeline: view();
       animation-range: entry 3% cover 24%;
     }
-
-    .mono-work-structure {
-      animation-range: entry 8% cover 28%;
-    }
   }
 }
 
-html.mono-menu-lock {
+html.mono-menu-lock,
+html.mono-menu-lock body {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* Tablet */
@@ -1609,7 +1757,7 @@ html.mono-menu-lock {
 @media (max-width: 1100px) {
   .mono-gooey-nav a {
     padding-inline: 0.72rem;
-    font-size: 0.64rem;
+    font-size: 0.72rem;
   }
 
   .mono-hero-note {
@@ -1623,12 +1771,25 @@ html.mono-menu-lock {
   }
 
   .mono-nav-shell {
+    isolation: isolate;
     width: calc(100% - 0.75rem);
     height: 58px;
     grid-template-columns: 1fr auto;
     margin-top: 7px;
-    background: rgb(11 12 10 / 0.94);
+    background: transparent;
     backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .mono-nav-shell::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgb(11 12 10 / 0.88);
+    backdrop-filter: blur(30px) saturate(1.04);
+    -webkit-backdrop-filter: blur(30px) saturate(1.04);
+    content: '';
+    pointer-events: none;
   }
 
   .mono-nav-logo {
@@ -1662,9 +1823,12 @@ html.mono-menu-lock {
     border: 1px solid rgb(233 234 223 / 0.3);
     border-radius: 0;
     font-family: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
-    font-size: 0.61rem;
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
     list-style: none;
     text-transform: uppercase;
+    touch-action: manipulation;
     transition:
       color var(--mono-fast),
       border-color var(--mono-fast),
@@ -1673,12 +1837,6 @@ html.mono-menu-lock {
 
   .mono-nav-mobile summary::-webkit-details-marker {
     display: none;
-  }
-
-  .mono-nav-mobile summary:hover {
-    color: var(--mono-bg);
-    border-color: var(--mono-paper);
-    background: var(--mono-paper);
   }
 
   .mono-menu-close {
@@ -1699,11 +1857,6 @@ html.mono-menu-lock {
     background: var(--mono-accent);
   }
 
-  .mono-nav-mobile[open] summary:hover {
-    border-color: var(--mono-accent);
-    background: var(--mono-accent);
-  }
-
   .mono-nav-mobile:not([open]) nav {
     display: none;
   }
@@ -1713,45 +1866,42 @@ html.mono-menu-lock {
     inset: 0;
     z-index: 2;
     display: grid;
-    grid-template-rows: 1fr auto;
-    padding: 6.5rem 1rem 1.25rem;
-    overflow: hidden;
+    width: 100%;
+    height: 100dvh;
+    grid-template-rows: minmax(0, 1fr) auto;
+    padding:
+      calc(5.5rem + env(safe-area-inset-top))
+      1rem
+      calc(1rem + env(safe-area-inset-bottom));
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     color: var(--mono-paper);
-    background: var(--mono-bg);
-  }
-
-  .mono-nav-mobile nav::before {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background:
-      linear-gradient(90deg, rgb(11 12 10 / 0.58), rgb(11 12 10 / 0.9)),
-      url('/images/aponiajs-chan-hero.webp') 58% 50% / cover;
-    content: '';
-    opacity: 0.68;
-    transform: scale(1.025);
+    background: rgb(11 12 10 / 0.98);
+    backdrop-filter: blur(40px) saturate(0.92);
+    -webkit-backdrop-filter: blur(40px) saturate(0.92);
+    -webkit-overflow-scrolling: touch;
   }
 
   .mono-mobile-links {
-    align-self: center;
+    min-width: 0;
+    align-self: start;
     border-top: 1px solid var(--mono-line);
   }
 
   .mono-mobile-links a {
     display: block;
+    min-width: 0;
     padding-block: 0.48rem;
     border-bottom: 1px solid var(--mono-line);
-    color: rgb(233 234 223 / 0.48);
-    font-size: clamp(3rem, 13.5vw, 5rem);
-    font-weight: 420;
+    color: rgb(233 234 223 / 0.84);
+    font-size: clamp(2.35rem, 10.5vw, 4rem);
+    font-weight: 500;
     letter-spacing: -0.075em;
     line-height: 0.88;
-    opacity: 0;
-    transform: translateY(1.1rem);
-    animation: mono-mobile-link-in 620ms var(--mono-ease) forwards;
   }
 
-  .mono-mobile-links a:hover {
+  .mono-mobile-links a:focus-visible {
     color: var(--mono-paper);
     background: transparent;
     text-decoration-line: underline;
@@ -1760,54 +1910,34 @@ html.mono-menu-lock {
     text-underline-offset: 0.14em;
   }
 
-  .mono-mobile-links a:nth-child(2) {
-    animation-delay: 45ms;
-  }
-
-  .mono-mobile-links a:nth-child(3) {
-    animation-delay: 90ms;
-  }
-
-  .mono-mobile-links a:nth-child(4) {
-    animation-delay: 135ms;
-  }
-
-  .mono-mobile-links a:nth-child(5) {
-    animation-delay: 180ms;
-  }
-
   .mono-mobile-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     border-top: 1px solid var(--mono-line);
     border-left: 1px solid var(--mono-line);
     font-family: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
-    font-size: 0.67rem;
+    font-size: 0.74rem;
+    font-weight: 600;
   }
 
   .mono-mobile-actions a {
+    display: flex;
+    min-width: 0;
     min-height: 3rem;
+    align-items: center;
     padding: 1rem;
     border-right: 1px solid var(--mono-line);
     border-bottom: 1px solid var(--mono-line);
+    overflow-wrap: anywhere;
   }
 
   .mono-mobile-actions a:first-child,
-  .mono-mobile-actions a:hover {
+  .mono-mobile-actions a:focus-visible {
     color: var(--mono-accent);
   }
 
-  .mono-work-feature {
-    grid-column: 1 / 10;
-  }
-
-  .mono-work-structure {
-    grid-column: 8 / -1;
-  }
-
-  .mono-work-caption {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+  .mono-paper {
+    grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
   }
 
   .mono-manifesto-intro h2 {
@@ -1821,16 +1951,45 @@ html.mono-menu-lock {
 
 }
 
-@keyframes mono-mobile-link-in {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Mobile */
 
 @media (max-width: 767px) {
+  .mono-hero,
+  .mono-hero-copy {
+    min-height: 82dvh;
+  }
+
+  .mono-flow-hero {
+    height: 135dvh;
+    min-height: 0;
+  }
+
+  .mono-flow-hero .mono-hero-sticky,
+  .mono-flow-hero .mono-hero-copy {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .mono-flow-effect svg {
+    left: -58%;
+    width: 170%;
+    max-width: none;
+  }
+
+  .mono-flow-source-labels {
+    display: none;
+  }
+
+  .mono-flow-target {
+    top: 48%;
+    right: 1rem;
+    padding: 0.55rem 0 0.55rem 0.75rem;
+  }
+
+  .mono-flow-target strong {
+    font-size: 1.15rem;
+  }
+
   .mono-hero-copy,
   .mono-work-shell,
   .mono-manifesto-shell,
@@ -1847,7 +2006,7 @@ html.mono-menu-lock {
   }
 
   .mono-hero-media {
-    object-position: 58% 50%;
+    object-position: 52% 48%;
   }
 
   .mono-hero-shade {
@@ -1873,11 +2032,11 @@ html.mono-menu-lock {
 
   .mono-work-shell,
   .mono-manifesto-shell {
-    padding-block: 6rem;
+    padding-block: 4rem;
   }
 
   .mono-work-heading {
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
   }
 
   .mono-work-heading h2,
@@ -1886,7 +2045,7 @@ html.mono-menu-lock {
   }
 
   .mono-work-heading h2 {
-    font-size: clamp(3.7rem, 16vw, 5.5rem);
+    font-size: clamp(3.15rem, 14vw, 4.8rem);
   }
 
   .mono-work-heading p {
@@ -1894,37 +2053,18 @@ html.mono-menu-lock {
     margin-left: 18%;
   }
 
-  .mono-work-spread {
-    gap: 4rem 1rem;
+  .mono-paper {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  .mono-work-feature,
-  .mono-work-structure {
-    grid-column: 1 / -1;
-    margin-top: 0;
+  .mono-paper-meta {
+    position: static;
   }
 
-  .mono-work-media-feature {
-    aspect-ratio: 0.92 / 1;
-  }
-
-  .mono-work-media-feature .mono-work-image {
-    object-position: 57% 50%;
-  }
-
-  .mono-work-media-structure {
-    width: 77%;
-    margin-left: auto;
-    aspect-ratio: 0.78 / 1;
-  }
-
-  .mono-work-structure .mono-work-caption {
-    width: 77%;
-    margin-left: auto;
-  }
-
-  .mono-work-caption h3 {
-    font-size: clamp(2rem, 8vw, 2.8rem);
+  .mono-paper-list > div {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 
   .mono-manifesto-intro h2,
@@ -1934,7 +2074,7 @@ html.mono-menu-lock {
   }
 
   .mono-manifesto-intro h2 {
-    font-size: clamp(4rem, 18vw, 6.2rem);
+    font-size: clamp(3.25rem, 14.5vw, 5rem);
   }
 
   .mono-manifesto-intro > p {
@@ -1966,56 +2106,34 @@ html.mono-menu-lock {
     white-space: nowrap;
   }
 
-  .mono-manifesto-meta {
-    grid-template-columns: 1fr;
-    margin-top: 5rem;
-  }
-
-  .mono-manifesto-meta > div,
-  .mono-manifesto-meta > div:first-child,
-  .mono-manifesto-meta > div:last-child {
-    min-height: 6.5rem;
-    padding: 0.9rem 0 1rem;
-    border-right: 0;
-    border-bottom: 1px solid var(--mono-line);
-  }
-
-  .mono-manifesto-meta > div:last-child {
-    border-bottom: 0;
-  }
-
-  .mono-manifesto-meta dd {
-    font-size: 3.2rem;
-  }
-
   .mono-manifesto-list {
-    margin-top: 5rem;
+    margin-top: 2.5rem;
   }
 
   .mono-manifesto-item {
-    gap: 1.4rem;
-    min-height: auto;
-    padding-block: 2.5rem;
-  }
-
-  .mono-manifesto-item h3,
-  .mono-manifesto-item:nth-child(2) h3,
-  .mono-manifesto-item p,
-  .mono-manifesto-item:nth-child(2) p {
-    grid-column: 1 / -1;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.75rem 0.9rem;
+    padding-block: 1.25rem;
   }
 
   .mono-manifesto-item h3 {
-    font-size: clamp(4.8rem, 23vw, 7rem);
+    min-width: 0;
+    max-width: 100%;
+    font-size: clamp(2.5rem, 11vw, 3.5rem);
+    line-height: 0.82;
+    text-wrap: balance;
   }
 
   .mono-manifesto-item p {
+    min-width: 0;
     max-width: 22rem;
-    margin-left: 18%;
+    grid-column: 2;
+    margin-left: 0;
   }
 
   .mono-benchmark-shell {
-    padding-block: 6rem;
+    padding-block: 4rem;
   }
 
   .mono-benchmark-heading h2,
@@ -2024,11 +2142,11 @@ html.mono-menu-lock {
   }
 
   .mono-benchmark-heading h2 {
-    font-size: clamp(4rem, 18vw, 6.2rem);
+    font-size: clamp(3.35rem, 15vw, 5.25rem);
   }
 
   .mono-benchmark-heading h2 span:last-child {
-    margin-left: 1.5rem;
+    margin-left: 0.75rem;
   }
 
   .mono-benchmark-heading > p:last-child {
@@ -2038,7 +2156,7 @@ html.mono-menu-lock {
 
   .mono-benchmark-stage {
     grid-template-columns: 1fr;
-    margin-top: 4rem;
+    margin-top: 2.5rem;
   }
 
   .mono-benchmark-chart {
@@ -2047,7 +2165,7 @@ html.mono-menu-lock {
 
   .mono-benchmark-chart-head {
     display: grid;
-    padding-bottom: 3.5rem;
+    padding-bottom: 2.25rem;
   }
 
   .mono-benchmark-chart-head p {
@@ -2059,7 +2177,7 @@ html.mono-menu-lock {
   }
 
   .mono-benchmark-track {
-    height: 3.5rem;
+    height: 3rem;
   }
 
   .mono-benchmark-context {
@@ -2068,7 +2186,7 @@ html.mono-menu-lock {
   }
 
   .mono-benchmark-context dl {
-    margin-top: 2rem;
+    margin-top: 1.25rem;
   }
 
   .mono-benchmark-table-head {
@@ -2078,6 +2196,7 @@ html.mono-menu-lock {
   .mono-benchmark-metric {
     grid-template-columns: minmax(0, 1fr) repeat(2, minmax(4.5rem, auto));
     gap: 1rem;
+    padding-block: 1rem;
   }
 
   .mono-benchmark-metric h3 {
@@ -2090,7 +2209,6 @@ html.mono-menu-lock {
 
   .mono-benchmark-delta {
     grid-column: 1 / -1;
-    color: rgb(11 12 10 / 0.68);
   }
 
   .mono-benchmark-source {
@@ -2099,7 +2217,7 @@ html.mono-menu-lock {
   }
 
   .mono-principle {
-    min-height: 88dvh;
+    min-height: 66dvh;
   }
 
   .mono-principle-image {
@@ -2114,7 +2232,7 @@ html.mono-menu-lock {
   }
 
   .mono-principle-copy {
-    padding-block: 5rem 3.5rem;
+    padding-block: 4rem 2.5rem;
   }
 
   .mono-principle-copy h2 {
@@ -2144,7 +2262,7 @@ html.mono-menu-lock {
   }
 
   .mono-namesake {
-    padding-block: 5rem;
+    padding-block: 3.5rem;
   }
 
   .mono-namesake-media {
@@ -2152,7 +2270,7 @@ html.mono-menu-lock {
   }
 
   .mono-namesake-frame {
-    aspect-ratio: 0.82 / 1;
+    aspect-ratio: 1 / 1;
   }
 
   .mono-namesake-image {
@@ -2180,7 +2298,7 @@ html.mono-menu-lock {
   }
 
   .mono-namesake-copy h2 {
-    font-size: clamp(3.35rem, 13.8vw, 4.5rem);
+    font-size: clamp(2.1rem, 9.5vw, 3rem);
     line-height: 0.73;
   }
 
@@ -2206,15 +2324,7 @@ html.mono-menu-lock {
   }
 
   .mono-footer {
-    padding-top: 6rem;
-  }
-
-  .mono-footer-lead {
-    padding-bottom: 5rem;
-  }
-
-  .mono-footer-lead a {
-    font-size: clamp(4.3rem, 22vw, 6.7rem);
+    padding-block: 1.5rem;
   }
 
   .mono-footer-meta {
@@ -2224,6 +2334,92 @@ html.mono-menu-lock {
 
   .mono-footer-meta > p:last-child {
     text-align: left;
+  }
+}
+
+@media (max-width: 980px) and (hover: hover) and (pointer: fine) {
+  .mono-nav-mobile summary:hover {
+    color: var(--mono-bg);
+    border-color: var(--mono-paper);
+    background: var(--mono-paper);
+  }
+
+  .mono-nav-mobile[open] summary:hover {
+    border-color: var(--mono-accent);
+    background: var(--mono-accent);
+  }
+
+  .mono-mobile-links a:hover {
+    color: var(--mono-paper);
+    background: transparent;
+    text-decoration-line: underline;
+    text-decoration-color: var(--mono-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.14em;
+  }
+
+  .mono-mobile-actions a:hover {
+    color: var(--mono-accent);
+  }
+}
+
+@supports not (
+  (backdrop-filter: blur(1px)) or
+  (-webkit-backdrop-filter: blur(1px))
+) {
+  @media (max-width: 980px) {
+    .mono-nav-shell::before {
+      background: rgb(11 12 10 / 0.92);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .mono-nav-mobile nav {
+      background: var(--mono-bg);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mono-nav-shell::before {
+    background: rgb(11 12 10 / 0.96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .mono-nav-mobile nav {
+    background: var(--mono-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (max-width: 980px) and (max-height: 520px) {
+  .mono-nav-mobile nav {
+    grid-template-rows: auto auto;
+    align-content: start;
+    gap: 0.625rem;
+    padding:
+      calc(3.75rem + env(safe-area-inset-top))
+      1rem
+      calc(0.5rem + env(safe-area-inset-bottom));
+  }
+
+  .mono-mobile-links {
+    align-self: start;
+  }
+
+  .mono-mobile-links a {
+    padding-block: 0.22rem;
+    font-size: clamp(1.5rem, 3.8vw, 2rem);
+    line-height: 0.94;
+  }
+
+  .mono-mobile-actions a {
+    min-height: 2.4rem;
+    padding: 0.65rem 0.75rem;
   }
 }
 
@@ -2241,15 +2437,9 @@ html.mono-menu-lock {
   }
 
   .mono-hero-media,
-  .mono-work-image,
   .mono-principle-image,
   .mono-namesake-image {
     transform: none !important;
-  }
-
-  .mono-mobile-links a {
-    opacity: 1;
-    transform: none;
   }
 
   .mono-nav-dropdown-panel,
