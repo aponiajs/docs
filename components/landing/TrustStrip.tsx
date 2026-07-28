@@ -10,6 +10,9 @@ export function TrustStrip() {
     <section id="work" className="mono-work" aria-labelledby="work-title">
       <div className="mono-work-shell">
         <div className="mono-work-heading">
+          <p className="mono-index-rail">
+            <b>01</b> System
+          </p>
           <h2 id="work-title">Designed as a system, not a black box.</h2>
           <p>
             Every boundary stays visible, from the first module to the running
@@ -18,7 +21,7 @@ export function TrustStrip() {
         </div>
         <div className="mono-work-spread">
           <article className="mono-work-feature">
-            <div className="mono-work-media mono-work-media-feature">
+            <div className="mono-work-media mono-work-media-feature mono-tick-frame">
               <Image
                 src={featureArtwork.src}
                 alt={featureArtwork.alt}
@@ -37,7 +40,7 @@ export function TrustStrip() {
             </div>
           </article>
           <article className="mono-work-structure">
-            <div className="mono-work-media mono-work-media-structure">
+            <div className="mono-work-media mono-work-media-structure mono-tick-frame">
               <Image
                 src={structureArtwork.src}
                 alt={structureArtwork.alt}

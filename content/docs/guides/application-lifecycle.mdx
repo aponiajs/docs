@@ -1,0 +1,51 @@
+---
+title: Application lifecycle
+description: Start, address, handle, and close an Aponia Elysia application.
+---
+
+## Create
+
+```ts
+const application = await AponiaFactory.create(AppModule);
+```
+
+Creation validates the graph, eagerly constructs singleton providers, registers
+plugins, and maps controllers.
+
+## Listen
+
+```ts
+const port = Number(Bun.env.PORT ?? 3000);
+await application.listen(port);
+```
+
+`listen()` starts Elysia, waits for its modules, and logs the actual server URL.
+
+## Read the URL
+
+```ts
+console.log(application.getUrl());
+```
+
+`getUrl()` reads `server.url.origin`. Calling it before `listen()` throws an
+`AponiaError` with code `APPLICATION_NOT_LISTENING`.
+
+## Handle without a socket
+
+```ts
+const response = await application.handle(
+  new Request("http://localhost/greetings"),
+);
+```
+
+This is the preferred HTTP test path.
+
+## Close
+
+```ts
+await application.close();
+```
+
+`close()` stops the native server when one exists. AponiaJS does not currently
+provide module/provider lifecycle hook interfaces such as initialization or
+destruction hooks.

@@ -1,0 +1,61 @@
+---
+title: Tokens and injection
+description: Use class tokens or explicit typed tokens for constructor dependencies.
+---
+
+A token identifies a provider. AponiaJS supports:
+
+- class constructors;
+- explicit tokens created with `createToken<T>()`.
+
+## Class injection
+
+```ts
+@Injectable()
+class GreetingService {}
+
+@Controller()
+class AppController {
+  constructor(private readonly greetings: GreetingService) {}
+}
+```
+
+This requires TypeScript to emit decorator metadata.
+
+## Explicit token injection
+
+Use `@Inject()` for interfaces, strings, configuration objects, or another
+non-class dependency:
+
+```ts
+import {
+  Inject,
+  Injectable,
+  createToken,
+  provideValue,
+} from "@aponiajs/common";
+
+interface AppConfig {
+  readonly environment: string;
+}
+
+export const APP_CONFIG = createToken<AppConfig>("APP_CONFIG");
+
+@Injectable()
+class ConfigReader {
+  constructor(@Inject(APP_CONFIG) readonly config: AppConfig) {}
+}
+
+const configProvider = provideValue(APP_CONFIG, {
+  environment: "development",
+});
+```
+
+Every `createToken()` call creates a new symbol identity. Export and reuse one
+token constant rather than recreating a token with the same description.
+
+## Diagnostics
+
+If reflected constructor metadata is not a class and there is no explicit
+token, compilation throws a `TypeError` instructing you to use
+`@Inject(token)`. Missing visible tokens become `MISSING_PROVIDER` errors.

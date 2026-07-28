@@ -1,0 +1,52 @@
+---
+title: Getting Started
+description: Create or add AponiaJS to a Bun application using the implemented alpha API.
+---
+
+AponiaJS adds modules, decorated controllers, request parameter decorators,
+route validation, singleton dependency injection, and structured application
+bootstrap to Elysia applications running on Bun.
+
+<Callout title="Experimental release">
+  AponiaJS `0.6.0-alpha.12` is under active development and is not recommended
+  for production workloads. Check the current limitations before adopting it for
+  a long-lived application.
+</Callout>
+
+## Choose a path
+
+<Cards>
+  <Card
+    title="Create a project"
+    description="Generate the standard AponiaJS application layout with the CLI."
+    href="./create-a-project"
+  />
+  <Card
+    title="Use an existing project"
+    description="Install the HTTP application packages and configure TypeScript manually."
+    href="./existing-project"
+  />
+  <Card
+    title="Review prerequisites"
+    description="Confirm the Bun, ESM, decorator, and package requirements."
+    href="./prerequisites"
+  />
+</Cards>
+
+## What you will build
+
+The starter request path is intentionally small:
+
+```text
+main.ts
+  -> AponiaFactory.create(AppModule)
+  -> AppModule
+  -> AppController
+  -> AppService
+```
+
+`main.ts` owns bootstrap and listening. Modules define application boundaries,
+controllers own routes, and injectable services own application behavior.
+
+Continue with [your first route](./first-route) after creating or configuring a
+project.

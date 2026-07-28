@@ -1,0 +1,162 @@
+---
+title: Route validation
+description: Reject invalid requests with Standard Schema or platform-native validators before the handler runs.
+---
+
+A route decorator accepts an optional schema. When a slot declares a validator,
+an invalid request answers `422` and the handler never runs.
+
+```ts
+import { Body, Controller, Post } from "@aponiajs/common";
+import { z } from "zod";
+
+const createUser = { body: z.object({ name: z.string().min(2) }) };
+type CreateUser = z.infer<(typeof createUser)["body"]>;
+
+@Controller("users")
+export class UserController {
+  @Post("/", createUser)
+  create(@Body() body: CreateUser) {
+    return body;
+  }
+}
+```
+
+The schema may be passed alone when the route has no path suffix:
+
+```ts
+@Post(createUser)
+create(@Body() body: CreateUser) {
+  return body;
+}
+```
+
+## Slots
+
+`RouteSchema` declares five optional slots:
+
+```ts
+interface RouteSchema {
+  readonly body?: RouteValidator;
+  readonly query?: RouteValidator;
+  readonly params?: RouteValidator;
+  readonly headers?: RouteValidator;
+  readonly response?: RouteValidator;
+}
+```
+
+The runtime constant `routeSchemaSlots` exports the same five names. A schema
+whose slots are all absent is treated as no schema at all.
+
+## Accepted validators
+
+A `RouteValidator` is either a
+[Standard Schema](https://standardschema.dev) implementation or a
+platform-native JSON Schema validator:
+
+- Standard Schema — Zod, ArkType, Valibot, and any other conforming library.
+  These are detected through the `~standard` property and passed to Elysia
+  unchanged.
+- Native — TypeBox and Elysia's `t` builder, matched structurally through the
+  neutral `NativeSchema` contract so `@aponiajs/common` never depends on
+  TypeBox.
+
+Both kinds can appear in one application, and even in one controller:
+
+```ts title="src/item.schema.ts"
+import { t } from "elysia";
+import { z } from "zod";
+
+export const createItemSchema = {
+  body: z.object({
+    name: z.string().min(2),
+    quantity: z.number().int().positive(),
+  }),
+};
+
+export const searchItemsSchema = {
+  query: t.Object({
+    term: t.String({ minLength: 1 }),
+    take: t.Optional(t.Numeric()),
+  }),
+};
+
+export const tenantHeaderSchema = {
+  headers: t.Object({ "x-tenant": t.String({ minLength: 2 }) }),
+};
+
+export type CreateItem = z.infer<(typeof createItemSchema)["body"]>;
+```
+
+```ts title="src/item.controller.ts"
+import { Body, Controller, Get, Headers, Post, Query } from "@aponiajs/common";
+import { createItemSchema, searchItemsSchema, tenantHeaderSchema } from "./item.schema.ts";
+import type { CreateItem } from "./item.schema.ts";
+
+@Controller("items")
+export class ItemController {
+  @Post("/", createItemSchema)
+  create(@Body() body: CreateItem) {
+    return body;
+  }
+
+  @Get("/", searchItemsSchema)
+  search(@Query("term") term: string, @Query("take") take: number | undefined) {
+    return { term, take: take ?? 10 };
+  }
+
+  @Get("tenant", tenantHeaderSchema)
+  readTenant(@Headers("x-tenant") tenant: string) {
+    return { tenant };
+  }
+}
+```
+
+Elysia's `t.Numeric()` coerces a numeric query string, which is why `take`
+arrives as a `number`.
+
+## Types come from your annotations
+
+TypeScript cannot contextually type the parameters of a decorated method, so a
+handler's parameter types are whatever you write — the same rule as NestJS.
+Keep each schema in a `const` and derive the type from it:
+
+```ts
+type CreateItem = z.infer<(typeof createItemSchema)["body"]>;
+```
+
+For TypeBox and Elysia `t`, use `Static<typeof schema>` from `elysia`.
+
+A `@Ctx()` handler is the exception: `ElysiaRouteContext<typeof schema>` and the
+platform-neutral `RouteContext<typeof schema>` both infer each covered slot from
+its validator.
+
+```ts
+import { type RouteContext } from "@aponiajs/common";
+
+@Post("/", createUser)
+create(@Ctx() context: RouteContext<typeof createUser>) {
+  return context.body;
+}
+```
+
+`InferValidatorOutput<TValidator>` is exported for the same inference in your
+own helpers, and `isStandardSchema(validator)` narrows a validator to its
+Standard Schema form.
+
+## Failure behavior
+
+Validation runs inside Elysia before the handler, so:
+
+- a rejected request answers `422` and the handler is never invoked;
+- the handler needs no defensive parsing for covered slots;
+- `response` validation applies to what a handler returns.
+
+Assert the status rather than the message body — see the
+[testing recipe](/docs/recipes/testing).
+
+<Callout type="info" title="No framework-level error mapping yet">
+  Validation failures are produced by Elysia. AponiaJS does not yet add its own
+  exception filters, Problem Details bodies, or serialization layer. The
+  roadmap tracks this under "Validation, errors, and serialization".
+</Callout>

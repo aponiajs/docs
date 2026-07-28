@@ -1,0 +1,80 @@
+---
+title: Generate Command
+description: Generate files and register implemented AponiaJS components in modules.
+---
+
+## Usage
+
+```text
+aponia generate <schematic> <name> [options]
+aponia g <schematic> <name> [options]
+```
+
+Run generation from an AponiaJS project root containing `aponia.json`:
+
+```bash
+aponia g module users
+aponia g controller users
+aponia g service users
+```
+
+Controller convenience aliases are `route`, `router`, and `routes`:
+
+```bash
+aponia g routes health --no-spec
+```
+
+## Options
+
+| Option | Alias | Behavior |
+| --- | --- | --- |
+| `--dry-run` | `-d` | Report create and update operations without writing. |
+| `--flat` / `--no-flat` | — | Override whether the schematic gets its own directory. |
+| `--spec` / `--no-spec` | — | Override spec generation. |
+| `--skip-import` | — | Do not register the generated declaration in a module. |
+| `--module <name>` | — | Select the declaring module. |
+| `--project <name>` | `-p` | Select a project from `aponia.json`. |
+| `--path <path>` | — | Override the configured source root for this generation. |
+| `--crud` / `--no-crud` | — | Include or omit resource CRUD shapes. |
+| `--type <type>` | — | Select a resource transport. |
+
+CLI flags take precedence over project-specific generation defaults, which take
+precedence over global defaults.
+
+## Applications and libraries
+
+Inside a configured workspace:
+
+```bash
+aponia g app admin-api
+aponia g library shared
+```
+
+The application generator writes under `apps/`. The library generator writes a
+private Bun package under `packages/`.
+
+## Resources
+
+The accepted resource types are:
+
+```text
+rest
+graphql-code-first
+graphql-schema-first
+microservice
+ws
+```
+
+A REST resource generates a controller, service, module, route schema, DTOs, and
+an entity. GraphQL resources generate a resolver, and WebSocket resources
+generate a gateway.
+
+<Callout title="Non-REST transports are scaffolds">
+  GraphQL, microservice, and WebSocket transports are not implemented by the
+  runtime. Those resources generate a class with conventional method names that
+  no platform package discovers. REST resources are fully runnable: their
+  handlers use request parameter decorators and the generated route schemas.
+</Callout>
+
+See [schematics](./schematics) for the complete catalog and
+[module registration](./module-registration) for automatic imports.

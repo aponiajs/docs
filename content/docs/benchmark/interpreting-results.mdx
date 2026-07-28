@@ -1,0 +1,26 @@
+---
+title: Interpreting benchmark results
+description: Apply the correct caveats to historical AponiaJS performance measurements.
+---
+
+Historical synthetic results can compare two implementations under one
+controlled CI protocol. They cannot establish:
+
+- production latency under real application work;
+- tail latency or memory behavior;
+- database, network, or external service cost;
+- capacity across different machines;
+- a stable performance ratio across framework versions.
+
+When citing a result, include:
+
+1. the AponiaJS version and commit;
+2. the benchmark protocol and workloads;
+3. runtime and dependency versions;
+4. connection count and duration;
+5. raw treatment values;
+6. the number of observations;
+7. the limitations above.
+
+Prefer application-specific load testing over archived framework microbenchmarks
+for deployment decisions.

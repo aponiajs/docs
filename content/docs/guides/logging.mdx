@@ -1,0 +1,80 @@
+---
+title: Logging
+description: Configure system logs, JSON output, level filtering, and custom loggers.
+---
+
+System logging is enabled by default:
+
+```ts
+const application = await AponiaFactory.create(AppModule);
+```
+
+Bootstrap logs use contexts such as `AponiaFactory`, `InstanceLoader`,
+`RoutesResolver`, `RouterExplorer`, and `AponiaApplication`.
+
+## Disable system logs
+
+```ts
+const application = await AponiaFactory.create(AppModule, {
+  logger: false,
+});
+```
+
+## Filter levels
+
+```ts
+const application = await AponiaFactory.create(AppModule, {
+  logger: ["error", "warn", "log"],
+});
+```
+
+Levels cascade from most severe to most verbose:
+
+```text
+fatal -> error -> warn -> log -> debug -> verbose
+```
+
+## Configure ConsoleLogger
+
+```ts
+import { ConsoleLogger } from "@aponiajs/common";
+
+const application = await AponiaFactory.create(AppModule, {
+  logger: new ConsoleLogger({
+    colors: false,
+    prefix: "Orders",
+    timestamp: true,
+  }),
+});
+```
+
+For newline-delimited JSON:
+
+```ts
+const logger = new ConsoleLogger({ json: true });
+```
+
+JSON entries contain `level`, `pid`, `timestamp`, `message`, and an optional
+`context`.
+
+## Log from application code
+
+```ts
+import { Injectable, Logger } from "@aponiajs/common";
+
+@Injectable()
+export class GreetingService {
+  private readonly logger = new Logger(GreetingService.name);
+
+  createGreeting(): string {
+    this.logger.log("Creating greeting");
+    return "Hello, AponiaJS!";
+  }
+}
+```
+
+## Custom LoggerService
+
+Pass an object implementing `log`, `fatal`, `error`, and `warn`. `debug` and
+`verbose` are optional. System calls pass their context name as the final
+parameter.

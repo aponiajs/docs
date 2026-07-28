@@ -1,0 +1,41 @@
+---
+title: From Elysia
+description: Introduce module boundaries and DI while preserving direct native Elysia access.
+---
+
+Add the platform packages:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
+```
+
+Move reusable business behavior into providers, group providers and decorated
+controllers in feature modules, and keep the root bootstrap small.
+
+Elysia route schemas port directly: the same `t` validators pass to a route
+decorator, and Standard Schema validators work in the same slots. See
+[route validation](/docs/concepts/route-validation).
+
+Continue to use native Elysia for:
+
+- hooks, macros, error handlers, and lifecycle events;
+- application-wide state declared outside any module;
+- routes that need Elysia's complete handler signature;
+- plugins that depend on Elysia's accumulated types.
+
+```ts
+import { Module } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+@Module({})
+class AppModule {}
+
+const application = await AponiaFactory.create(AppModule, {
+  configureNative: (elysia) =>
+    elysia.get("/native-health", () => ({ ok: true })),
+});
+```
+
+Reusable plugins can move into `ElysiaPluginModule` imports. This gives them
+module ordering and DI-configured construction without hiding the plugin from
+Elysia.

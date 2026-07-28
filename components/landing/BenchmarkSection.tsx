@@ -48,8 +48,8 @@ export function BenchmarkSection() {
     >
       <div className="mono-benchmark-shell">
         <header className="mono-benchmark-heading">
-          <p className="mono-benchmark-kicker">
-            Elysia overhead / v0.3.17
+          <p className="mono-index-rail">
+            <b>03</b> Elysia overhead · archived v0.3.17
           </p>
           <h2 id="benchmark-title">
             <span>75%</span>

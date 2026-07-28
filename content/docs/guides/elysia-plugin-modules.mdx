@@ -1,0 +1,124 @@
+---
+title: Elysia plugin modules
+description: Install native Elysia plugins through module imports and dependency injection.
+---
+
+Every Elysia plugin works inside an AponiaJS application unchanged. A plugin
+becomes a module import, the platform passes it to Elysia's own `.use()`, and
+what it adds to the request context reaches every controller. Plugins are
+installed in module dependency order, before controllers are mounted.
+
+## Define a plugin as a module import
+
+`defineElysiaPlugin` converts a native plugin into a module import that also
+carries the plugin's type:
+
+```ts title="src/clock.plugin.ts"
+import { defineElysiaPlugin } from "@aponiajs/platform-elysia";
+import { Elysia } from "elysia";
+
+export const clock = defineElysiaPlugin(
+  new Elysia({ name: "clock" })
+    .decorate("now", () => new Date().toISOString())
+    .state("requests", 0)
+    .derive({ as: "global" }, () => ({ traceId: crypto.randomUUID() })),
+  { key: "clock" },
+);
+export type clock = typeof clock;
+```
+
+```ts
+import { Module } from "@aponiajs/common";
+import { clock } from "./clock.plugin.ts";
+
+@Module({ imports: [clock] })
+export class AppModule {}
+```
+
+A published plugin is wrapped the same way:
+
+```bash
+bun add @elysiajs/cors
+```
+
+```ts
+import { cors } from "@elysiajs/cors";
+import { defineElysiaPlugin } from "@aponiajs/platform-elysia";
+
+export const corsPlugin = defineElysiaPlugin(cors(), { key: "cors" });
+export type corsPlugin = typeof corsPlugin;
+```
+
+## Register a plugin value directly
+
+`ElysiaPluginModule.register(plugin, { key })` performs the same registration
+without attaching the plugin type. It stays supported; prefer
+`defineElysiaPlugin` unless no handler ever needs the plugin's types.
+
+```ts
+import { Module } from "@aponiajs/common";
+import { ElysiaPluginModule } from "@aponiajs/platform-elysia";
+import { cors } from "@elysiajs/cors";
+
+@Module({
+  imports: [
+    ElysiaPluginModule.register(cors(), {
+      key: "cors",
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+The plugin value is passed unchanged to Elysia's `.use()`.
+
+## Configure a plugin with DI
+
+`ElysiaPluginModule.registerAsync` builds the plugin from the container, so it
+can read configuration a provider owns:
+
+```ts
+import { Module } from "@aponiajs/common";
+import { ElysiaPluginModule } from "@aponiajs/platform-elysia";
+import { jwt } from "@elysiajs/jwt";
+import { ConfigModule, ConfigService } from "./config/config.module.ts";
+
+@Module({
+  imports: [
+    ElysiaPluginModule.registerAsync({
+      key: "jwt",
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) =>
+        jwt({ name: "jwt", secret: config.get("JWT_SECRET") }),
+    }),
+  ],
+})
+export class AuthModule {}
+```
+
+`imports` lists the modules whose exports the factory resolves against. A token
+that no imported module exports fails with `MISSING_PROVIDER` at compile time.
+
+<Callout type="warning" title="registerAsync is not an async provider">
+  Despite its name, `useFactory` must return the plugin synchronously.
+  Promise-based provider initialization is not implemented.
+</Callout>
+
+## Keys and duplicate registration
+
+- A non-empty `key` creates a stable module identity (`Symbol.for`-backed).
+- Diamond imports of the same keyed plugin install it once.
+- Two different plugin definitions sharing one key fail with
+  `DUPLICATE_MODULE` before the server listens.
+- Omitting a key creates a distinct identity for each registration.
+- An empty or whitespace-only key throws `TypeError`.
+
+Use stable keys for shared infrastructure plugins and distinct keys when the
+same plugin intentionally needs multiple configurations.
+
+## Typing what a plugin adds
+
+Everything a plugin decorates, stores, or globally derives is present in every
+handler at runtime. Typing it requires naming the plugin — see
+[typed plugin context](./plugin-context-types).

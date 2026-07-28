@@ -1,0 +1,61 @@
+---
+title: Safety and Errors
+description: Predictable write behavior and common AponiaJS CLI failures.
+---
+
+## Safety guarantees
+
+- `--dry-run` validates and reports changes without writing.
+- A new project is never merged into an existing target directory.
+- Existing generated-file targets are never overwritten.
+- Output paths are constrained to the project root.
+- Template output and reported changes are deterministic.
+- Project installation uses the Bun executable with inherited terminal output.
+- A failed install returns a nonzero result and removes the incomplete new
+  project.
+- Module changes are calculated before create operations are written.
+
+## Common errors
+
+### Could not find aponia.json
+
+Run `aponia generate` from the AponiaJS project root, or add a valid
+`aponia.json`.
+
+### Unknown project
+
+The value passed to `--project` must exist in the `projects` object in
+`aponia.json`.
+
+### Module not found or ambiguous
+
+Use a more specific `--module` path, or generate inside the feature directory
+that owns the declaration.
+
+### File already exists
+
+The CLI does not overwrite generated files. Rename the schematic, remove the
+conflict intentionally, or edit the existing file manually.
+
+### Path escapes the project root
+
+`--path` and configured source roots cannot resolve outside the current
+project.
+
+### Unknown schematic or option
+
+Review the [schematic catalog](./schematics) and [generate options](./generate).
+The CLI rejects unknown commands, schematics, options, resource transports, and
+extra positional arguments.
+
+### Generated feature does not run
+
+Check whether the output is marked scaffold-only. File generation for guards,
+filters, middleware, interceptors, gateways, resolvers, and non-REST transports
+does not indicate runtime implementation.
+
+Use a dry run to diagnose generation without changing the project:
+
+```bash
+aponia g controller users --dry-run
+```

@@ -1,0 +1,55 @@
+---
+title: Native Elysia access
+description: Configure and retrieve the underlying Elysia application without replacing it.
+---
+
+AponiaJS deliberately keeps Elysia accessible. Use `configureNative` during
+creation when Elysia's fluent type accumulation matters:
+
+```ts
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+const application = await AponiaFactory.create(AppModule, {
+  configureNative: (elysia) =>
+    elysia
+      .state("version", "0.6.0-alpha.12")
+      .get("/health", ({ store }) => ({
+        ok: true,
+        version: store.version,
+      })),
+});
+```
+
+`configureNative` must mutate and return the exact Elysia instance it receives.
+Returning a replacement instance throws `INVALID_NATIVE_APPLICATION`.
+
+## Retrieve the configured instance
+
+```ts
+const native = application.getNativeApplication();
+```
+
+The return type preserves the Elysia type produced by `configureNative`.
+
+## When to use this escape hatch
+
+Use native access for behavior that the decorated surface does not implement:
+
+- Elysia hooks, macros, error handlers, and lifecycle events;
+- application-wide state or decorators declared outside any module;
+- routes that need Elysia's complete handler signature;
+- an application-wide native plugin.
+
+Request binding and validation no longer require this escape hatch — see
+[request parameters](/docs/concepts/request-parameters) and
+[route validation](/docs/concepts/route-validation).
+
+For reusable plugins owned by a module boundary, prefer
+[`ElysiaPluginModule`](/docs/guides/elysia-plugin-modules).
+
+<Callout type="info" title="Controller type boundary">
+  State and decorators from module-imported plugins exist at runtime in every
+  handler, but compiling a controller erases its module imports, so their types
+  reach a handler only when the plugin is named — see
+  [typed plugin context](/docs/guides/plugin-context-types).
+</Callout>

@@ -1,0 +1,114 @@
+---
+title: Schematics
+description: Complete AponiaJS CLI schematic catalog with aliases and runtime status.
+---
+
+## Catalog
+
+| Schematic | Aliases | Generated shape |
+| --- | --- | --- |
+| `app` | `application` | Application under `apps/`. |
+| `library` | `lib` | Private package under `packages/`. |
+| `class` | `cl` | Plain class. |
+| `controller` | `co`, `route`, `router`, `routes` | Decorated HTTP controller. |
+| `decorator` | `d` | Custom method decorator shape. |
+| `filter` | `f` | Exception-filter-shaped class. |
+| `gateway` | `ga` | WebSocket-gateway-shaped class. |
+| `guard` | `gu` | Guard-shaped class. |
+| `interface` | `itf` | TypeScript interface. |
+| `interceptor` | `itc` | Interceptor-shaped class. |
+| `middleware` | `mi` | Middleware-shaped class. |
+| `module` | `mo` | Decorated AponiaJS module. |
+| `pipe` | `pi` | Transformation-pipe-shaped class. |
+| `provider` | `pr` | Injectable provider class. |
+| `resolver` | `r` | GraphQL-resolver-shaped class. |
+| `resource` | `res` | Module, service, transport shape, schema, and optional data classes. |
+| `service` | `s` | Injectable service class. |
+
+<Callout type="warning" title="Controller alias spelling">
+  The accepted controller aliases are `co`, `route`, `router`, and `routes`.
+  The CLI help text also lists `routers`, but the argument parser does not
+  accept it — that spelling fails with `Unknown schematic "routers"`.
+</Callout>
+
+## Default output shape
+
+| Schematic | Own directory by default | Spec generated |
+| --- | --- | --- |
+| `controller`, `module`, `resolver`, `service`, `resource` | yes | yes, except `module` |
+| `class`, `decorator`, `filter`, `gateway`, `guard`, `interface`, `interceptor`, `middleware`, `pipe`, `provider` | no (flat) | yes, except `decorator` and `interface` |
+
+`--flat` and `--no-flat` override the directory behavior; `--spec` and
+`--no-spec` override spec generation.
+
+## Runtime-aware output
+
+These generated shapes correspond to implemented runtime concepts:
+
+- modules;
+- controllers with decorated route handlers, request parameters, and schemas;
+- services and providers registered as singleton providers;
+- plain classes, interfaces, and custom decorators as application-owned code;
+- applications and libraries as workspace file structures.
+
+## REST resources
+
+A REST CRUD resource generates a working feature:
+
+```text
+src/users/
+├── dto/
+│   ├── create-user.dto.ts
+│   └── update-user.dto.ts
+├── entities/
+│   └── user.entity.ts
+├── users.controller.ts
+├── users.module.ts
+├── users.schema.ts
+└── users.service.ts
+```
+
+`users.schema.ts` owns the per-slot validators and the route schemas the
+controller passes to its decorators, built with Elysia's `t`. Both DTOs derive
+their types from those schemas with `Static<typeof …>`, so a field is declared
+once:
+
+```ts
+export const createUserSchema = t.Object({
+  name: t.String({ minLength: 1 }),
+});
+
+export const createUserRoute = {
+  body: createUserSchema,
+};
+```
+
+```ts
+@Post("/", createUserRoute)
+create(@Body() input: CreateUserDto) {
+  return this.usersService.create(input);
+}
+```
+
+Swap in any [Standard Schema](https://standardschema.dev) validator — Zod,
+ArkType, Valibot — by editing that one file.
+
+## Scaffold-only output
+
+The CLI also generates Nest-familiar shapes before the corresponding AponiaJS
+runtime contracts exist:
+
+- filters;
+- gateways;
+- guards;
+- interceptors;
+- middleware;
+- pipes;
+- resolvers;
+- GraphQL, microservice, and WebSocket resources.
+
+These classes have conventional method names but are not discovered or invoked
+by the framework runtime.
+
+Use `--dry-run` before generation and review every scaffold before integrating
+it.

@@ -1,0 +1,36 @@
+---
+title: In-process requests
+description: Test complete HTTP routing through Elysia without binding a network port.
+---
+
+`application.handle()` delegates directly to the native Elysia application:
+
+```ts
+import { expect, test } from "bun:test";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "../src/app.module.ts";
+
+test("routes a greeting", async () => {
+  const application = await AponiaFactory.create(AppModule, {
+    logger: false,
+  });
+
+  const response = await application.handle(
+    new Request("http://localhost/greetings"),
+  );
+
+  expect(response.status).toBe(200);
+  expect(await response.text()).toBe("Hello, AponiaJS!");
+
+  await application.close();
+});
+```
+
+No socket is opened, so the test is fast and does not need port allocation.
+The request still crosses the compiled module, constructed controller, route
+plugin, and Elysia response pipeline.
+
+For unit tests, instantiate controllers and services directly. There is no
+`@aponiajs/testing`, testing module, or provider override API yet.
+
+See [Testing recipe](/docs/recipes/testing).

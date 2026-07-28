@@ -1,0 +1,73 @@
+---
+title: Create a Project
+description: Generate a standard AponiaJS application with the Bun-native CLI.
+---
+
+## Install the CLI
+
+Install the published CLI globally with Bun. Every public package is published
+to the `alpha` distribution tag, so request it explicitly:
+
+```bash
+bun add --global @aponiajs/cli@alpha
+aponia --version
+```
+
+Create a project:
+
+```bash
+aponia new my-api
+cd my-api
+bun run dev
+```
+
+Open `http://localhost:3000/`.
+
+Project names must use lowercase kebab-case. The generator refuses to merge
+into or overwrite an existing target directory.
+
+## Use the Bun create entrypoint
+
+The separately published `create-aponia` package delegates to the same project
+generator:
+
+```bash
+bun create aponia my-api
+```
+
+Both entrypoints create the same application shape. The documented `aponia`
+binary is also used for later component generation.
+
+## Preview without writing
+
+Use a dry run to validate the project name and inspect the output:
+
+```bash
+aponia new my-api --dry-run
+```
+
+Skip dependency installation when another process will install the generated
+project:
+
+```bash
+aponia new my-api --skip-install
+```
+
+## Generated commands
+
+The generated `package.json` includes:
+
+```bash
+bun run dev
+bun run start
+bun run build
+bun test
+bun run test:e2e
+bun run check
+```
+
+The generated manifest pins `@aponiajs/common` and `@aponiajs/platform-elysia`
+to the exact CLI version, so decorators and the runtime cannot drift apart.
+
+Continue with [your first route](./first-route) or review the
+[generated project structure](./project-structure).

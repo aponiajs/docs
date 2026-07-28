@@ -1,0 +1,43 @@
+---
+title: Custom logger
+description: Replace Aponia system output with an application-specific LoggerService.
+---
+
+```ts
+import type { LoggerService } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "../src/app.module.ts";
+
+class ApplicationLogger implements LoggerService {
+  log(message: unknown, ...parameters: unknown[]): void {
+    console.log(message, ...parameters);
+  }
+
+  fatal(message: unknown, ...parameters: unknown[]): void {
+    console.error(message, ...parameters);
+  }
+
+  error(message: unknown, ...parameters: unknown[]): void {
+    console.error(message, ...parameters);
+  }
+
+  warn(message: unknown, ...parameters: unknown[]): void {
+    console.warn(message, ...parameters);
+  }
+}
+
+const application = await AponiaFactory.create(AppModule, {
+  logger: new ApplicationLogger(),
+});
+```
+
+The final parameter on system events is the framework subsystem context. A
+custom logger can use it for routing or structured fields.
+
+For built-in JSON lines, prefer:
+
+```ts
+import { ConsoleLogger } from "@aponiajs/common";
+
+const logger = new ConsoleLogger({ json: true });
+```

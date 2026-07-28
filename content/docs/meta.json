@@ -1,0 +1,20 @@
+{
+  "title": "AponiaJS",
+  "pages": [
+    "index",
+    "---Getting started---",
+    "getting-started",
+    "---Framework---",
+    "concepts",
+    "guides",
+    "---Tooling---",
+    "cli",
+    "recipes",
+    "---Reference---",
+    "api-reference",
+    "migration",
+    "benchmark",
+    "---Project---",
+    "project"
+  ]
+}

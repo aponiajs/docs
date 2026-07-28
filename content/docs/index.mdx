@@ -1,44 +1,126 @@
 ---
 title: Introduction
-description: Build structured, type-safe server applications with Bun and Elysia.
+description: Build modular, type-safe Bun applications with dependency injection, route validation, and direct access to Elysia.
 ---
 
-AponiaJS brings familiar modules, controllers, and dependency injection to a
-Bun-first runtime. It keeps application structure explicit while Elysia handles
-the HTTP layer.
+AponiaJS is an experimental, Bun-first TypeScript application framework. It
+adds modules, decorated controllers, request parameter decorators, Standard
+Schema route validation, singleton dependency injection, explicit provider
+visibility, structured diagnostics, and a native Elysia integration.
 
-<Callout title="Project status">
-  AponiaJS is under active development. Review the source repository before
-  using it in production.
+<Callout type="warning" title="Experimental software">
+  AponiaJS `0.6.0-alpha.12` is under active development and is not recommended
+  for production yet. The API is pre-1.0 and can change between releases. All
+  public packages publish to the npm `alpha` channel.
 </Callout>
 
 ## Start here
 
 <Cards>
   <Card
-    title="Core concepts"
-    description="Learn how modules, controllers, and providers fit together."
-    href="/docs/test"
+    title="Create a project"
+    description="Generate a working Bun application with the Aponia CLI."
+    href="/docs/getting-started/create-a-project"
   />
   <Card
-    title="Source repository"
-    description="Inspect the implementation and current project activity."
-    href="https://github.com/aponiajs/aponiajs"
+    title="Add AponiaJS manually"
+    description="Install the HTTP platform in an existing Bun project."
+    href="/docs/getting-started/existing-project"
+  />
+  <Card
+    title="Understand the framework"
+    description="Learn modules, controllers, validation, providers, and visibility."
+    href="/docs/concepts"
+  />
+  <Card
+    title="API reference"
+    description="Review every public export in the alpha package surface."
+    href="/docs/api-reference"
+  />
+  <Card
+    title="Current limitations"
+    description="See exactly what is implemented, experimental, and planned."
+    href="/docs/migration/current-limitations"
   />
 </Cards>
 
-## Install
+## The application model
 
-```bash
-bun add @aponiajs/core @aponiajs/common
+```text
+main.ts
+  -> AponiaFactory.create(AppModule)
+  -> module graph validation
+  -> singleton provider construction
+  -> Elysia plugin and controller registration
+  -> listen(), handle(), or close()
 ```
 
-## Create an application
+A normal HTTP application installs `@aponiajs/common`,
+`@aponiajs/platform-elysia`, and the Elysia peer dependency. Most applications
+do not install `@aponiajs/core` directly.
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
+```
 
 ```ts
-import { AponiaFactory } from '@aponiajs/core';
-import { AppModule } from './app.module';
+import { Controller, Get, Injectable, Module, Param } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+@Injectable()
+class GreetingService {
+  greet(name: string): string {
+    return `Hello, ${name}!`;
+  }
+}
+
+@Controller("greetings")
+class GreetingController {
+  constructor(private readonly greetings: GreetingService) {}
+
+  @Get(":name")
+  getGreeting(@Param("name") name: string): string {
+    return this.greetings.greet(name);
+  }
+}
+
+@Module({
+  controllers: [GreetingController],
+  providers: [GreetingService],
+})
+class AppModule {}
 
 const app = await AponiaFactory.create(AppModule);
 await app.listen(3000);
 ```
+
+## What is implemented
+
+- decorated modules, controllers, and the seven HTTP method decorators;
+- [request parameter decorators](/docs/concepts/request-parameters) for body,
+  query, params, headers, cookies, request, response settings, and context;
+- [Standard Schema](https://standardschema.dev) route validation — Zod,
+  ArkType, Valibot — plus platform-native TypeBox and Elysia `t` validators;
+- singleton class, value, factory, and alias providers with explicit tokens;
+- native Elysia plugin imports, including typed plugin context;
+- structured system logging and the complete CLI schematic catalog.
+
+## Documentation baseline
+
+These docs were reviewed against AponiaJS `0.6.0-alpha.12` on
+[`main@7d6c426`](https://github.com/aponiajs/aponiajs/tree/7d6c42621e2222751d694b09f9ae7c61b90368ef).
+Source code and package exports are authoritative when a pre-1.0 release differs
+from this site.
+
+<Cards>
+  <Card
+    title="GitHub source"
+    description="Inspect the implementation, tests, examples, and roadmap."
+    href="https://github.com/aponiajs/aponiajs"
+  />
+  <Card
+    title="Version compatibility"
+    description="Check the documented Bun, Elysia, and package version contract."
+    href="/docs/migration/version-compatibility"
+  />
+</Cards>

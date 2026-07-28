@@ -1,0 +1,58 @@
+---
+title: Application bootstrap
+description: Follow AponiaFactory.create from decorated root module to a ready Elysia application.
+---
+
+`AponiaFactory.create()` is exported by `@aponiajs/platform-elysia`. It accepts
+a decorated module class, dynamic module, or low-level module definition.
+
+```ts
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "./app.module.ts";
+
+const application = await AponiaFactory.create(AppModule);
+```
+
+During creation, AponiaJS:
+
+1. creates the configured system logger;
+2. compiles decorated and dynamic modules into immutable definitions;
+3. validates module identity, imports, exports, and provider dependencies;
+4. creates the singleton dependency container;
+5. creates one Elysia application;
+6. applies `configureNative`, when supplied;
+7. initializes providers and imported Elysia plugins in dependency order;
+8. instantiates controllers and registers their generated plugins;
+9. waits for Elysia modules before returning the wrapper.
+
+Creation is asynchronous because Elysia module composition is awaited. Provider
+factories themselves are currently synchronous.
+
+## Root module
+
+```ts
+import { Module } from "@aponiajs/common";
+import { GreetingModule } from "./greeting/greeting.module.ts";
+
+@Module({
+  imports: [GreetingModule],
+})
+export class AppModule {}
+```
+
+## Application wrapper
+
+The returned `AponiaElysiaApplication` exposes:
+
+| Method | Purpose |
+| --- | --- |
+| `getNativeApplication()` | Access the configured Elysia instance. |
+| `handle(request)` | Execute an in-process request without opening a port. |
+| `listen(port)` | Start Bun's HTTP server. |
+| `getUrl()` | Read the server origin after `listen()`. |
+| `close()` | Stop the server when it is running. |
+
+Calling `getUrl()` before `listen()` throws `APPLICATION_NOT_LISTENING`.
+
+See [Application lifecycle](/docs/guides/application-lifecycle) and
+[Native Elysia access](/docs/guides/native-elysia-access).

@@ -1,0 +1,98 @@
+---
+title: Prerequisites
+description: Runtime, package, and TypeScript requirements for the AponiaJS alpha releases.
+---
+
+## Bun
+
+AponiaJS is Bun-first. The `0.6.0-alpha.12` source baseline and generated
+applications pin Bun `1.3.14`:
+
+```bash
+bun --version
+```
+
+Use Bun for package installation, scripts, application execution, and tests.
+Node.js is not the primary runtime target.
+
+## Application packages
+
+A decorated HTTP application uses:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
+```
+
+- `@aponiajs/common` provides decorators, request parameter decorators, route
+  schema contracts, tokens, provider helpers, errors, and logging.
+- `@aponiajs/platform-elysia` provides `AponiaFactory`, the Elysia application
+  adapter, plugin modules, and the typed Elysia route context.
+- `elysia` is a peer dependency of the platform package (`^1.4.29`).
+
+<Callout title="Do not bootstrap from core">
+  `AponiaFactory` is exported by `@aponiajs/platform-elysia`, not
+  `@aponiajs/core`. Most HTTP applications receive core transitively and should
+  not install it directly.
+</Callout>
+
+Every public package is published to the npm `alpha` distribution tag; `latest`
+is reserved for the first stable release. Keep all AponiaJS packages on the same
+version — the public packages are released with synchronized versions.
+
+## ESM and TypeScript
+
+Set the project package type to ESM:
+
+```json
+{
+  "type": "module"
+}
+```
+
+Constructor injection through decorated classes requires decorator metadata.
+The generated configuration includes:
+
+```json
+{
+  "compilerOptions": {
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true
+  }
+}
+```
+
+Use explicit `.ts` extensions for local imports, matching the generated
+application and framework examples.
+
+## Optional validators
+
+Route validation accepts any [Standard Schema](https://standardschema.dev)
+implementation. Elysia's own `t` builder ships with the Elysia peer dependency,
+so no extra install is needed for TypeBox-style schemas. Install a validator
+only when you want one:
+
+```bash
+bun add zod
+```
+
+## Current runtime boundary
+
+The implemented release supports decorated modules and HTTP routes, request
+parameter decorators, route validation, singleton providers, explicit tokens,
+module imports and exports, native Elysia plugins with typed context,
+application lifecycle methods, and logging.
+
+Runtime guards and interceptors, middleware, exception filters, request or
+transient provider scopes, async provider factories, lifecycle hooks, testing
+modules, OpenAPI, authentication, WebSockets, GraphQL, and microservice
+transports are not implemented.
+
+See [project status](../project/status-and-roadmap) for the complete supported
+and planned boundary.

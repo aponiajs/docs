@@ -1,0 +1,12 @@
+{
+  "title": "API reference",
+  "pages": [
+    "index",
+    "common",
+    "core",
+    "platform-elysia",
+    "application",
+    "error-codes",
+    "cli-programmatic-api"
+  ]
+}

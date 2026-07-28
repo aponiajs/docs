@@ -1,0 +1,75 @@
+---
+title: Application API
+description: Reference AponiaFactory.create and the AponiaElysiaApplication wrapper.
+---
+
+## AponiaFactory.create
+
+```ts
+const application = await AponiaFactory.create(AppModule, options);
+```
+
+Options without native configuration:
+
+```ts
+interface AponiaApplicationOptions {
+  readonly logger?: false | LoggerService | readonly LogLevel[];
+}
+```
+
+Configured overload:
+
+```ts
+interface ConfiguredAponiaApplicationOptions<TNativeApplication>
+  extends AponiaApplicationOptions {
+  readonly configureNative: (
+    application: Elysia,
+  ) => TNativeApplication;
+}
+```
+
+`configureNative` must return the same object it receives. Its accumulated
+Elysia type becomes the native type on the returned wrapper.
+
+## AponiaElysiaApplication
+
+### getNativeApplication
+
+```ts
+getNativeApplication(): TNativeApplication
+```
+
+Returns the configured Elysia instance.
+
+### handle
+
+```ts
+handle(request: Request): Response | Promise<Response>
+```
+
+Delegates to Elysia's request handler.
+
+### listen
+
+```ts
+listen(port: number): Promise<void>
+```
+
+Starts the server, waits for Elysia modules, and emits startup logs.
+
+### getUrl
+
+```ts
+getUrl(): string
+```
+
+Returns `server.url.origin`. Throws `APPLICATION_NOT_LISTENING` before a
+successful `listen()`.
+
+### close
+
+```ts
+close(): Promise<void>
+```
+
+Stops the server when one exists.

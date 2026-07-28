@@ -1,0 +1,65 @@
+---
+title: CLI programmatic API
+description: Use the public parser and project or schematic generators from @aponiajs/cli.
+---
+
+Most users should call the `aponia` binary. Tooling integrations can import the
+same public functions.
+
+## Public exports
+
+| Kind | Exports |
+| --- | --- |
+| Functions | `generateProject`, `generateSchematic`, `generateSchematics`, `parseArguments`, `runCli` |
+| Types | `CliCommand`, `GenerateCommandOptions`, `GenerateProjectOptions`, `GenerateProjectResult`, `GenerateSchematic`, `GenerateSchematicOptions`, `GenerateSchematicResult`, `ResourceTransport`, `SchematicChange` |
+
+## Argument parsing
+
+```ts
+import { parseArguments } from "@aponiajs/cli";
+
+const command = parseArguments(["generate", "service", "users"]);
+```
+
+Parsing throws on unknown commands, options, missing values, or extra
+positionals.
+
+## Project generation
+
+```ts
+import { generateProject } from "@aponiajs/cli";
+
+const result = await generateProject({
+  name: "my-api",
+  cwd: process.cwd(),
+  dryRun: true,
+  skipInstall: false,
+});
+```
+
+## Schematic generation
+
+```ts
+import { generateSchematic } from "@aponiajs/cli";
+
+const result = await generateSchematic({
+  command: "generate",
+  schematic: "service",
+  name: "users",
+  dryRun: true,
+  skipImport: false,
+  crud: true,
+  type: "rest",
+});
+```
+
+## runCli
+
+```ts
+import { runCli } from "@aponiajs/cli";
+
+const exitCode = await runCli(["generate", "service", "users"]);
+```
+
+`runCli(arguments)` returns `0` on success and `1` after printing a normalized
+CLI error.

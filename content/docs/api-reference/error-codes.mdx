@@ -1,0 +1,44 @@
+---
+title: Error codes
+description: Diagnose every AponiaError code exposed by the public contract.
+---
+
+`AponiaError` provides a stable `code`, a human-readable `message`, and frozen
+structured `details`.
+
+| Code | Cause | Typical correction |
+| --- | --- | --- |
+| `MODULE_CYCLE` | A module import path returns to a module already being compiled. | Break the import cycle and extract a shared boundary. |
+| `DUPLICATE_MODULE` | Different definitions claim the same module ID or stable dynamic identity. | Use one definition or a distinct dynamic-module key. |
+| `DUPLICATE_PROVIDER` | One module declares the same provider or controller token twice. | Remove the duplicate registration. |
+| `INVALID_EXPORT` | A module exports a token it cannot resolve. | Provide it locally or import a module that exports it. |
+| `AMBIGUOUS_PROVIDER` | Multiple imported source modules export the same token. | Export distinct tokens or restructure imports. |
+| `MISSING_PROVIDER` | A dependency is not visible from the requesting module. | Add a provider, import its module, and export the token. |
+| `PROVIDER_CYCLE` | Provider resolution returns to a provider being constructed. | Remove the constructor/factory cycle. |
+| `INVALID_CONTROLLER` | Missing decorator metadata or a non-callable route handler. | Add `@Controller()` and use callable decorated methods. |
+| `INVALID_MODULE` | A class root/import is missing `@Module()`. | Decorate it or pass a low-level definition. |
+| `INVALID_NATIVE_APPLICATION` | `configureNative` returned a different Elysia object. | Return the received instance after chaining methods. |
+| `APPLICATION_NOT_LISTENING` | `getUrl()` ran before `listen()`. | Listen first or avoid URL access in in-process tests. |
+| `UNSUPPORTED_CONTROLLER` | The Elysia platform received another controller kind or a builder returned a non-Elysia value. | Use decorated controllers or `defineElysiaController()` correctly. |
+
+## Inspect an error
+
+```ts
+import { AponiaError } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "./app.module.ts";
+
+try {
+  await AponiaFactory.create(AppModule);
+} catch (error) {
+  if (error instanceof AponiaError) {
+    console.error(error.code, error.details);
+  }
+  throw error;
+}
+```
+
+These errors describe framework graph and lifecycle validation. Route input
+validation is performed by Elysia and answers `422`; AponiaJS does not yet add
+its own exception filters or Problem Details error bodies. Assert the `code`
+rather than the message, which is not part of the contract.

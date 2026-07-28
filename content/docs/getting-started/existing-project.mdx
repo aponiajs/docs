@@ -1,0 +1,91 @@
+---
+title: Existing Project
+description: Add the AponiaJS alpha packages to an existing Bun and Elysia project.
+---
+
+## Install the HTTP packages
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
+```
+
+`@aponiajs/core` is not the application bootstrap package. Install core
+directly only when building a low-level container integration or a platform
+adapter.
+
+## Configure the project
+
+Ensure `package.json` declares ESM:
+
+```json
+{
+  "type": "module"
+}
+```
+
+Enable TypeScript decorator metadata:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "types": ["bun"]
+  },
+  "include": ["src", "test"]
+}
+```
+
+## Add the application module
+
+```ts title="src/app.module.ts"
+import { Module } from "@aponiajs/common";
+
+@Module({})
+export class AppModule {}
+```
+
+## Bootstrap the Elysia platform
+
+```ts title="src/main.ts"
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "./app.module.ts";
+
+async function bootstrap(): Promise<void> {
+  const application = await AponiaFactory.create(AppModule);
+  const port = Number(Bun.env.PORT ?? 3000);
+  await application.listen(port);
+}
+
+await bootstrap();
+```
+
+Run the entrypoint with Bun:
+
+```bash
+bun src/main.ts
+```
+
+## Keep existing Elysia routes
+
+Adopting AponiaJS does not require rewriting an existing Elysia application at
+once. Existing plugins mount as module imports, and `configureNative` keeps
+direct access to the same Elysia instance:
+
+```ts
+const application = await AponiaFactory.create(AppModule, {
+  configureNative: (elysia) => elysia.get("/legacy-health", () => ({ ok: true })),
+});
+```
+
+See [From Elysia](../migration/from-elysia) for the incremental path.
+
+Add a controller and service in [your first route](./first-route).

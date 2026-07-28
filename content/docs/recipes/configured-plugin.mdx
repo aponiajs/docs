@@ -1,0 +1,82 @@
+---
+title: Configure a plugin with DI
+description: Build an Elysia plugin from a provider visible through module imports.
+---
+
+Define a typed configuration token:
+
+```bash
+bun add @elysiajs/jwt
+```
+
+```ts title="src/config.module.ts"
+import {
+  Inject,
+  Injectable,
+  Module,
+  createToken,
+  provideValue,
+} from "@aponiajs/common";
+
+interface AuthConfig {
+  readonly secret: string;
+}
+
+function requireEnvironment(name: string): string {
+  const value = Bun.env[name]?.trim();
+  if (!value) {
+    throw new Error(`${name} must be set to a non-empty value`);
+  }
+  return value;
+}
+
+const AUTH_CONFIG = createToken<AuthConfig>("AUTH_CONFIG");
+const jwtSecret = requireEnvironment("JWT_SECRET");
+
+@Injectable()
+export class ConfigService {
+  constructor(@Inject(AUTH_CONFIG) readonly auth: AuthConfig) {}
+}
+
+@Module({
+  providers: [
+    provideValue(AUTH_CONFIG, { secret: jwtSecret }),
+    ConfigService,
+  ],
+  exports: [ConfigService],
+})
+export class ConfigModule {}
+```
+
+Use it in plugin registration:
+
+```ts title="src/auth.module.ts"
+import { Module } from "@aponiajs/common";
+import { ElysiaPluginModule } from "@aponiajs/platform-elysia";
+import { jwt } from "@elysiajs/jwt";
+import { ConfigModule, ConfigService } from "./config.module.ts";
+
+@Module({
+  imports: [
+    ElysiaPluginModule.registerAsync({
+      key: "jwt",
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) =>
+        jwt({
+          name: "jwt",
+          secret: config.auth.secret,
+        }),
+    }),
+  ],
+})
+export class AuthModule {}
+```
+
+<Callout type="warning" title="Use real secret management in deployed apps">
+  Supply `JWT_SECRET` through your deployment's secret store. The example
+  rejects missing and whitespace-only values because AponiaJS does not yet ship
+  a configuration or secrets package.
+</Callout>
+
+The factory must return synchronously.

@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 
 export interface GooeyNavItem {
@@ -11,7 +9,6 @@ interface GooeyNavProps {
   items: GooeyNavItem[];
 }
 
-// Static section navigation with pointer-only underline feedback.
 export function GooeyNav({ items }: GooeyNavProps) {
   return (
     <div className="mono-gooey-nav">

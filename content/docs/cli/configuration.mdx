@@ -1,0 +1,80 @@
+---
+title: CLI Configuration
+description: Configure source roots, project selection, and generation defaults in aponia.json.
+---
+
+Generated applications include `aponia.json`:
+
+```json
+{
+  "sourceRoot": "src",
+  "entryFile": "main",
+  "platform": "elysia",
+  "language": "typescript",
+  "generateOptions": {
+    "spec": true
+  }
+}
+```
+
+Generation currently reads `sourceRoot`, `generateOptions`, and optional
+`projects`. The remaining fields record project metadata for the generated
+application.
+
+## Global defaults
+
+Set default spec and directory behavior:
+
+```json
+{
+  "sourceRoot": "src",
+  "generateOptions": {
+    "flat": false,
+    "spec": {
+      "controller": true,
+      "service": true,
+      "guard": false
+    }
+  }
+}
+```
+
+`spec` can be a boolean for all schematics or a map keyed by schematic name.
+
+## Projects
+
+Select a configured project with `--project`:
+
+```json
+{
+  "sourceRoot": "src",
+  "projects": {
+    "admin": {
+      "root": "apps/admin",
+      "sourceRoot": "apps/admin/src",
+      "generateOptions": {
+        "spec": false
+      }
+    }
+  }
+}
+```
+
+```bash
+aponia g controller users --project admin
+```
+
+If a project omits `sourceRoot`, generation derives it from the project root
+and `src`.
+
+## Precedence
+
+Generation resolves options in this order:
+
+1. CLI flag;
+2. selected project `generateOptions`;
+3. root `generateOptions`;
+4. schematic default.
+
+`--path` overrides the output base for one command. Paths that escape the
+project root are rejected.
