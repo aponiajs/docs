@@ -263,16 +263,14 @@ function validatePlaceholderRoute(path, source) {
 }
 
 function validateImports(path, source) {
-  const invalidImport =
-    /import\s*\{[^}]*\bAponiaFactory\b[^}]*\}\s*from\s*["']@aponiajs\/core["']/gsu.exec(
-      source,
-    );
+  const pattern =
+    /import\s*\{[^}]*\bAponiaFactory\b[^}]*\}\s*from\s*["']@aponiajs\/core["']/gsu;
 
-  if (invalidImport) {
+  for (const match of source.matchAll(pattern)) {
     report(
       path,
       'AponiaFactory must not be imported from "@aponiajs/core"',
-      lineAt(source, invalidImport.index),
+      lineAt(source, match.index),
     );
   }
 }

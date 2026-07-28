@@ -6,16 +6,14 @@ description: Use the public parser and project or schematic generators from @apo
 Most users should call the `aponia` binary. Tooling integrations can import the
 same public functions.
 
+## Public exports
+
+| Kind | Exports |
+| --- | --- |
+| Functions | `generateProject`, `generateSchematic`, `generateSchematics`, `parseArguments`, `runCli` |
+| Types | `CliCommand`, `GenerateCommandOptions`, `GenerateProjectOptions`, `GenerateProjectResult`, `GenerateSchematic`, `GenerateSchematicOptions`, `GenerateSchematicResult`, `ResourceTransport`, `SchematicChange` |
+
 ## Argument parsing
-
-Exports:
-
-- `parseArguments`
-- `generateSchematics`
-- `CliCommand`
-- `GenerateCommandOptions`
-- `GenerateSchematic`
-- `ResourceTransport`
 
 ```ts
 import { parseArguments } from "@aponiajs/cli";
@@ -39,8 +37,6 @@ const result = await generateProject({
 });
 ```
 
-Exports include `GenerateProjectOptions` and `GenerateProjectResult`.
-
 ## Schematic generation
 
 ```ts
@@ -57,13 +53,13 @@ const result = await generateSchematic({
 });
 ```
 
-Exports include `GenerateSchematicOptions`, `GenerateSchematicResult`, and
-`SchematicChange`.
-
 ## runCli
 
 ```ts
-runCli(arguments_: readonly string[]): Promise<number>
+import { runCli } from "@aponiajs/cli";
+
+const exitCode = await runCli(["generate", "service", "users"]);
 ```
 
-Returns `0` on success and `1` after printing a normalized CLI error.
+`runCli(arguments)` returns `0` on success and `1` after printing a normalized
+CLI error.

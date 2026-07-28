@@ -117,12 +117,27 @@ if (siteUrl.hostname === 'localhost') {
     'SEO check used localhost. Set NEXT_PUBLIC_SITE_URL for production builds.',
   );
 } else {
-  const outputFiles = requiredFiles
-    .filter((file) => file.endsWith('.html') || file.endsWith('.txt'))
-    .map(readOutput);
+  // Documentation prose legitimately shows localhost in commands and request
+  // examples, so inspect metadata and generated discovery links rather than
+  // every byte of the rendered page and full-context document.
+  const metadataOutputs = [
+    ...['robots.txt', 'sitemap.xml', 'manifest.webmanifest'].map(readOutput),
+    ...['index.html', 'docs.html'].map((page) => {
+      const html = readOutput(page);
+      const head = /<head[^>]*>([\s\S]*?)<\/head>/u.exec(html)?.[1] ?? '';
+      const structuredData = [
+        ...html.matchAll(
+          /<script\b[^>]*\btype=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/giu,
+        ),
+      ].map((match) => match[1]);
+
+      return [head, ...structuredData].join('\n');
+    }),
+    ...[...llms.matchAll(/\]\(([^)]+)\)/gu)].map((match) => match[1]),
+  ];
   assert(
-    outputFiles.every((content) => !content.includes('localhost:3000')),
-    'Production SEO output contains localhost URLs',
+    metadataOutputs.every((content) => !content.includes('localhost:3000')),
+    'Production discovery metadata contains localhost URLs',
   );
 }
 

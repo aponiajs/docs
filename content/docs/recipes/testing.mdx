@@ -39,8 +39,6 @@ test("GET /greetings", async () => {
 
   expect(response.status).toBe(200);
   expect(await response.text()).toBe("Hello, AponiaJS!");
-
-  await application.close();
 });
 ```
 
@@ -50,15 +48,25 @@ A schema rejects the request before the handler runs, so the test asserts the
 status rather than a message body:
 
 ```ts
-const rejected = await application.handle(
-  new Request("http://localhost/users", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ name: "A" }),
-  }),
-);
+import { expect, test } from "bun:test";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "../src/app.module.ts";
 
-expect(rejected.status).toBe(422);
+test("POST /users rejects an invalid body", async () => {
+  const application = await AponiaFactory.create(AppModule, {
+    logger: false,
+  });
+
+  const rejected = await application.handle(
+    new Request("http://localhost/users", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ name: "A" }),
+    }),
+  );
+
+  expect(rejected.status).toBe(422);
+});
 ```
 
 ## Assert a graph failure
@@ -67,10 +75,26 @@ Graph and container failures happen while the application is being created.
 Assert the `code`, never the message:
 
 ```ts
-import { AponiaError } from "@aponiajs/common";
+import { expect, test } from "bun:test";
+import { Injectable, Module } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
 
-await expect(AponiaFactory.create(BrokenModule, { logger: false })).rejects.toMatchObject({
-  code: "MISSING_PROVIDER",
+class MissingDependency {}
+
+@Injectable()
+class BrokenService {
+  constructor(readonly dependency: MissingDependency) {}
+}
+
+@Module({ providers: [BrokenService] })
+class BrokenModule {}
+
+test("reports a stable graph error code", async () => {
+  await expect(
+    AponiaFactory.create(BrokenModule, { logger: false }),
+  ).rejects.toMatchObject({
+    code: "MISSING_PROVIDER",
+  });
 });
 ```
 
@@ -82,6 +106,7 @@ Run tests with:
 bun test
 ```
 
-`handle()` never binds a port, so nothing needs to be closed; call
-`application.close()` only after `application.listen(port)`. There is no
-testing module or provider override API yet.
+`handle()` never binds a port, so nothing needs to be closed.
+`application.close()` only stops an existing Elysia server, so call it after
+`application.listen(port)`. There is no testing module or provider override API
+yet.

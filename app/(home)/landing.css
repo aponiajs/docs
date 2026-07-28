@@ -61,8 +61,9 @@ body:has(.mono-root) {
   --mono-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --mono-fast: 120ms linear;
   --mono-tick: 0.55rem;
-  --mono-display: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
-  --mono-code: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
+  --mono-display: 'Geist Editorial', 'Helvetica Neue', arial, sans-serif;
+  --mono-code: 'Geist Editorial Mono', 'SFMono-Regular', consolas, monospace;
+
   color: var(--mono-paper);
   background: var(--mono-bg);
 }
@@ -123,6 +124,10 @@ body:has(.mono-root) {
 }
 
 /* Caliper ticks: four corner registration marks on framed media. */
+.mono-tick-frame {
+  position: relative;
+}
+
 .mono-tick-frame::before,
 .mono-tick-frame::after {
   position: absolute;
@@ -505,7 +510,6 @@ body:has(.mono-root) ::selection {
   transition: color var(--mono-fast);
 }
 
-/* Position readout: a 1px tick under the section currently in view. */
 .mono-gooey-nav a::after {
   position: absolute;
   right: 0.9rem;
@@ -516,7 +520,7 @@ body:has(.mono-root) ::selection {
   content: '';
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 140ms linear;
+  transition: transform var(--mono-fast);
 }
 
 .mono-gooey-nav a:hover {
@@ -524,13 +528,8 @@ body:has(.mono-root) ::selection {
   background: transparent;
 }
 
-.mono-gooey-nav a:hover::after,
-.mono-gooey-nav a[aria-current='true']::after {
+.mono-gooey-nav a:hover::after {
   transform: scaleX(1);
-}
-
-.mono-gooey-nav a[aria-current='true'] {
-  color: var(--mono-paper);
 }
 
 .mono-nav-mobile {

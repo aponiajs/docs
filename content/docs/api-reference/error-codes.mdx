@@ -25,6 +25,8 @@ structured `details`.
 
 ```ts
 import { AponiaError } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "./app.module.ts";
 
 try {
   await AponiaFactory.create(AppModule);

@@ -6,7 +6,7 @@ description: Introduce module boundaries and DI while preserving direct native E
 Add the platform packages:
 
 ```bash
-bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
 ```
 
 Move reusable business behavior into providers, group providers and decorated
@@ -24,6 +24,12 @@ Continue to use native Elysia for:
 - plugins that depend on Elysia's accumulated types.
 
 ```ts
+import { Module } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+@Module({})
+class AppModule {}
+
 const application = await AponiaFactory.create(AppModule, {
   configureNative: (elysia) =>
     elysia.get("/native-health", () => ({ ok: true })),

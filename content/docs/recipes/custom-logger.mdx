@@ -5,6 +5,8 @@ description: Replace Aponia system output with an application-specific LoggerSer
 
 ```ts
 import type { LoggerService } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+import { AppModule } from "../src/app.module.ts";
 
 class ApplicationLogger implements LoggerService {
   log(message: unknown, ...parameters: unknown[]): void {
@@ -35,5 +37,7 @@ custom logger can use it for routing or structured fields.
 For built-in JSON lines, prefer:
 
 ```ts
-new ConsoleLogger({ json: true });
+import { ConsoleLogger } from "@aponiajs/common";
+
+const logger = new ConsoleLogger({ json: true });
 ```
