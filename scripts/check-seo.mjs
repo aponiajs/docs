@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const outputDirectory = resolve('out');
@@ -23,6 +23,28 @@ function readOutput(path) {
   const filePath = resolve(outputDirectory, path);
   assert(existsSync(filePath), `Missing SEO output: out/${path}`);
   return readFileSync(filePath, 'utf8');
+}
+
+function listOutputFiles(directory = outputDirectory, prefix = '') {
+  const files = [];
+
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+
+    if (entry.isDirectory()) {
+      files.push(
+        ...listOutputFiles(resolve(directory, entry.name), relativePath),
+      );
+    } else {
+      files.push(relativePath);
+    }
+  }
+
+  return files;
+}
+
+function markdownLinkTargets(source) {
+  return [...source.matchAll(/\]\(([^)]+)\)/gu)].map((match) => match[1]);
 }
 
 const requiredFiles = [
@@ -120,9 +142,10 @@ if (siteUrl.hostname === 'localhost') {
   // Documentation prose legitimately shows localhost in commands and request
   // examples, so inspect metadata and generated discovery links rather than
   // every byte of the rendered page and full-context document.
+  const htmlPages = listOutputFiles().filter((file) => file.endsWith('.html'));
   const metadataOutputs = [
     ...['robots.txt', 'sitemap.xml', 'manifest.webmanifest'].map(readOutput),
-    ...['index.html', 'docs.html'].map((page) => {
+    ...htmlPages.map((page) => {
       const html = readOutput(page);
       const head = /<head[^>]*>([\s\S]*?)<\/head>/u.exec(html)?.[1] ?? '';
       const structuredData = [
@@ -133,7 +156,8 @@ if (siteUrl.hostname === 'localhost') {
 
       return [head, ...structuredData].join('\n');
     }),
-    ...[...llms.matchAll(/\]\(([^)]+)\)/gu)].map((match) => match[1]),
+    ...markdownLinkTargets(llms),
+    ...markdownLinkTargets(readOutput('llms-full.txt')),
   ];
   assert(
     metadataOutputs.every((content) => !content.includes('localhost:3000')),
