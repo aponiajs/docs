@@ -81,9 +81,11 @@ interface RouteResponseSettings {
 
 ## The whole context
 
-A handler with no parameter decorators receives the context as its only
-argument. `@Ctx()` does the same explicitly, which is useful when other
-parameters are present.
+A handler with no parameter decorators may declare one unannotated parameter to
+receive the context. `@Ctx()` does the same explicitly, which is useful when
+other parameters are present. Keep a handler parameterless when it needs no
+request data; the compiled route then avoids materializing unused context
+fields.
 
 Annotate the context with `RouteContext<typeof schema>` from
 `@aponiajs/common` to stay platform-neutral, or with `ElysiaRouteContext` from

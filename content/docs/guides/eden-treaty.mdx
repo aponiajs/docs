@@ -1,0 +1,230 @@
+---
+title: Eden Treaty
+description: Export the composed native Elysia application for end-to-end route types and in-process Treaty tests.
+---
+
+`AponiaFactory.createNative()` returns the composed Elysia application itself,
+so Eden Treaty uses the same contract as a plain Elysia project:
+
+```ts
+export const app = await AponiaFactory.createNative(AppModule);
+export type App = typeof app;
+```
+
+There is no Aponia-specific contract adapter, type assertion, fetch wrapper, or
+second HTTP runtime.
+
+## Install
+
+The server uses AponiaJS and Elysia:
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
+```
+
+The client uses Eden. Keep its Elysia version aligned with the server:
+
+```bash
+bun add @elysia/eden
+```
+
+Also declare the server's Elysia version as a client development dependency so
+the imported `App` type resolves against the same contract.
+
+## Define and export the application
+
+Wrap a native route plugin with `defineElysiaPlugin()` and keep it in a
+statically declared `defineModule()` graph:
+
+```ts title="backend/src/server.ts"
+import { defineModule } from "@aponiajs/common";
+import {
+  AponiaFactory,
+  defineElysiaPlugin,
+} from "@aponiajs/platform-elysia";
+import { Elysia, t } from "elysia";
+
+const apiRoutes = defineElysiaPlugin(
+  new Elysia({ name: "api-routes" }).get(
+    "/users/:id",
+    ({ params }) => ({
+      id: params.id,
+      name: `user-${params.id}`,
+    }),
+    {
+      params: t.Object({ id: t.Number() }),
+      response: t.Object({
+        id: t.Number(),
+        name: t.String(),
+      }),
+    },
+  ),
+  { key: "api-routes" },
+);
+
+export const AppModule = defineModule({
+  id: "AppModule",
+  imports: [apiRoutes],
+});
+
+export const app = await AponiaFactory.createNative(AppModule);
+export type App = typeof app;
+
+if (import.meta.main) {
+  app.listen(3000);
+}
+```
+
+The returned value is a real Elysia instance. Native methods such as `use`,
+`listen`, `handle`, `compile`, and `stop` remain available.
+
+## Create the client
+
+Import only the application type in the client:
+
+```ts title="frontend/src/api.ts"
+import { treaty } from "@elysia/eden";
+import type { App } from "@backend/server.ts";
+
+export const api = treaty<App>("http://localhost:3000");
+
+const result = await api.users({ id: 42 }).get();
+
+if (result.error) {
+  throw result.error.value;
+}
+
+console.log(result.data.name);
+```
+
+The type-only import does not bootstrap the server or add server runtime code to
+the client bundle. Treaty rejects methods and parameters that disagree with the
+route schema:
+
+```ts
+// @ts-expect-error The path parameter accepts a string or number, not a boolean.
+void api.users({ id: true }).get();
+
+// @ts-expect-error This route exposes GET, not POST.
+void api.users({ id: 42 }).post();
+```
+
+## Preserve DI in typed controller routes
+
+A low-level controller descriptor can contribute its exact Elysia route type
+while AponiaJS still constructs the controller through dependency injection:
+
+```ts
+import {
+  defineModule,
+  provideClass,
+} from "@aponiajs/common";
+import {
+  AponiaFactory,
+  defineElysiaController,
+} from "@aponiajs/platform-elysia";
+import { Elysia, t } from "elysia";
+
+class UsersService {
+  find(id: number) {
+    return { id, name: `user-${id}` };
+  }
+}
+
+class UsersController {
+  constructor(readonly users: UsersService) {}
+}
+
+const usersController = defineElysiaController(UsersController, {
+  inject: [UsersService] as const,
+  buildPlugin: (controller) =>
+    new Elysia({ name: "users-controller" }).get(
+      "/users/:id",
+      ({ params }) => controller.users.find(params.id),
+      {
+        params: t.Object({ id: t.Number() }),
+        response: t.Object({
+          id: t.Number(),
+          name: t.String(),
+        }),
+      },
+    ),
+});
+
+const AppModule = defineModule({
+  id: "AppModule",
+  providers: [provideClass(UsersService, [] as const)],
+  controllers: [usersController],
+});
+
+export const app = await AponiaFactory.createNative(AppModule);
+export type App = typeof app;
+```
+
+Routes accumulated by `configureNative()` also remain in the returned type:
+
+```ts
+const app = await AponiaFactory.createNative(AppModule, {
+  configureNative: (native) =>
+    native.get("/health", () => ({ status: "ok" as const })),
+});
+```
+
+## Test without opening a port
+
+Treaty accepts the native application directly:
+
+```ts
+import { expect, test } from "bun:test";
+import { treaty } from "@elysia/eden";
+import { app } from "../src/server.ts";
+
+test("reads a user through the typed application", async () => {
+  const api = treaty(app);
+  const result = await api.users({ id: 42 }).get();
+
+  expect(result.error).toBeNull();
+  expect(result.data).toEqual({ id: 42, name: "user-42" });
+});
+```
+
+This uses Elysia's in-process request path and performs no network I/O.
+
+## Keep the managed application when needed
+
+`AponiaFactory.create()` retains the same inferred native type behind Aponia's
+lifecycle wrapper:
+
+```ts
+const application = await AponiaFactory.create(AppModule, {
+  logger: false,
+});
+const api = treaty(application.getNativeApplication());
+
+await application.listen(3000);
+await application.close();
+```
+
+Use `createNative()` when native Elysia and Eden should be the calling surface.
+Use `create()` when startup logging, `getUrl()`, and the managed `close()` method
+are more useful.
+
+## Static inference boundary
+
+TypeScript preserves routes that are visible in source:
+
+- native applications wrapped by `defineElysiaPlugin()`;
+- `defineElysiaController()` descriptors whose `buildPlugin` returns a typed
+  Elysia plugin;
+- statically declared imports and controllers in `defineModule()`;
+- routes accumulated by `configureNative()`.
+
+Decorated classes and `ElysiaPluginModule.registerAsync()` are discovered at
+runtime. Their routes and plugins still work, but TypeScript cannot add them to
+the exported Eden contract. Decorator-wide inference requires the planned
+build-time module compiler; AponiaJS does not cast runtime-only routes into a
+false static type.
+
+See [native Elysia access](./native-elysia-access),
+[plugin modules](./elysia-plugin-modules), and
+[in-process requests](./in-process-requests).

@@ -1,6 +1,6 @@
 ---
 title: Application API
-description: Reference AponiaFactory.create and the AponiaElysiaApplication wrapper.
+description: Reference AponiaFactory.create, createNative, compilation options, and the managed application wrapper.
 ---
 
 ## AponiaFactory.create
@@ -9,27 +9,104 @@ description: Reference AponiaFactory.create and the AponiaElysiaApplication wrap
 const application = await AponiaFactory.create(AppModule, options);
 ```
 
-Options without native configuration:
+`create()` compiles the module graph, initializes providers and native plugins,
+registers controllers, and returns an `AponiaElysiaApplication` lifecycle
+wrapper.
+
+## Application options
 
 ```ts
 interface AponiaApplicationOptions {
   readonly logger?: false | LoggerService | readonly LogLevel[];
+  readonly elysia?: ElysiaCompilationOptions;
 }
 ```
 
-Configured overload:
+- `logger: false` disables system logs.
+- A `LogLevel[]` filters the built-in logger.
+- A `LoggerService` replaces the built-in logger.
+- `elysia` passes `aot` and `precompile` policy to the root Elysia instance.
+
+`ElysiaCompilationOptions` is the readonly `aot` and `precompile` subset of
+Elysia's own configuration:
+
+```ts
+type ElysiaCompilationOptions = Readonly<
+  Pick<ElysiaConfig<undefined>, "aot" | "precompile">
+>;
+```
+
+For predictable first-hit behavior, precompile routes and schemas during
+bootstrap:
+
+```ts
+const application = await AponiaFactory.create(AppModule, {
+  elysia: {
+    aot: true,
+    precompile: {
+      compose: true,
+      schema: true,
+    },
+  },
+});
+```
+
+Elysia's AOT option composes route-specific JavaScript. It is distinct from
+build-time Aponia source generation and JavaScriptCore's machine-code JIT.
+
+### configureNative
+
+The configured overload adds an application-level Elysia escape hatch:
 
 ```ts
 interface ConfiguredAponiaApplicationOptions<TNativeApplication>
   extends AponiaApplicationOptions {
-  readonly configureNative: (
-    application: Elysia,
-  ) => TNativeApplication;
+  readonly configureNative:
+    NativeElysiaConfigurator<TNativeApplication>;
 }
 ```
 
 `configureNative` must return the same object it receives. Its accumulated
 Elysia type becomes the native type on the returned wrapper.
+
+```ts
+const application = await AponiaFactory.create(AppModule, {
+  configureNative: (native) =>
+    native.get("/health", () => ({ status: "ok" as const })),
+});
+```
+
+Returning a replacement Elysia instance throws
+`INVALID_NATIVE_APPLICATION`.
+
+## AponiaFactory.createNative
+
+```ts
+const app = await AponiaFactory.createNative(AppModule, options);
+```
+
+`createNative()` runs the same bootstrap pipeline but returns the composed
+Elysia instance directly:
+
+```ts
+export const app = await AponiaFactory.createNative(AppModule);
+export type App = typeof app;
+
+app.listen(3000);
+```
+
+The `AponiaNativeApplication<TRootModule, TConfiguredApplication>` return type
+preserves statically visible routes from:
+
+- `defineElysiaPlugin()` imports;
+- `defineElysiaController()` descriptors whose `buildPlugin` returns a typed
+  Elysia plugin;
+- nested `defineModule()` imports;
+- `configureNative()`.
+
+Decorated routes and plugins created through
+`ElysiaPluginModule.registerAsync()` are visible only at runtime. See
+[Eden Treaty](/docs/guides/eden-treaty) for the complete inference boundary.
 
 ## AponiaElysiaApplication
 
@@ -73,3 +150,6 @@ close(): Promise<void>
 ```
 
 Stops the server when one exists.
+
+The wrapper does not currently expose module or provider initialization and
+destruction hooks. Provider factories remain synchronous.

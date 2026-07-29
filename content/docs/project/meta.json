@@ -3,6 +3,7 @@
   "pages": [
     "status-and-roadmap",
     "packages-and-versioning",
+    "repository-development",
     "legal-and-attribution"
   ]
 }

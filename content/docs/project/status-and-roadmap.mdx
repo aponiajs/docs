@@ -24,13 +24,19 @@ The current source implements:
 - class injection and explicit typed injection tokens;
 - module graph validation for cycles, duplicates, missing providers, invalid
   exports, and ambiguous providers;
-- `AponiaFactory.create()` on the Elysia platform;
+- managed `AponiaFactory.create()` and native `AponiaFactory.createNative()`
+  bootstrap paths on the Elysia platform;
 - application `handle`, `listen`, `getUrl`, `getNativeApplication`, and `close`
   methods;
 - native Elysia configuration, module-imported Elysia plugins, and typed plugin
   context through `ElysiaRouteContext`;
+- statically composed native plugin and controller-descriptor route types for
+  Eden Treaty;
+- bootstrap-compiled decorated route invokers, direct root registration, and
+  explicit Elysia `aot` / `precompile` policy;
 - structured system logging, JSON logging, level filtering, and custom loggers;
-- project generation and the complete CLI file-schematic catalog.
+- project generation and the complete CLI file-schematic catalog, including
+  REST resource validation models.
 
 “Complete schematic catalog” describes generated file shapes. It does not mean
 every generated Nest-style capability is implemented by the runtime.
@@ -45,14 +51,16 @@ The runtime does not provide:
 - lifecycle hooks or graceful drain coordination;
 - testing modules or provider overrides;
 - configuration, authentication, authorization, or rate-limiting packages;
-- OpenAPI or Eden Treaty integration;
+- OpenAPI generation or decorator-wide Eden Treaty inference;
+- a build-time module and route compiler;
 - GraphQL, WebSocket, or microservice platforms.
 
 CLI output for these areas is scaffold-only.
 
 ## Milestones
 
-The source roadmap tracks 28 items across six milestones:
+The source roadmap tracks 27 items across six milestones: 10 completed, 4 in
+progress, and 13 planned (`44.81%` overall):
 
 | Milestone | Target | Status |
 | --- | --- | --- |
@@ -63,17 +71,19 @@ The source roadmap tracks 28 items across six milestones:
 | Production capabilities | `1.0.0` | Planned |
 | Post-1.0 ecosystem | `1.1.0` | Planned |
 
-Active workstreams are foundation stabilization, dependency maintenance, and
-validation, errors, and serialization. Async lifecycle and provider scopes, the
-platform and HTTP package split, native plugin type inference, and Elysia
-lifecycle conformance are planned for runtime maturity.
+Active workstreams are foundation stabilization, dependency maintenance, native
+Elysia plugin type inference, and validation, errors, and serialization. Static
+native route composition is implemented; decorator-wide inference remains part
+of the native-plugin workstream. Async lifecycle and provider scopes, the
+platform and HTTP package split, and full Elysia lifecycle conformance remain
+planned for runtime maturity.
 
 Use the source implementation and package exports as the authority for current
 behavior:
 
 - [AponiaJS source repository](https://github.com/aponiajs/aponiajs)
-- [Roadmap](https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md)
-- [Learning path](https://github.com/aponiajs/aponiajs/blob/main/docs/learn/README.md)
+- [Roadmap at the audited commit](https://github.com/aponiajs/aponiajs/blob/9207e806b801c856583a9d04c66a2c5a04b4700b/ROADMAP.md)
+- [Learning path at the audited commit](https://github.com/aponiajs/aponiajs/blob/9207e806b801c856583a9d04c66a2c5a04b4700b/docs/learn/README.md)
 
 ## Benchmark status
 

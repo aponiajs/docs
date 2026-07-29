@@ -15,7 +15,9 @@ bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
 - `AponiaElysiaApplication`
 - `AponiaApplicationOptions`
 - `ConfiguredAponiaApplicationOptions`
+- `ElysiaCompilationOptions`
 - `NativeElysiaConfigurator`
+- `AponiaNativeApplication`
 
 See [Application API](/docs/api-reference/application).
 
@@ -35,6 +37,25 @@ Exports:
 - `ELYSIA_CONTROLLER`
 - `defineElysiaController`
 - `ElysiaControllerDefinition`
+- `RegisteredElysiaControllerDefinition`
+- `ElysiaControllerPluginOptions`
+- `ElysiaControllerRegistrationOptions`
+
+```ts
+defineElysiaController(ControllerClass, {
+  inject: [TOKEN],
+  path: "/health",
+  registerRoutes: (application, controller) => {
+    application.get("/health", () => controller.read());
+  },
+});
+```
+
+`registerRoutes` writes directly to the root Elysia application after native
+plugins mount. `path` is optional diagnostic metadata. The returned descriptor
+also carries a generated `buildPlugin` compatibility fallback.
+
+The original plugin-producing form remains supported:
 
 ```ts
 defineElysiaController(ControllerClass, {
@@ -44,7 +65,12 @@ defineElysiaController(ControllerClass, {
 ```
 
 The built plugin must be an Elysia instance; anything else fails with
+`INVALID_CONTROLLER`. A descriptor with a non-Elysia platform kind fails with
 `UNSUPPORTED_CONTROLLER`.
+
+A concrete `buildPlugin` return type contributes routes to
+`AponiaNativeApplication`. The direct `registerRoutes` form optimizes runtime
+registration but does not add route generics to the current static return type.
 
 ## Plugin modules
 

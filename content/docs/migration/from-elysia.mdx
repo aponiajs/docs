@@ -30,7 +30,7 @@ import { AponiaFactory } from "@aponiajs/platform-elysia";
 @Module({})
 class AppModule {}
 
-const application = await AponiaFactory.create(AppModule, {
+const app = await AponiaFactory.createNative(AppModule, {
   configureNative: (elysia) =>
     elysia.get("/native-health", () => ({ ok: true })),
 });
@@ -39,3 +39,8 @@ const application = await AponiaFactory.create(AppModule, {
 Reusable plugins can move into `ElysiaPluginModule` imports. This gives them
 module ordering and DI-configured construction without hiding the plugin from
 Elysia.
+
+`createNative()` keeps native Elysia as the calling surface and preserves
+statically visible route types for Eden Treaty. Use `create()` instead when the
+managed Aponia lifecycle wrapper is more useful. See
+[Eden Treaty](/docs/guides/eden-treaty) for the exact inference boundary.

@@ -1,10 +1,11 @@
 ---
 title: Application bootstrap
-description: Follow AponiaFactory.create from decorated root module to a ready Elysia application.
+description: Follow AponiaFactory from a root module to a managed or native Elysia application.
 ---
 
-`AponiaFactory.create()` is exported by `@aponiajs/platform-elysia`. It accepts
-a decorated module class, dynamic module, or low-level module definition.
+`AponiaFactory` is exported by `@aponiajs/platform-elysia`. Both bootstrap
+methods accept a decorated module class, dynamic module, or low-level module
+definition.
 
 ```ts
 import { AponiaFactory } from "@aponiajs/platform-elysia";
@@ -19,14 +20,23 @@ During creation, AponiaJS:
 2. compiles decorated and dynamic modules into immutable definitions;
 3. validates module identity, imports, exports, and provider dependencies;
 4. creates the singleton dependency container;
-5. creates one Elysia application;
+5. creates one Elysia application with the requested `aot` and `precompile`
+   policy;
 6. applies `configureNative`, when supplied;
-7. initializes providers and imported Elysia plugins in dependency order;
-8. instantiates controllers and registers their generated plugins;
-9. waits for Elysia modules before returning the wrapper.
+7. initializes providers and mounts imported Elysia plugins in dependency
+   order;
+8. instantiates controllers, registers compiled decorated routes directly, and
+   mounts low-level controller plugins when required;
+9. waits for Elysia modules;
+10. returns either the managed wrapper or the native Elysia instance.
 
 Creation is asynchronous because Elysia module composition is awaited. Provider
 factories themselves are currently synchronous.
+
+Decorated routes are lowered into immutable plans during module compilation.
+The platform generates and caches fixed-arity invokers during bootstrap, so
+parameter metadata is not interpreted and argument arrays are not allocated on
+every request.
 
 ## Root module
 
@@ -54,5 +64,20 @@ The returned `AponiaElysiaApplication` exposes:
 
 Calling `getUrl()` before `listen()` throws `APPLICATION_NOT_LISTENING`.
 
+## Native application
+
+`createNative()` runs the same bootstrap pipeline and returns the composed
+Elysia instance directly:
+
+```ts
+export const app = await AponiaFactory.createNative(AppModule);
+export type App = typeof app;
+```
+
+Statically visible `defineModule()`, `defineElysiaPlugin()`, and typed
+`defineElysiaController()` declarations contribute to the returned Elysia type.
+Decorated controller metadata remains a runtime-only contract.
+
 See [Application lifecycle](/docs/guides/application-lifecycle) and
-[Native Elysia access](/docs/guides/native-elysia-access).
+[Native Elysia access](/docs/guides/native-elysia-access). Compilation options
+and exact return types are in the [Application API](/docs/api-reference/application).

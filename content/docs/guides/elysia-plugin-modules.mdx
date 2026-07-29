@@ -35,6 +35,18 @@ import { clock } from "./clock.plugin.ts";
 export class AppModule {}
 ```
 
+The same value is also a complete low-level module import, which preserves its
+type in a statically declared graph:
+
+```ts
+import { defineModule } from "@aponiajs/common";
+
+export const AppModule = defineModule({
+  id: "AppModule",
+  imports: [clock],
+});
+```
+
 A published plugin is wrapped the same way:
 
 ```bash
@@ -122,3 +134,7 @@ same plugin intentionally needs multiple configurations.
 Everything a plugin decorates, stores, or globally derives is present in every
 handler at runtime. Typing it requires naming the plugin — see
 [typed plugin context](./plugin-context-types).
+
+When static route types should flow into Eden Treaty as well, return the
+composed application with `AponiaFactory.createNative()`; see
+[Eden Treaty](./eden-treaty).

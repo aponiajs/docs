@@ -11,7 +11,7 @@ AponiaJS publishes five usable packages:
 | --- | --- |
 | `@aponiajs/common` | Decorators, contracts, tokens, providers, errors, and logging. |
 | `@aponiajs/core` | Module graph and singleton dependency injection runtime. |
-| `@aponiajs/platform-elysia` | Elysia adapter, application lifecycle, routes, and native plugins. |
+| `@aponiajs/platform-elysia` | Managed/native Elysia bootstrap, routes, plugins, and Eden-compatible native types. |
 | `@aponiajs/cli` | `aponia` project and schematic generator. |
 | `create-aponia` | `bun create aponia` entrypoint. |
 
@@ -77,6 +77,21 @@ development versions, minor releases may contain breaking API changes. Check
 the package registry and source release notes for the version you install
 instead of assuming this page describes a future release.
 
+## Release branches
+
+Persistent branches and npm channels move forward in order:
+
+| Branch | Version shape | Primary npm tag |
+| --- | --- | --- |
+| `release/alpha` | `X.Y.Z-alpha.N` | `alpha` |
+| `release/beta` | `X.Y.Z-beta.N` | `beta` |
+| `release/rc` | `X.Y.Z-rc.N` | `rc` |
+| `main` | stable `X.Y.Z` | `latest` |
+
+`next` is an alias for the newest alpha, beta, or release candidate and has no
+branch. Canary versions are stamped by CI and are never promoted. The release
+workflow verifies that the version-derived tag matches its persistent branch.
+
 <Cards>
   <Card
     title="Current status"
@@ -87,5 +102,10 @@ instead of assuming this page describes a future release.
     title="Getting started"
     description="Create a project or configure an existing application."
     href="../getting-started"
+  />
+  <Card
+    title="Repository development"
+    description="Review source ownership and verification lanes."
+    href="./repository-development"
   />
 </Cards>

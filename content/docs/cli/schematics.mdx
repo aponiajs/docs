@@ -22,7 +22,7 @@ description: Complete AponiaJS CLI schematic catalog with aliases and runtime st
 | `pipe` | `pi` | Transformation-pipe-shaped class. |
 | `provider` | `pr` | Injectable provider class. |
 | `resolver` | `r` | GraphQL-resolver-shaped class. |
-| `resource` | `res` | Module, service, transport shape, schema, and optional data classes. |
+| `resource` | `res` | Module, service, transport shape, model, and optional data classes. |
 | `service` | `s` | Injectable service class. |
 
 <Callout type="warning" title="Controller alias spelling">
@@ -64,11 +64,11 @@ src/users/
 │   └── user.entity.ts
 ├── users.controller.ts
 ├── users.module.ts
-├── users.schema.ts
+├── users.model.ts
 └── users.service.ts
 ```
 
-`users.schema.ts` owns the per-slot validators and the route schemas the
+`users.model.ts` owns the per-slot validators and the route schemas the
 controller passes to its decorators, built with Elysia's `t`. Both DTOs derive
 their types from those schemas with `Static<typeof …>`, so a field is declared
 once:

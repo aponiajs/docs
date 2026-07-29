@@ -1,17 +1,16 @@
 {
-  "$schema": "./roadmap.schema.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-25T15:20:00Z",
+  "generatedAt": "2026-07-29T02:42:27Z",
   "project": {
     "id": "aponiajs",
     "name": "AponiaJS",
     "description": "A Bun-first, Nest-inspired application framework built around Elysia.",
     "repository": "https://github.com/aponiajs/aponiajs",
     "defaultBranch": "main",
-    "currentVersion": "0.3.17",
+    "currentVersion": "0.6.0-alpha.17",
     "runtime": "Bun 1.3.14",
     "packageManager": "Bun 1.3.14",
-    "sourceCommit": "8e14611f2ccdeaccbe6fb5eac82e2b04ee36f770"
+    "sourceCommit": "9207e806b801c856583a9d04c66a2c5a04b4700b"
   },
   "statusDefinitions": {
     "completed": {
@@ -34,11 +33,11 @@
     }
   },
   "summary": {
-    "total": 29,
-    "completed": 12,
-    "inProgress": 2,
-    "planned": 15,
-    "completionPercent": 45.17
+    "total": 27,
+    "completed": 10,
+    "inProgress": 4,
+    "planned": 13,
+    "completionPercent": 44.81
   },
   "milestones": [
     {
@@ -61,7 +60,7 @@
     {
       "id": "milestone-developer-experience",
       "title": "Developer experience",
-      "description": "Application generation, Nest-style schematics, package documentation, and tracker-ready roadmap data.",
+      "description": "Application generation, Nest-style schematics, and package documentation.",
       "order": 2,
       "status": "completed",
       "progressPercent": 100,
@@ -70,20 +69,18 @@
         "cli-application-generator",
         "cli-schematic-catalog",
         "automated-version-and-publish-flow",
-        "published-package-documentation",
-        "machine-readable-roadmap"
+        "published-package-documentation"
       ]
     },
     {
       "id": "milestone-release-quality",
       "title": "Release quality",
-      "description": "Repeatable performance evidence, dependency maintenance, foundation hardening, and release-candidate gates.",
+      "description": "Dependency maintenance, foundation hardening, and release-candidate gates.",
       "order": 3,
       "status": "in_progress",
-      "progressPercent": 52.5,
+      "progressPercent": 36.67,
       "targetVersion": "0.5.0",
       "itemIds": [
-        "ci-benchmark-publication",
         "foundation-stabilization",
         "dependency-maintenance",
         "foundation-release-candidate"
@@ -94,8 +91,8 @@
       "title": "Runtime maturity",
       "description": "Provider lifecycles, package boundaries, native plugin inference, phase conformance, and response contracts.",
       "order": 4,
-      "status": "planned",
-      "progressPercent": 0,
+      "status": "in_progress",
+      "progressPercent": 20,
       "targetVersion": "0.7.0",
       "itemIds": [
         "async-lifecycle-and-scopes",
@@ -226,7 +223,7 @@
         {
           "kind": "file",
           "label": "Graph implementation",
-          "ref": "packages/core/src/graph.ts"
+          "ref": "packages/core/src/graph/graph-compiler.ts"
         },
         {
           "kind": "file",
@@ -261,7 +258,7 @@
         {
           "kind": "file",
           "label": "Container implementation",
-          "ref": "packages/core/src/container.ts"
+          "ref": "packages/core/src/container/container.ts"
         },
         {
           "kind": "file",
@@ -296,7 +293,7 @@
         {
           "kind": "file",
           "label": "Application implementation",
-          "ref": "packages/platform-elysia/src/application.ts"
+          "ref": "packages/platform-elysia/src/application/aponia-factory.ts"
         },
         {
           "kind": "file",
@@ -336,7 +333,7 @@
         {
           "kind": "file",
           "label": "Logger implementation",
-          "ref": "packages/common/src/logger.ts"
+          "ref": "packages/common/src/logging/console-logger.ts"
         }
       ],
       "acceptanceCriteria": ["Applications can select log levels or replace the framework logger."],
@@ -364,7 +361,7 @@
         {
           "kind": "file",
           "label": "Project generator",
-          "ref": "packages/cli/src/project-generator.ts"
+          "ref": "packages/cli/src/generation/project-generator.ts"
         },
         {
           "kind": "documentation",
@@ -456,41 +453,6 @@
       "tags": ["npm", "semver", "release"]
     },
     {
-      "id": "ci-benchmark-publication",
-      "milestoneId": "milestone-release-quality",
-      "title": "CI benchmark and public report",
-      "description": "Compare pure Elysia and Aponia with balanced trials, publish SVG and JSON from CI, and display only the CI image.",
-      "status": "completed",
-      "progressPercent": 100,
-      "priority": "high",
-      "category": "quality",
-      "packages": ["@aponiajs/platform-elysia"],
-      "dependencies": ["minimal-elysia-adapter", "automated-version-and-publish-flow"],
-      "deliverables": [
-        "Mitata request and startup benchmark",
-        "Latency, throughput, variance, and environment JSON",
-        "Versioned public CI chart"
-      ],
-      "evidence": [
-        {
-          "kind": "pull_request",
-          "label": "CI-only benchmark artifacts",
-          "ref": "https://github.com/aponiajs/aponiajs/pull/25"
-        },
-        {
-          "kind": "workflow",
-          "label": "Benchmark CI job",
-          "ref": ".github/workflows/ci.yml"
-        }
-      ],
-      "acceptanceCriteria": [
-        "The README image is produced by a successful main-branch CI run and raw trial data remains downloadable."
-      ],
-      "nextActions": [],
-      "updatedAt": "2026-07-25",
-      "tags": ["benchmark", "ci", "vega"]
-    },
-    {
       "id": "published-package-documentation",
       "milestoneId": "milestone-developer-experience",
       "title": "Published package documentation",
@@ -530,41 +492,6 @@
       "tags": ["documentation", "npm", "cli"]
     },
     {
-      "id": "machine-readable-roadmap",
-      "milestoneId": "milestone-developer-experience",
-      "title": "Machine-readable roadmap",
-      "description": "Publish normalized JSON and a JSON Schema for a roadmap tracking website.",
-      "status": "completed",
-      "progressPercent": 100,
-      "priority": "high",
-      "category": "documentation",
-      "packages": [],
-      "dependencies": ["published-package-documentation"],
-      "deliverables": [
-        "Roadmap JSON",
-        "JSON Schema 2020-12 contract",
-        "Ajv validation and relational tests"
-      ],
-      "evidence": [
-        {
-          "kind": "file",
-          "label": "Roadmap data",
-          "ref": "roadmap/roadmap.json"
-        },
-        {
-          "kind": "file",
-          "label": "Roadmap schema",
-          "ref": "roadmap/roadmap.schema.json"
-        }
-      ],
-      "acceptanceCriteria": [
-        "A consumer can render milestones and status columns without parsing Markdown."
-      ],
-      "nextActions": [],
-      "updatedAt": "2026-07-25",
-      "tags": ["roadmap", "json", "tracker"]
-    },
-    {
       "id": "foundation-stabilization",
       "milestoneId": "milestone-release-quality",
       "title": "Foundation stabilization",
@@ -588,13 +515,13 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework delivery roadmap",
-          "ref": "plans/aponia-framework-roadmap.md"
+          "label": "Framework blueprint",
+          "ref": "ROADMAP.md#framework-blueprint"
         },
         {
           "kind": "plan",
-          "label": "Package architecture roadmap",
-          "ref": "plans/npm-package-architecture-roadmap.md"
+          "label": "Package architecture",
+          "ref": "ROADMAP.md#package-architecture"
         }
       ],
       "acceptanceCriteria": [
@@ -637,7 +564,7 @@
         }
       ],
       "acceptanceCriteria": [
-        "Dependency pull requests pass version, test, build, and benchmark checks."
+        "Dependency pull requests pass version, test, and build checks."
       ],
       "nextActions": [
         "Resolve the missing version bump in PR 21.",
@@ -665,8 +592,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap steps 5 and 6",
-          "ref": "plans/aponia-framework-roadmap.md#step-5-async-lifecycle-and-provider-scopes"
+          "label": "Async lifecycle and provider scopes blueprint",
+          "ref": "ROADMAP.md#step-5-async-lifecycle-and-provider-scopes"
         }
       ],
       "acceptanceCriteria": [
@@ -698,8 +625,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Package roadmap steps 7 and 8",
-          "ref": "plans/npm-package-architecture-roadmap.md#step-7-extract-aponiajsplatform"
+          "label": "Platform and HTTP package blueprints",
+          "ref": "ROADMAP.md#package-architecture"
         }
       ],
       "acceptanceCriteria": [
@@ -717,32 +644,53 @@
       "milestoneId": "milestone-runtime-maturity",
       "title": "Native Elysia plugin type inference",
       "description": "Preserve exact Elysia plugin inputs, accumulated context, deferred readiness, and Eden-compatible route types.",
-      "status": "planned",
-      "progressPercent": 0,
+      "status": "in_progress",
+      "progressPercent": 75,
       "priority": "critical",
       "category": "http",
       "packages": ["@aponiajs/platform-elysia"],
       "dependencies": ["platform-and-http-package-split", "async-lifecycle-and-scopes"],
       "deliverables": [
         "Tuple-preserving native plugin registration",
+        "Native application bootstrap with statically composed Eden route types",
         "Compiled Aponia module as a native Elysia plugin",
         "Positive and negative inference fixtures"
       ],
       "evidence": [
         {
+          "kind": "file",
+          "label": "Plugin context implementation",
+          "ref": "packages/platform-elysia/src/routing/route-context.types.ts"
+        },
+        {
+          "kind": "test",
+          "label": "Plugin context tests",
+          "ref": "packages/platform-elysia/tests/plugin-context.test.ts"
+        },
+        {
+          "kind": "test",
+          "label": "Native Eden application tests",
+          "ref": "packages/platform-elysia/tests/eden-contract.test.ts"
+        },
+        {
+          "kind": "documentation",
+          "label": "Eden Treaty guide",
+          "ref": "docs/eden-treaty.md"
+        },
+        {
           "kind": "plan",
           "label": "Native Elysia compatibility invariant",
-          "ref": "plans/npm-package-architecture-roadmap.md#30-native-elysia-compatibility-invariant"
+          "ref": "ROADMAP.md#30-native-elysia-compatibility-invariant"
         }
       ],
       "acceptanceCriteria": [
         "Native plugin context reaches controllers without Elysia<any> or duplicate registration."
       ],
       "nextActions": [
-        "Pin the supported Elysia plugin input contract.",
+        "Extend route inference to build-time compiled decorated modules.",
         "Add bearer, CORS, JWT, OpenAPI, and deferred plugin fixtures."
       ],
-      "updatedAt": "2026-07-25",
+      "updatedAt": "2026-07-28",
       "tags": ["elysia", "type-inference", "plugins"]
     },
     {
@@ -764,8 +712,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap step 7",
-          "ref": "plans/aponia-framework-roadmap.md#step-7-elysia-lifecycle-and-scope-conformance"
+          "label": "Elysia lifecycle blueprint",
+          "ref": "ROADMAP.md#step-7-elysia-lifecycle-and-scope-conformance"
         }
       ],
       "acceptanceCriteria": [
@@ -783,8 +731,8 @@
       "milestoneId": "milestone-runtime-maturity",
       "title": "Validation, errors, and serialization",
       "description": "Add typed input and status-specific response contracts, RFC 9457 errors, coercion policy, and safe serialization.",
-      "status": "planned",
-      "progressPercent": 0,
+      "status": "in_progress",
+      "progressPercent": 25,
       "priority": "high",
       "category": "http",
       "packages": ["@aponiajs/http", "@aponiajs/validation", "@aponiajs/serialization"],
@@ -797,18 +745,23 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap step 8",
-          "ref": "plans/aponia-framework-roadmap.md#step-8-validation-errors-and-response-contracts"
+          "label": "Validation and response contracts blueprint",
+          "ref": "ROADMAP.md#step-8-validation-errors-and-response-contracts"
+        },
+        {
+          "kind": "test",
+          "label": "Standard Schema route validation",
+          "ref": "packages/platform-elysia/tests/route-schema.test.ts"
         }
       ],
       "acceptanceCriteria": [
         "Runtime validation and generated types agree for success and error responses."
       ],
       "nextActions": [
-        "Define the schema metadata boundary.",
-        "Add Problem Details and response validation fixtures."
+        "Add Problem Details error responses.",
+        "Define the serialization and unknown-field policy."
       ],
-      "updatedAt": "2026-07-25",
+      "updatedAt": "2026-07-27",
       "tags": ["validation", "errors", "serialization"]
     },
     {
@@ -830,8 +783,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap step 9",
-          "ref": "plans/aponia-framework-roadmap.md#step-9-configuration-secrets-logging-and-redaction"
+          "label": "Configuration and redaction blueprint",
+          "ref": "ROADMAP.md#step-9-configuration-secrets-logging-and-redaction"
         }
       ],
       "acceptanceCriteria": [
@@ -864,7 +817,7 @@
         {
           "kind": "plan",
           "label": "Framework security baseline",
-          "ref": "plans/aponia-framework-roadmap.md#7-security-baseline"
+          "ref": "ROADMAP.md#7-security-baseline"
         }
       ],
       "acceptanceCriteria": [
@@ -896,8 +849,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap step 11",
-          "ref": "plans/aponia-framework-roadmap.md#step-11-authentication-and-authorization"
+          "label": "Authentication and authorization blueprint",
+          "ref": "ROADMAP.md#step-11-authentication-and-authorization"
         }
       ],
       "acceptanceCriteria": [
@@ -929,8 +882,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap step 12",
-          "ref": "plans/aponia-framework-roadmap.md#step-12-rate-limiting"
+          "label": "Rate limiting blueprint",
+          "ref": "ROADMAP.md#step-12-rate-limiting"
         }
       ],
       "acceptanceCriteria": [
@@ -962,8 +915,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Package roadmap testing packages",
-          "ref": "plans/npm-package-architecture-roadmap.md#46-aponiajstesting"
+          "label": "Testing package blueprint",
+          "ref": "ROADMAP.md#step-13-testing-package"
         }
       ],
       "acceptanceCriteria": [
@@ -995,8 +948,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework observability plan",
-          "ref": "plans/aponia-framework-roadmap.md#8-observability-and-operations"
+          "label": "Observability and health blueprint",
+          "ref": "ROADMAP.md#step-14-observability-and-health"
         }
       ],
       "acceptanceCriteria": [
@@ -1028,8 +981,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap step 17",
-          "ref": "plans/aponia-framework-roadmap.md#step-17-openapi-and-eden-treaty"
+          "label": "OpenAPI and Eden Treaty blueprint",
+          "ref": "ROADMAP.md#step-17-openapi-and-eden-treaty"
         }
       ],
       "acceptanceCriteria": [
@@ -1061,8 +1014,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Package roadmap decorators package",
-          "ref": "plans/npm-package-architecture-roadmap.md#48-aponiajsdecorators"
+          "label": "Optional decorators blueprint",
+          "ref": "ROADMAP.md#step-18-optional-decorators"
         }
       ],
       "acceptanceCriteria": [
@@ -1111,8 +1064,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Package roadmap step 29",
-          "ref": "plans/npm-package-architecture-roadmap.md#step-29-foundation-release-candidate"
+          "label": "Release hardening blueprint",
+          "ref": "ROADMAP.md#step-19-release-hardening"
         }
       ],
       "acceptanceCriteria": [
@@ -1151,8 +1104,8 @@
       "evidence": [
         {
           "kind": "plan",
-          "label": "Framework roadmap post-version-1 ecosystem",
-          "ref": "plans/aponia-framework-roadmap.md#step-20-post-version-1-ecosystem"
+          "label": "Post-version-1 ecosystem blueprint",
+          "ref": "ROADMAP.md#step-20-post-version-1-ecosystem"
         }
       ],
       "acceptanceCriteria": [

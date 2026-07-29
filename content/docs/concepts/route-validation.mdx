@@ -63,7 +63,7 @@ platform-native JSON Schema validator:
 
 Both kinds can appear in one application, and even in one controller:
 
-```ts title="src/item.schema.ts"
+```ts title="src/item.model.ts"
 import { t } from "elysia";
 import { z } from "zod";
 
@@ -90,8 +90,8 @@ export type CreateItem = z.infer<(typeof createItemSchema)["body"]>;
 
 ```ts title="src/item.controller.ts"
 import { Body, Controller, Get, Headers, Post, Query } from "@aponiajs/common";
-import { createItemSchema, searchItemsSchema, tenantHeaderSchema } from "./item.schema.ts";
-import type { CreateItem } from "./item.schema.ts";
+import { createItemSchema, searchItemsSchema, tenantHeaderSchema } from "./item.model.ts";
+import type { CreateItem } from "./item.model.ts";
 
 @Controller("items")
 export class ItemController {

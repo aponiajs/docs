@@ -26,25 +26,56 @@ const AppModule = defineModule({
 
 `defineModule()` freezes copied imports, controllers, providers, and exports.
 
-## Define an Elysia controller
+## Register routes directly
 
 ```ts
 import { defineElysiaController } from "@aponiajs/platform-elysia";
-import { Elysia } from "elysia";
 
 class HealthController {
-  health() {
+  read() {
     return { ok: true };
   }
 }
 
 const healthController = defineElysiaController(HealthController, {
-  inject: [],
-  buildPlugin: (controller) =>
-    new Elysia().get("/health", () => controller.health()),
+  inject: [] as const,
+  path: "/health",
+  registerRoutes: (application, controller) => {
+    application.get("/health", () => controller.read());
+  },
 });
 ```
 
-The `buildPlugin` result must be an Elysia instance. Low-level controller
-definitions are platform-specific; module and provider descriptors remain
-platform-neutral.
+`registerRoutes` receives the root Elysia application after native plugin
+modules mount. `path` is optional metadata used by route diagnostics. This form
+avoids an intermediate controller plugin and is the target for future
+build-time descriptor emitters.
+
+## Build an isolated controller plugin
+
+The compatibility form lets a controller deliberately own a native plugin:
+
+```ts
+import { defineElysiaController } from "@aponiajs/platform-elysia";
+import { Elysia } from "elysia";
+
+const healthController = defineElysiaController(HealthController, {
+  inject: [] as const,
+  buildPlugin: (controller) =>
+    new Elysia().get("/health", () => controller.read()),
+});
+```
+
+The `buildPlugin` result must be an Elysia instance or bootstrap fails with
+`INVALID_CONTROLLER`. The controller definition is frozen in either form.
+Low-level controller definitions are platform-specific; module and provider
+descriptors remain platform-neutral.
+
+<Callout type="info" title="Static route types">
+  A concrete `buildPlugin` return type contributes its routes to
+  `AponiaFactory.createNative()`. The direct `registerRoutes` callback is the
+  optimized runtime path, but its generic root-application parameter does not
+  describe new route generics to TypeScript today.
+</Callout>
+
+See [Eden Treaty](./eden-treaty) for the complete static inference boundary.

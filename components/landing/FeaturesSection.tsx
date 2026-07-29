@@ -9,7 +9,7 @@ const experiencePillars = [
   {
     title: 'Native',
     description:
-      'Controllers compile into native Elysia plugins, keeping request execution on Elysia without a second HTTP layer.',
+      'Decorated routes register directly on Elysia, while statically declared native routes retain Eden types.',
   },
   {
     title: 'Bun-first',

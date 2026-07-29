@@ -28,9 +28,11 @@ test("routes a greeting", async () => {
 
 No socket is opened, so the test is fast and does not need port allocation.
 The request still crosses the compiled module, constructed controller, route
-plugin, and Elysia response pipeline.
+registration, and Elysia response pipeline.
 
 For unit tests, instantiate controllers and services directly. There is no
 `@aponiajs/testing`, testing module, or provider override API yet.
 
-See [Testing recipe](/docs/recipes/testing).
+For statically typed native routes, `treaty(app)` accepts the result of
+`AponiaFactory.createNative()` directly. See [Eden Treaty](./eden-treaty) and
+the [Testing recipe](/docs/recipes/testing).

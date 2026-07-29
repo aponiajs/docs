@@ -1,12 +1,12 @@
 ---
 title: Validate a resource
-description: Own one schema file per feature and derive both handler types and route validation from it.
+description: Own one validation model per feature and derive both handler types and route validation from it.
 ---
 
 Keep every validator for a feature in one file, and derive the handler types
 from the same declarations. A field is then declared once.
 
-```ts title="src/items/item.schema.ts"
+```ts title="src/items/item.model.ts"
 import { z } from "zod";
 
 export const createItemSchema = {
@@ -25,7 +25,7 @@ export type CreateItem = z.infer<(typeof createItemSchema)["body"]>;
 
 ```ts title="src/items/item.service.ts"
 import { Injectable } from "@aponiajs/common";
-import type { CreateItem } from "./item.schema.ts";
+import type { CreateItem } from "./item.model.ts";
 
 export interface StoredItem extends CreateItem {
   readonly id: string;
@@ -49,7 +49,7 @@ export class ItemService {
 
 ```ts title="src/items/item.controller.ts"
 import { Body, Controller, Get, Param, Post } from "@aponiajs/common";
-import { createItemSchema, findItemSchema, type CreateItem } from "./item.schema.ts";
+import { createItemSchema, findItemSchema, type CreateItem } from "./item.model.ts";
 import { ItemService } from "./item.service.ts";
 
 @Controller("items")

@@ -20,11 +20,12 @@ Enable `experimentalDecorators` and `emitDecoratorMetadata`. Use
 
 ## A route handler argument is undefined
 
-Every handler argument must carry a parameter decorator. A handler with no
-decorators receives the whole request context as its only argument; a handler
-that mixes decorated and undecorated parameters receives `undefined` for the
-undecorated ones. A named selection such as `@Query("term")` is also
-`undefined` when the request omits it.
+When a handler uses parameter decorators, every request-bound argument needs
+one. A handler with no decorators may instead declare one unannotated parameter
+to receive the whole request context; a parameterless handler receives no
+arguments. A handler that mixes decorated and undecorated parameters receives
+`undefined` for the undecorated ones. A named selection such as
+`@Query("term")` is also `undefined` when the request omits it.
 
 ## A request answers 422
 
