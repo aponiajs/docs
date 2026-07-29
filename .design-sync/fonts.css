@@ -1,0 +1,26 @@
+/*
+ * Font source for /design-sync.
+ *
+ * The app's own @font-face rules (app/(home)/landing.css) point at "/fonts/*.woff2"
+ * — an absolute URL that only resolves against Next's public/ root. Nothing serves
+ * that root in a preview card or in a design rendered from this system, so those
+ * rules ship dangling ([FONT_DANGLING]).
+ *
+ * These rules say the same thing with repo-relative URLs, so the converter can
+ * resolve the files, copy them into fonts/, and rewrite the URLs.
+ */
+@font-face {
+  font-family: 'Geist Editorial';
+  src: url('../public/fonts/geist-latin.woff2') format('woff2');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: 'Geist Editorial Mono';
+  src: url('../public/fonts/geist-mono-latin.woff2') format('woff2');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 900;
+}

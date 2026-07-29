@@ -26,8 +26,17 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
+        url: siteConfig.logo,
+        type: 'image/png',
+        sizes: '1024x1024',
+      },
+    ],
+    shortcut: [siteConfig.logo],
+    apple: [
+      {
+        url: siteConfig.logo,
+        type: 'image/png',
+        sizes: '1024x1024',
       },
     ],
   },
@@ -72,8 +81,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: 'dark',
-  themeColor: '#0a0908',
+  colorScheme: 'light dark',
+  themeColor: [
+    {
+      media: '(prefers-color-scheme: light)',
+      color: '#f7f8fa',
+    },
+    {
+      media: '(prefers-color-scheme: dark)',
+      color: '#0a0908',
+    },
+  ],
 };
 
 const websiteJsonLd = {
@@ -84,6 +102,7 @@ const websiteJsonLd = {
       '@id': absoluteUrl('/#organization'),
       name: siteConfig.name,
       url: siteConfig.url,
+      logo: absoluteUrl(siteConfig.logo),
       sameAs: [siteConfig.organization, siteConfig.repository],
     },
     {

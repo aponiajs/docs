@@ -1656,6 +1656,7 @@ body:has(.mono-root) ::selection {
 
 .mono-footer-meta > div {
   display: flex;
+  flex-wrap: wrap;
   gap: 1.25rem;
 }
 

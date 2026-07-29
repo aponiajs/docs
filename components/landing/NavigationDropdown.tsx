@@ -5,8 +5,6 @@ import Link from 'next/link';
 import {
   type FocusEvent,
   type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
-  type PointerEvent as ReactPointerEvent,
   useEffect,
   useId,
   useRef,
@@ -18,6 +16,7 @@ export interface NavigationDropdownItem {
   label: string;
   description: string;
   external?: boolean;
+  staticFile?: boolean;
 }
 
 interface NavigationDropdownProps {
@@ -33,38 +32,14 @@ export function NavigationDropdown({
   const dropdown = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastPointerType = useRef<string | null>(null);
   const panelId = useId();
 
-  function clearCloseTimer() {
-    if (closeTimer.current === null) return;
-
-    clearTimeout(closeTimer.current);
-    closeTimer.current = null;
-  }
-
   function openDropdown() {
-    clearCloseTimer();
     setOpen(true);
   }
 
   function closeDropdown() {
-    clearCloseTimer();
     setOpen(false);
-  }
-
-  function scheduleClose() {
-    clearCloseTimer();
-    closeTimer.current = setTimeout(() => {
-      if (panel.current?.contains(document.activeElement)) {
-        closeTimer.current = null;
-        return;
-      }
-
-      setOpen(false);
-      closeTimer.current = null;
-    }, 150);
   }
 
   useEffect(() => {
@@ -92,59 +67,8 @@ export function NavigationDropdown({
     };
   }, [open]);
 
-  useEffect(
-    () => () => {
-      if (closeTimer.current !== null) {
-        clearTimeout(closeTimer.current);
-      }
-    },
-    [],
-  );
-
-  function handlePointerEnter(event: ReactPointerEvent<HTMLDivElement>) {
-    const canHover = window.matchMedia(
-      '(hover: hover) and (pointer: fine)',
-    ).matches;
-
-    if (event.pointerType !== 'touch' && canHover) {
-      openDropdown();
-    }
-  }
-
-  function handlePointerLeave(event: ReactPointerEvent<HTMLDivElement>) {
-    const canHover = window.matchMedia(
-      '(hover: hover) and (pointer: fine)',
-    ).matches;
-
-    if (event.pointerType !== 'touch' && canHover) {
-      scheduleClose();
-    }
-  }
-
-  function handleTriggerClick(event: ReactMouseEvent<HTMLButtonElement>) {
-    const openedWithKeyboard = event.detail === 0;
-    const openedWithDirectTouch =
-      lastPointerType.current !== null &&
-      lastPointerType.current !== 'mouse';
-    const canHover = window.matchMedia(
-      '(hover: hover) and (pointer: fine)',
-    ).matches;
-
-    lastPointerType.current = null;
-
-    if (openedWithKeyboard || openedWithDirectTouch || !canHover) {
-      clearCloseTimer();
-      setOpen((current) => !current);
-      return;
-    }
-
-    openDropdown();
-  }
-
-  function handleTriggerPointerDown(
-    event: ReactPointerEvent<HTMLButtonElement>,
-  ) {
-    lastPointerType.current = event.pointerType;
+  function handleTriggerClick() {
+    setOpen((current) => !current);
   }
 
   function handleTriggerKeyDown(
@@ -209,8 +133,6 @@ export function NavigationDropdown({
       ref={dropdown}
       className="mono-nav-dropdown"
       data-open={open}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
       onBlur={closeWhenFocusLeaves}
     >
       <button
@@ -219,7 +141,6 @@ export function NavigationDropdown({
         className="mono-nav-dropdown-trigger"
         aria-expanded={open}
         aria-controls={panelId}
-        onPointerDown={handleTriggerPointerDown}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
       >
@@ -242,23 +163,35 @@ export function NavigationDropdown({
           <ul>
             {items.map((item) => (
               <li key={item.href}>
-                {item.external ? (
+                {item.external || item.staticFile ? (
                   <a
                     href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${item.label} (opens in a new tab)`}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                    aria-label={
+                      item.external
+                        ? `${item.label} (opens in a new tab)`
+                        : undefined
+                    }
                     onClick={closeDropdown}
                   >
                     <span className="mono-nav-dropdown-copy">
                       <strong>{item.label}</strong>
                       <small>{item.description}</small>
                     </span>
-                    <ArrowUpRight
-                      size={14}
-                      strokeWidth={1.5}
-                      aria-hidden="true"
-                    />
+                    {item.external ? (
+                      <ArrowUpRight
+                        size={14}
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <ArrowRight
+                        size={14}
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                      />
+                    )}
                   </a>
                 ) : (
                   <Link href={item.href} onClick={closeDropdown}>

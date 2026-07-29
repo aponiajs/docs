@@ -5,6 +5,7 @@ import {
   type MotionValue,
   useReducedMotion,
 } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 interface AponiaFlowEffectProps {
   pathLengths: readonly MotionValue<number>[];
@@ -31,7 +32,12 @@ export function AponiaFlowEffect({
   pathLengths,
   targetOpacity,
 }: AponiaFlowEffectProps) {
-  const reducedMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    setReducedMotion(prefersReducedMotion ?? false);
+  }, [prefersReducedMotion]);
 
   return (
     <div className="mono-flow-effect">

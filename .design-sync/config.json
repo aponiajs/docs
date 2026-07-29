@@ -1,0 +1,39 @@
+{
+  "projectId": "65699f86-a037-45dd-89ae-aba5877a7628",
+  "shape": "package",
+  "pkg": "docs",
+  "globalName": "AponiaJS",
+  "srcDir": "components",
+  "tsconfig": "tsconfig.sync.json",
+  "cssEntry": "app/(home)/landing.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "tokensPkg": "docs",
+  "tokensGlob": ".design-sync/reset.css",
+  "extraFonts": [".design-sync/fonts.css"],
+  "overrides": {
+    "GooeyNav": { "cardMode": "column" },
+    "NavigationDropdown": { "cardMode": "column" }
+  },
+  "dtsPropsFor": {
+    "AponiaLogo": "/** Which surface the wordmark sits on. `docs` appends a \"Docs\" context tag. @default 'site' */\n  context?: 'site' | 'docs';",
+    "GooeyNav": "/** Section links, rendered in order. */\n  items: { href: string; label: string }[];",
+    "NavigationDropdown": "/** Visible trigger text. */\n  label: string;\n  /** Menu entries. `external` opens a new tab; `staticFile` uses native same-tab navigation. */\n  items: { href: string; label: string; description: string; external?: boolean; staticFile?: boolean }[];",
+    "CreateProjectCommand": "// No props — the command string is fixed at 'bun create aponia my-api'."
+  },
+  "componentSrcMap": {
+    "AponiaLogo": "components/brand/AponiaLogo.tsx",
+    "GooeyNav": "components/landing/GooeyNav.tsx",
+    "NavigationDropdown": "components/landing/NavigationDropdown.tsx",
+    "CreateProjectCommand": "components/landing/CreateProjectCommand.tsx",
+    "HeroSection": null,
+    "BenchmarkSection": null,
+    "FeaturesSection": null,
+    "TrustStrip": null,
+    "AponiaInterlude": null,
+    "ArchitecturePaper": null,
+    "CallToAction": null,
+    "LandingNavigation": null,
+    "AponiaFlowEffect": null,
+    "JsonLd": null
+  }
+}

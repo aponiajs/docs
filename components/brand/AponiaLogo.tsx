@@ -8,7 +8,7 @@ export function AponiaLogo({ context = 'site' }: AponiaLogoProps) {
   return (
     <span className="aponia-brand">
       <Image
-        src="/brand/aponiajs-mark.svg"
+        src="/brand/aponiajs-mark.png"
         alt=""
         width={32}
         height={32}

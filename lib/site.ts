@@ -2,7 +2,8 @@ const configuredSiteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? process.env.CF_PAGES_URL;
 
 const siteUrl = new URL(configuredSiteUrl ?? 'http://localhost:3000');
-const socialImage = process.env.NEXT_PUBLIC_OG_IMAGE ?? '/og-image.png';
+const socialImage =
+  process.env.NEXT_PUBLIC_OG_IMAGE ?? '/og/docs/image.png';
 
 export const siteConfig = {
   name: 'AponiaJS',
@@ -13,6 +14,7 @@ export const siteConfig = {
     'Bun-first TypeScript framework for modular Elysia applications with dependency injection, validation, native plugins, Eden Treaty types, and CLI schematics.',
   url: siteUrl.toString().replace(/\/$/, ''),
   socialImage,
+  logo: '/brand/aponiajs-mark.png',
   language: 'en',
   locale: 'en_US',
   repository: 'https://github.com/aponiajs/aponiajs',
