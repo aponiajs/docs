@@ -1,0 +1,63 @@
+/*
+ * Base reset for /design-sync.
+ *
+ * app/(home)/landing.css is authored against Tailwind's preflight, which the app
+ * loads separately via app/global.css (`@import 'tailwindcss'`). That import
+ * can't ship here — it only resolves inside Next's PostCSS pipeline — so the
+ * landing stylesheet arrives without the baseline it assumes.
+ *
+ * Most visibly: `.mono-gooey-nav a` and friends never set text-decoration,
+ * because preflight already cleared it. Without this file every anchor in every
+ * design built from this system renders with a UA underline the real site
+ * doesn't have.
+ *
+ * Scope is deliberately narrow — only the preflight behaviour the shipped
+ * components actually depend on. It is imported before _ds_bundle.css, so any
+ * real component rule wins.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}

@@ -9,7 +9,7 @@ const configuredSiteUrl =
 const siteUrl = new URL(configuredSiteUrl);
 const baseUrl = siteUrl.toString().replace(/\/$/, '');
 const socialImageUrl = new URL(
-  process.env.NEXT_PUBLIC_OG_IMAGE ?? '/og-image.png',
+  process.env.NEXT_PUBLIC_OG_IMAGE ?? '/og/docs/image.png',
   `${baseUrl}/`,
 ).toString();
 

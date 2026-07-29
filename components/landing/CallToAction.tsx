@@ -74,6 +74,20 @@ export function CallToAction() {
               Source code
             </a>
             <a
+              href="https://github.com/aponiajs/aponiajs/tree/main/examples"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Examples
+            </a>
+            <a
+              href="https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Roadmap
+            </a>
+            <a
               href="https://github.com/aponiajs/aponiajs/blob/main/LICENSE"
               target="_blank"
               rel="noopener noreferrer"

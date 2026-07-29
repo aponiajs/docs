@@ -15,9 +15,9 @@ export function GET() {
     lang: siteConfig.language,
     icons: [
       {
-        src: '/icon.svg',
-        sizes: 'any',
-        type: 'image/svg+xml',
+        src: siteConfig.logo,
+        sizes: '1024x1024',
+        type: 'image/png',
         purpose: 'any',
       },
     ],

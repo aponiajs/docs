@@ -30,6 +30,18 @@ const resourceLinks: NavigationDropdownItem[] = [
     external: true,
   },
   {
+    href: 'https://github.com/aponiajs/aponiajs/tree/main/examples',
+    label: 'Examples',
+    description: 'Runnable applications for implemented framework features',
+    external: true,
+  },
+  {
+    href: 'https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md',
+    label: 'Roadmap',
+    description: 'Current milestones, evidence, and planned capabilities',
+    external: true,
+  },
+  {
     href: 'https://github.com/aponiajs/aponiajs/issues',
     label: 'Issue tracker',
     description: 'Bugs, feature requests, and active work',
@@ -39,6 +51,7 @@ const resourceLinks: NavigationDropdownItem[] = [
     href: '/llms.txt',
     label: 'LLM index',
     description: 'Plain-text documentation routes for AI tools',
+    staticFile: true,
   },
 ];
 
@@ -141,15 +154,20 @@ export function LandingNavigation() {
                 Docs <span aria-hidden="true">↗</span>
               </Link>
               {resourceLinks.map((link) =>
-                link.external ? (
+                link.external || link.staticFile ? (
                   <a
                     key={link.href}
                     href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target={link.external ? '_blank' : undefined}
+                    rel={
+                      link.external ? 'noopener noreferrer' : undefined
+                    }
                     onClick={closeMobileMenu}
                   >
-                    {link.label} <span aria-hidden="true">↗</span>
+                    {link.label}{' '}
+                    {link.external ? (
+                      <span aria-hidden="true">↗</span>
+                    ) : null}
                   </a>
                 ) : (
                   <Link

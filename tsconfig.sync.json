@@ -1,0 +1,18 @@
+{
+  "_comment": "Build-only tsconfig for /design-sync. Not used by Next. It mirrors the real tsconfig.json's path aliases and redirects next/link + next/image to .design-sync/shims/ so the DS bundle carries no Next client runtime. Referenced by .design-sync/config.json -> tsconfig.",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./*"],
+      "collections/*": ["./.source/*"],
+      "next/link": ["./.design-sync/shims/next-link.jsx"],
+      "next/image": ["./.design-sync/shims/next-image.jsx"]
+    }
+  }
+}
