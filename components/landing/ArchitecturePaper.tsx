@@ -11,7 +11,7 @@ const capabilities = [
   ],
   [
     'Controllers',
-    'Decorated classes with request parameter decorators, compiled into Elysia plugins.',
+    'Decorated classes with request parameters, compiled into direct Elysia route registrations.',
   ],
   [
     'Validation',
@@ -19,7 +19,7 @@ const capabilities = [
   ],
   [
     'Composition',
-    'Elysia plugin modules resolve through injection and mount with the native .use().',
+    'Native plugins mount with .use(), and createNative exposes statically visible routes to Eden Treaty.',
   ],
   [
     'Tooling',
@@ -30,6 +30,7 @@ const capabilities = [
 const limits = [
   'ProviderScope contains one member: singleton. Request and transient scopes do not exist.',
   'Provider factories are synchronous. Async providers and lifecycle hooks are not implemented.',
+  'Decorated routes run normally but need a future build-time compiler to enter the static Eden contract.',
   'The alpha packages publish to the npm alpha channel and the API can change before 1.0.',
 ] as const;
 
@@ -116,9 +117,10 @@ export function ArchitecturePaper() {
             imports, exports, and provider dependencies. It creates the
             singleton container and one Elysia application, initializes
             providers and imported plugins in dependency order, instantiates
-            controllers, and registers the plugins they generate. Structural
-            mistakes fail at startup rather than on the first request that
-            touches them.
+            controllers, and registers their compiled routes. Low-level
+            controllers can still mount native plugins when isolation is
+            intentional. Structural mistakes fail at startup rather than on
+            the first request that touches them.
           </p>
         </section>
 

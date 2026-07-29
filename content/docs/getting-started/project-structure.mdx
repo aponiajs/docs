@@ -45,13 +45,13 @@ src/
     │   └── greeting.entity.ts
     ├── greeting.controller.spec.ts
     ├── greeting.controller.ts
+    ├── greeting.model.ts
     ├── greeting.module.ts
-    ├── greeting.schema.ts
     ├── greeting.service.spec.ts
     └── greeting.service.ts
 ```
 
-A REST CRUD resource generates the `dto/`, `entities/`, and `*.schema.ts` files
+A REST CRUD resource generates the `dto/`, `entities/`, and `*.model.ts` files
 shown above. A plain `aponia g controller` or `aponia g service` generates only
 the matching file and its spec.
 
@@ -67,7 +67,7 @@ code genuinely shared by multiple features.
 | `*.module.ts` | Declare imports, controllers, providers, and exports. |
 | `*.controller.ts` | Own decorated HTTP routes and delegate behavior. |
 | `*.service.ts` | Contain reusable application behavior. |
-| `*.schema.ts` | Own the route validation schemas for one feature. |
+| `*.model.ts` | Own route validators, route schemas, and their derived input types. |
 | `*.spec.ts` | Unit tests colocated with the owning class. |
 | `test/*.e2e-spec.ts` | End-to-end tests for the application boundary. |
 | `aponia.json` | CLI source root, project, and generation defaults. |

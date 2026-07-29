@@ -23,11 +23,15 @@ Reviewed against `0.6.0-alpha.17`.
 - module imports, exports, re-exports, and graph diagnostics;
 - Elysia application creation, in-process handling, listening, URL access, and
   closing;
+- direct native Elysia application creation with `AponiaFactory.createNative`;
 - native Elysia configuration and low-level controller escape hatches;
 - static and DI-configured Elysia plugin modules, plus `defineElysiaPlugin` and
   the typed `ElysiaRouteContext`;
+- statically composed native route types for Eden Treaty, plus direct
+  bootstrap registration for decorated routes;
+- Elysia `aot` and `precompile` policy exposed through application options;
 - system, JSON, filtered, and custom logging;
-- project and component generation.
+- project and component generation, including REST resource validation models.
 
 ## Not implemented
 
@@ -36,7 +40,8 @@ Reviewed against `0.6.0-alpha.17`.
   validation failures come from Elysia as `422`;
 - async provider factories, lifecycle hooks, and non-singleton scopes;
 - testing modules or provider overrides;
-- OpenAPI generation and Eden Treaty integration;
+- OpenAPI generation, decorator-wide Eden Treaty inference, and a build-time
+  module compiler;
 - built-in configuration, secrets, authentication, authorization, or rate
   limiting;
 - GraphQL, WebSocket, or microservice platform packages.
@@ -48,7 +53,8 @@ gateway, resolver, and non-REST resource transports. These are standalone
 scaffolds, not classes wired into an implemented runtime contract.
 
 REST resources are the exception: their generated controller, service, module,
-route schema, DTOs, and entity run against the implemented runtime.
+`<name>.model.ts` validation model, DTOs, and entity run against the implemented
+runtime.
 
 See [status and roadmap](/docs/project/status-and-roadmap) for the milestone
 each planned capability belongs to.

@@ -1,0 +1,76 @@
+---
+title: Repository Development
+description: Understand the framework workspace, source ownership, verification lanes, and contribution invariants.
+---
+
+The framework source repository is a Bun workspace. Published packages live in
+`packages/*`, executable applications live in `examples/*`, and the reference
+documents used to verify this site live in `docs/*`.
+
+This is different from the flat application layout produced by `aponia new`.
+
+## Source ownership
+
+Published package internals use domain-first directories. `src/index.ts` is the
+only public barrel for each package:
+
+```text
+packages/<package>/src/
+├── <domain>/
+│   ├── <capability>.ts
+│   └── <capability>.types.ts
+└── index.ts
+```
+
+| Package | Source domains |
+| --- | --- |
+| `@aponiajs/common` | controllers, decorators, errors, logging, modules, providers, routing, tokens |
+| `@aponiajs/core` | container, graph |
+| `@aponiajs/platform-elysia` | application, controllers, modules, plugins, routing |
+| `@aponiajs/cli` | commands, generation |
+
+Type-only contracts stay beside the implementation that owns them. Cross-package
+imports use public package names rather than private source paths.
+
+## Verification lanes
+
+Run the repository gates with the pinned Bun toolchain:
+
+```bash
+mise install
+bun install
+bun run check
+bun test
+bun run test:coverage
+bun run test:vite-plus
+bun run build
+```
+
+- Bun tests live in `packages/*/tests/*.test.ts`.
+- Vite+ conformance tests live in
+  `packages/*/tests-vp/*.conformance.ts`.
+- The coverage lane enforces at least 95% for both lines and functions.
+- `packages/cli/e2e/` packs the CLI, generates an application, and verifies the
+  installed result; it is intentionally slower than the default lanes.
+- `scripts/source-layout.spec.ts` protects the domain-first layout and
+  type-only file boundary.
+
+## Documentation invariant
+
+A public behavior change ships with updates to the affected package README,
+framework reference documents, examples, and this site when applicable. Code
+examples should be copied from passing tests or executable examples so the
+documented API stays compilable.
+
+The framework requires English repository content and Conventional Commit
+subjects. The authoritative contributor rules remain in the source
+[`AGENTS.md`](https://github.com/aponiajs/aponiajs/blob/9207e806b801c856583a9d04c66a2c5a04b4700b/AGENTS.md).
+
+## Version and branch policy
+
+Every public package uses the same version. Feature and fix branches target the
+persistent release branch for their intended npm channel; routine prerelease
+work currently targets `release/alpha`.
+
+See [packages and versioning](./packages-and-versioning) for the branch-to-tag
+mapping and [status and roadmap](./status-and-roadmap) for current workstreams.

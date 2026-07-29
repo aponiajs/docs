@@ -15,11 +15,11 @@ structured `details`.
 | `AMBIGUOUS_PROVIDER` | Multiple imported source modules export the same token. | Export distinct tokens or restructure imports. |
 | `MISSING_PROVIDER` | A dependency is not visible from the requesting module. | Add a provider, import its module, and export the token. |
 | `PROVIDER_CYCLE` | Provider resolution returns to a provider being constructed. | Remove the constructor/factory cycle. |
-| `INVALID_CONTROLLER` | Missing decorator metadata or a non-callable route handler. | Add `@Controller()` and use callable decorated methods. |
+| `INVALID_CONTROLLER` | Missing decorator metadata, a non-callable route handler, or a controller factory that returned a non-Elysia value. | Add `@Controller()`, use callable methods, or return an Elysia plugin. |
 | `INVALID_MODULE` | A class root/import is missing `@Module()`. | Decorate it or pass a low-level definition. |
 | `INVALID_NATIVE_APPLICATION` | `configureNative` returned a different Elysia object. | Return the received instance after chaining methods. |
 | `APPLICATION_NOT_LISTENING` | `getUrl()` ran before `listen()`. | Listen first or avoid URL access in in-process tests. |
-| `UNSUPPORTED_CONTROLLER` | The Elysia platform received another controller kind or a builder returned a non-Elysia value. | Use decorated controllers or `defineElysiaController()` correctly. |
+| `UNSUPPORTED_CONTROLLER` | The Elysia platform received a controller descriptor owned by another platform kind. | Use a decorated controller or an Elysia controller descriptor. |
 
 ## Inspect an error
 
@@ -42,3 +42,9 @@ These errors describe framework graph and lifecycle validation. Route input
 validation is performed by Elysia and answers `422`; AponiaJS does not yet add
 its own exception filters or Problem Details error bodies. Assert the `code`
 rather than the message, which is not part of the contract.
+
+Graph errors through `MISSING_PROVIDER` are raised while the module graph
+compiles. Provider cycles are detected while singletons initialize, and
+controller or platform diagnostics are raised while routes mount. All occur
+during `AponiaFactory.create()` or `createNative()`, before the application can
+listen.

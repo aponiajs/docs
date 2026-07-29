@@ -69,6 +69,29 @@ test("POST /users rejects an invalid body", async () => {
 });
 ```
 
+## Test a typed native route
+
+When the module graph declares routes statically, return the native application
+and pass it directly to Eden Treaty:
+
+```ts
+import { expect, test } from "bun:test";
+import { treaty } from "@elysia/eden";
+import { app } from "../src/server.ts";
+
+test("reads a user through Treaty", async () => {
+  const api = treaty(app);
+  const result = await api.users({ id: 42 }).get();
+
+  expect(result.error).toBeNull();
+  expect(result.data).toEqual({ id: 42, name: "user-42" });
+});
+```
+
+This performs no network I/O and keeps the route contract inferred from the
+same Elysia application. See [Eden Treaty](/docs/guides/eden-treaty) for the
+static inference boundary.
+
 ## Assert a graph failure
 
 Graph and container failures happen while the application is being created.

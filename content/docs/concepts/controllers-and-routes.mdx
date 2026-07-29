@@ -79,8 +79,8 @@ export class UserController {
 }
 ```
 
-A handler declared with no parameter decorators receives the whole request
-context as its only argument:
+A handler declared with no parameter decorators may declare one unannotated
+parameter to receive the whole request context:
 
 ```ts
 import { Controller, Get } from "@aponiajs/common";
@@ -119,9 +119,11 @@ export class GreetingController {
 }
 ```
 
-Each controller is compiled into one Elysia plugin whose routes are registered
-on the application. A controller missing `@Controller()` fails with
-`INVALID_CONTROLLER` before the server listens.
+Decorated routes are compiled into immutable plans and registered directly on
+the root Elysia application during bootstrap. Parameter binding becomes a
+fixed-arity invoker instead of request-time metadata traversal. A controller
+missing `@Controller()` fails with `INVALID_CONTROLLER` before the server
+listens.
 
 For Elysia hooks, macros, or a route that needs Elysia's complete handler
 signature, use [native Elysia access](/docs/guides/native-elysia-access) or

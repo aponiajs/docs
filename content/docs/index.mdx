@@ -38,6 +38,11 @@ visibility, structured diagnostics, and a native Elysia integration.
     href="/docs/api-reference"
   />
   <Card
+    title="Use Eden Treaty"
+    description="Export the composed native Elysia type for end-to-end clients."
+    href="/docs/guides/eden-treaty"
+  />
+  <Card
     title="Current limitations"
     description="See exactly what is implemented, experimental, and planned."
     href="/docs/migration/current-limitations"
@@ -48,11 +53,11 @@ visibility, structured diagnostics, and a native Elysia integration.
 
 ```text
 main.ts
-  -> AponiaFactory.create(AppModule)
+  -> AponiaFactory.create(AppModule) or createNative(AppModule)
   -> module graph validation
   -> singleton provider construction
-  -> Elysia plugin and controller registration
-  -> listen(), handle(), or close()
+  -> native plugin mounting and direct route registration
+  -> managed lifecycle or the composed Elysia application
 ```
 
 A normal HTTP application installs `@aponiajs/common`,
@@ -103,12 +108,16 @@ await app.listen(3000);
   ArkType, Valibot — plus platform-native TypeBox and Elysia `t` validators;
 - singleton class, value, factory, and alias providers with explicit tokens;
 - native Elysia plugin imports, including typed plugin context;
+- managed and native application bootstraps, including statically composed
+  Elysia route types for Eden Treaty;
+- bootstrap-compiled controller invokers and explicit Elysia AOT/precompile
+  policy;
 - structured system logging and the complete CLI schematic catalog.
 
 ## Documentation baseline
 
 These docs were reviewed against AponiaJS `0.6.0-alpha.17` on
-[`main@9207e80`](https://github.com/aponiajs/aponiajs/tree/9207e806b801c856583a9d04c66a2c5a04b4700b).
+[`9207e80`](https://github.com/aponiajs/aponiajs/tree/9207e806b801c856583a9d04c66a2c5a04b4700b).
 Source code and package exports are authoritative when a pre-1.0 release differs
 from this site.
 

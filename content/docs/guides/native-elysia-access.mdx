@@ -1,15 +1,20 @@
 ---
 title: Native Elysia access
-description: Configure and retrieve the underlying Elysia application without replacing it.
+description: Return, configure, or retrieve the composed Elysia application without replacing it.
 ---
 
-AponiaJS deliberately keeps Elysia accessible. Use `configureNative` during
-creation when Elysia's fluent type accumulation matters:
+AponiaJS deliberately keeps Elysia accessible. Choose the calling surface that
+fits the application.
+
+## Return the native application
+
+Use `createNative()` when native Elysia or Eden Treaty should own listening,
+handling, and shutdown:
 
 ```ts
 import { AponiaFactory } from "@aponiajs/platform-elysia";
 
-const application = await AponiaFactory.create(AppModule, {
+const app = await AponiaFactory.createNative(AppModule, {
   configureNative: (elysia) =>
     elysia
       .state("version", "1.0.0")
@@ -18,18 +23,32 @@ const application = await AponiaFactory.create(AppModule, {
         version: store.version,
       })),
 });
+
+app.listen(3000);
 ```
+
+The return value is the composed Elysia instance itself. Its type preserves
+statically declared plugin and controller routes plus everything added by
+`configureNative`.
 
 `configureNative` must mutate and return the exact Elysia instance it receives.
 Returning a replacement instance throws `INVALID_NATIVE_APPLICATION`.
 
-## Retrieve the configured instance
+## Keep the managed lifecycle
+
+Use `create()` when Aponia's startup logging, `getUrl()`, and managed `close()`
+method are useful:
 
 ```ts
+const application = await AponiaFactory.create(AppModule, {
+  configureNative: (elysia) =>
+    elysia.state("version", "1.0.0"),
+});
+
 const native = application.getNativeApplication();
 ```
 
-The return type preserves the Elysia type produced by `configureNative`.
+`getNativeApplication()` preserves the same accumulated native type.
 
 ## When to use this escape hatch
 
@@ -46,6 +65,9 @@ Request binding and validation no longer require this escape hatch — see
 
 For reusable plugins owned by a module boundary, prefer
 [`ElysiaPluginModule`](/docs/guides/elysia-plugin-modules).
+
+For an end-to-end typed client or a typed in-process request, see
+[Eden Treaty](./eden-treaty).
 
 <Callout type="info" title="Controller type boundary">
   State and decorators from module-imported plugins exist at runtime in every

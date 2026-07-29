@@ -2,6 +2,7 @@
   "title": "Guides",
   "pages": [
     "native-elysia-access",
+    "eden-treaty",
     "elysia-plugin-modules",
     "plugin-context-types",
     "logging",

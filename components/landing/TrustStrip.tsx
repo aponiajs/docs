@@ -8,10 +8,11 @@ export function TrustStrip() {
           <p className="mono-index-rail">
             <b>Architecture</b>
           </p>
-          <h2 id="work-title">Compile. Initialize. Mount.</h2>
+          <h2 id="work-title">Compile. Initialize. Register.</h2>
           <p>
             AponiaFactory builds a validated module graph, initializes singleton
-            providers, and mounts plugins on one native Elysia instance.
+            providers, mounts native plugins, and registers routes on one Elysia
+            instance.
           </p>
         </div>
         <ArchitecturePaper />

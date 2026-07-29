@@ -10,7 +10,11 @@ const application = await AponiaFactory.create(AppModule);
 ```
 
 Creation validates the graph, eagerly constructs singleton providers, registers
-plugins, and maps controllers.
+native plugins, compiles decorated route invokers, and maps controllers.
+
+Pass `elysia.aot` and `elysia.precompile` options when route composition should
+happen during bootstrap instead of on first use. See the
+[Application API](/docs/api-reference/application).
 
 ## Listen
 
@@ -49,3 +53,7 @@ await application.close();
 `close()` stops the native server when one exists. AponiaJS does not currently
 provide module/provider lifecycle hook interfaces such as initialization or
 destruction hooks.
+
+When the Aponia wrapper is unnecessary, `AponiaFactory.createNative()` returns
+the composed Elysia instance directly. Native Elysia then owns `listen`,
+`handle`, and `stop`; see [native Elysia access](./native-elysia-access).
