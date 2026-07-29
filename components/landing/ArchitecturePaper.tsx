@@ -1,3 +1,5 @@
+import { frameworkVersion } from '@/lib/shared';
+
 const capabilities = [
   [
     'Modules',
@@ -57,7 +59,7 @@ export function ArchitecturePaper() {
         <dl>
           <div>
             <dt>Version</dt>
-            <dd>0.6.0-alpha.17</dd>
+            <dd>{frameworkVersion}</dd>
           </div>
           <div>
             <dt>Runtime</dt>

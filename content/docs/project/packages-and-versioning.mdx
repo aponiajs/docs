@@ -69,9 +69,8 @@ See the [CLI reference](../cli) for command behavior and runtime limitations.
 All five public packages use the same release version and move to the same npm
 distribution tag together. The tag is derived from the version, never chosen by
 hand: `0.6.0-alpha.17` publishes to `alpha` and receives the `next` alias, while
-`latest` only ever holds a stable `X.Y.Z` release — currently `0.5.0`, which
-predates the `0.6.0` alpha line. Do not combine different AponiaJS versions in
-one application.
+`latest` only ever holds a stable `X.Y.Z` release and therefore never points at
+an alpha. Do not combine different AponiaJS versions in one application.
 
 The audited source baseline is `0.6.0-alpha.17`. Because `0.y.z` releases are initial
 development versions, minor releases may contain breaking API changes. Check

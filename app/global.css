@@ -88,11 +88,12 @@ body {
 
 /*
  * The landing page and the 404 keep the dark instrument surface in every
- * theme, so their scrollbars and form controls have to follow.
+ * theme, so their scrollbars and form controls have to follow. next-themes
+ * writes color-scheme as an inline style, so only !important reaches this.
  */
 html:has(.mono-root),
 html:has(.aponia-404) {
-  color-scheme: dark;
+  color-scheme: dark !important;
 }
 
 ::selection {

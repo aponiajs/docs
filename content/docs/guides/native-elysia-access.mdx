@@ -12,7 +12,7 @@ import { AponiaFactory } from "@aponiajs/platform-elysia";
 const application = await AponiaFactory.create(AppModule, {
   configureNative: (elysia) =>
     elysia
-      .state("version", "0.6.0-alpha.17")
+      .state("version", "1.0.0")
       .get("/health", ({ store }) => ({
         ok: true,
         version: store.version,
