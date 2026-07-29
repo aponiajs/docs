@@ -19,11 +19,13 @@
 }
 
 :root {
+  color-scheme: light;
   --color-fd-background: hsl(220, 14%, 97%);
   --color-fd-foreground: hsl(228, 12%, 13%);
   --color-fd-primary: hsl(248, 28%, 49%);
   --color-fd-primary-foreground: hsl(220, 20%, 98%);
-  --color-fd-border: hsla(228, 14%, 18%, 0.15);
+  /* Hairlines carry the structure, so they stay visible: ~2.3:1 on the page. */
+  --color-fd-border: hsla(228, 14%, 18%, 0.4);
   --color-fd-ring: hsl(248, 30%, 55%);
   --color-fd-accent: hsl(245, 20%, 92%);
   --color-fd-accent-foreground: hsl(248, 25%, 28%);
@@ -39,6 +41,11 @@
   --font-mono: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
   --font-display: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
   --fd-layout-width: 1400px;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
 }
 
 .dark {
@@ -47,7 +54,7 @@
   --color-fd-foreground: #e9eadf;
   --color-fd-primary: #d7ff43;
   --color-fd-primary-foreground: #0b0c0a;
-  --color-fd-border: rgb(233 234 223 / 0.16);
+  --color-fd-border: rgb(233 234 223 / 0.3);
   --color-fd-ring: #d7ff43;
   --color-fd-accent: #1b1d17;
   --color-fd-accent-foreground: #e9eadf;
@@ -79,6 +86,15 @@ body {
   background: var(--color-fd-background);
 }
 
+/*
+ * The landing page and the 404 keep the dark instrument surface in every
+ * theme, so their scrollbars and form controls have to follow.
+ */
+html:has(.mono-root),
+html:has(.aponia-404) {
+  color-scheme: dark;
+}
+
 ::selection {
   color: #0b0c0a;
   background: #d7ff43;
@@ -91,32 +107,14 @@ html > body[data-scroll-locked] {
 
 /* Fumadocs UI theme for the AponiaJS documentation */
 
+/*
+ * Docs inherit the palette from :root and .dark so the theme toggle works.
+ * Only layout-scoped tokens belong here.
+ */
 .aponia-docs {
-  --color-fd-background: #0b0c0a;
-  --color-fd-foreground: #e9eadf;
-  --color-fd-primary: #d7ff43;
-  --color-fd-primary-foreground: #0b0c0a;
-  --color-fd-border: rgb(233 234 223 / 0.16);
-  --color-fd-ring: #d7ff43;
-  --color-fd-accent: #1b1d17;
-  --color-fd-accent-foreground: #e9eadf;
-  --color-fd-muted: #151610;
-  --color-fd-muted-foreground: #9a9c90;
-  --color-fd-secondary: #171813;
-  --color-fd-secondary-foreground: #e9eadf;
-  --color-fd-card: #11120f;
-  --color-fd-card-foreground: #e9eadf;
-  --color-fd-popover: #171813;
-  --color-fd-popover-foreground: #e9eadf;
-  --color-fd-info: #d7ff43;
   --fd-layout-width: 1500px;
   --font-sans: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  --radius-2xl: 0;
   min-height: 100dvh;
   color: var(--color-fd-foreground);
   background: var(--color-fd-background);
@@ -126,9 +124,6 @@ html > body[data-scroll-locked] {
 }
 
 .aponia-docs #nd-sidebar {
-  --color-fd-muted: #151610;
-  --color-fd-muted-foreground: #9a9c90;
-  --color-fd-secondary: #171813;
   border-color: var(--color-fd-border);
   background: var(--color-fd-card);
   box-shadow: none;
@@ -136,7 +131,7 @@ html > body[data-scroll-locked] {
 
 .aponia-docs #nd-subnav {
   border-color: var(--color-fd-border);
-  background: rgb(11 12 10 / 0.8);
+  background: color-mix(in srgb, var(--color-fd-background) 80%, transparent);
   box-shadow: none;
   backdrop-filter: blur(18px) saturate(1.12);
   -webkit-backdrop-filter: blur(18px) saturate(1.12);
@@ -349,8 +344,8 @@ html > body[data-scroll-locked] {
   flex-wrap: wrap;
   gap: 0;
   margin-top: clamp(2.5rem, 4vw, 3.5rem);
-  border-top: 1px solid rgb(233 234 223 / 0.18);
-  border-left: 1px solid rgb(233 234 223 / 0.18);
+  border-top: 1px solid rgb(233 234 223 / 0.3);
+  border-left: 1px solid rgb(233 234 223 / 0.3);
   font-family: var(--font-mono);
   font-size: 0.72rem;
 }
@@ -361,8 +356,8 @@ html > body[data-scroll-locked] {
   align-items: center;
   gap: 0.4rem;
   padding-inline: 1.15rem;
-  border-right: 1px solid rgb(233 234 223 / 0.18);
-  border-bottom: 1px solid rgb(233 234 223 / 0.18);
+  border-right: 1px solid rgb(233 234 223 / 0.3);
+  border-bottom: 1px solid rgb(233 234 223 / 0.3);
   color: #e9eadf;
   transition:
     color 120ms linear,
