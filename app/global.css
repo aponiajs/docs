@@ -18,6 +18,31 @@
   font-weight: 100 900;
 }
 
+/*
+ * Design tokens for the landing page and the goal paper, exposed to Tailwind
+ * so both surfaces are written in utilities (`bg-stock`, `text-ink-faint`,
+ * `border-rule`, `font-mark`) instead of bespoke class names. The docs keep
+ * their own `--color-fd-*` variables below, which fumadocs reads directly.
+ */
+@theme {
+  --color-stock: #ffffff;
+  --color-sunk: #f2f2f2;
+  --color-wash: #ececec;
+  --color-ink: #0f0f0f;
+  --color-ink-soft: #333333;
+  --color-ink-faint: #767676;
+  --color-rule: #dcdcdc;
+  --color-rule-soft: #b4b4b4;
+  --color-slate: #171717;
+
+  --font-face: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
+  --font-mark: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
+  --font-book: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia,
+    'Times New Roman', serif;
+
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 :root {
   color-scheme: light;
   /*
@@ -314,114 +339,16 @@ html > body[data-scroll-locked] {
   outline-offset: 3px;
 }
 
-/* Not found: same instrument surface as the landing page, no illustration. */
-
+/*
+ * Not found: the page itself is written in utilities. Only the graph-paper
+ * field behind it needs real CSS.
+ */
 .aponia-404 {
-  display: grid;
-  min-height: 100dvh;
-  flex: 1;
-  align-items: center;
-  color: #0f0f0f;
   background:
     linear-gradient(rgb(15 15 15 / 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgb(15 15 15 / 0.03) 1px, transparent 1px),
     #ffffff;
   background-size: 3rem 3rem;
-  font-family: var(--font-sans);
-}
-
-.aponia-404-shell {
-  width: min(calc(100% - 3.5rem), 68rem);
-  margin-inline: auto;
-  padding-block: clamp(5rem, 12vw, 9rem);
-}
-
-.aponia-404-rail {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #767676;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.12em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.aponia-404-rail::before {
-  width: 1.75rem;
-  height: 1px;
-  flex: none;
-  background: #0f0f0f;
-  content: '';
-}
-
-.aponia-404-rail b {
-  color: #0f0f0f;
-  font-weight: 500;
-}
-
-.aponia-404 h1 {
-  max-width: 14ch;
-  margin-top: clamp(1.75rem, 3vw, 2.75rem);
-  font-size: clamp(3rem, 8vw, 7rem);
-  font-weight: 430;
-  letter-spacing: -0.07em;
-  line-height: 0.86;
-  text-wrap: balance;
-}
-
-.aponia-404-copy {
-  max-width: 34rem;
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
-  color: #767676;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  text-wrap: pretty;
-}
-
-.aponia-404-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  margin-top: clamp(2.5rem, 4vw, 3.5rem);
-  border-top: 1px solid rgb(15 15 15 / 0.3);
-  border-left: 1px solid rgb(15 15 15 / 0.3);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-}
-
-.aponia-404-actions :is(a) {
-  display: inline-flex;
-  min-height: 3rem;
-  align-items: center;
-  gap: 0.4rem;
-  padding-inline: 1.15rem;
-  border-right: 1px solid rgb(15 15 15 / 0.3);
-  border-bottom: 1px solid rgb(15 15 15 / 0.3);
-  color: #0f0f0f;
-  transition:
-    color 120ms linear,
-    background-color 120ms linear;
-}
-
-.aponia-404-actions a:first-child {
-  color: #0f0f0f;
-}
-
-.aponia-404-actions a:hover {
-  color: #0f0f0f;
-  background: rgb(15 15 15 / 0.06);
-}
-
-.aponia-404-actions a:active {
-  transform: translateY(1px);
-}
-
-.aponia-404-actions a:focus-visible {
-  outline: 2px solid #0f0f0f;
-  outline-offset: -2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

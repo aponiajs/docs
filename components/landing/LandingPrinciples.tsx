@@ -18,28 +18,38 @@ const principles = [
 
 export function LandingPrinciples() {
   return (
-    <section
-      id="principles"
-      className="mono-principles"
-      aria-labelledby="principles-title"
-    >
-      <header className="mono-head">
+    <section id="principles" aria-labelledby="principles-title">
+      <header className="mb-9 grid gap-5 md:mb-14 md:gap-8">
         <p className="mono-tag">
           <b>02</b> Position
         </p>
-        <h2 id="principles-title">
+        <h2
+          id="principles-title"
+          className="max-w-[15ch] text-[clamp(2.4rem,6.5vw,5.5rem)] leading-[0.9] tracking-[-0.055em]"
+        >
           Familiar. Native.
           <br />
           Bun-first.
         </h2>
       </header>
 
-      <ol className="mono-rows">
+      {/* `mono-rows` and `mono-row` carry the CSS counter that numbers rows. */}
+      <ol className="mono-rows grid border-t border-ink">
         {principles.map(({ title, body, detail }) => (
-          <li key={title} className="mono-row" data-mono-reveal>
-            <h3>{title}</h3>
-            <p>{body}</p>
-            <p className="mono-row-detail">{detail}</p>
+          <li
+            key={title}
+            className="mono-row grid gap-x-6 gap-y-3 border-b border-rule py-6 transition-colors duration-150 hover:bg-sunk md:grid-cols-[3.5rem_minmax(0,0.75fr)_minmax(0,1fr)_minmax(0,0.65fr)] md:items-baseline md:gap-x-12 md:py-10"
+            data-mono-reveal
+          >
+            <h3 className="text-[clamp(2rem,4vw,3.75rem)] leading-[0.88] tracking-[-0.055em]">
+              {title}
+            </h3>
+            <p className="max-w-[42ch] text-[0.92rem] leading-[1.6] text-pretty">
+              {body}
+            </p>
+            <p className="font-mark text-[0.72rem] leading-[1.5] text-ink-faint">
+              {detail}
+            </p>
           </li>
         ))}
       </ol>

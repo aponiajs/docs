@@ -189,7 +189,7 @@ export function NavigationMegaMenu({
       <button
         ref={trigger}
         type="button"
-        className="mono-mega-trigger"
+        className="hidden h-full cursor-pointer items-center gap-1.5 border-l border-rule px-4 tracking-[0.1em] text-ink-faint uppercase transition-colors duration-150 hover:bg-ink hover:text-stock aria-expanded:bg-ink aria-expanded:text-stock lg:inline-flex [&[aria-expanded=true]_svg]:rotate-180 [&_svg]:transition-transform [&_svg]:duration-300 active:translate-y-px"
         aria-expanded={open}
         aria-controls={panelId}
         aria-haspopup="true"
@@ -209,16 +209,21 @@ export function NavigationMegaMenu({
       >
         <div
           ref={panel}
-          className="mono-mega-panel"
+          className="mono-mega-panel border-b border-ink bg-stock"
           onKeyDown={handlePanelKeyDown}
         >
-          <div className="mono-mega-grid">
+          <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1fr))] xl:grid-cols-[minmax(0,1.2fr)_repeat(3,minmax(0,1fr))]">
             <MegaFeature feature={feature} onNavigate={closeMenu} />
 
             {columns.map((column) => (
-              <section key={column.label} className="mono-mega-column">
-                <h3>{column.label}</h3>
-                <ul>
+              <section
+                key={column.label}
+                className="mono-mega-column min-w-0 border-l border-rule px-[1.15rem] pt-5 pb-6"
+              >
+                <h3 className="mb-3 pl-2 font-mark text-[0.62rem] font-medium tracking-[0.16em] text-ink-faint uppercase">
+                  {column.label}
+                </h3>
+                <ul className="grid">
                   {column.links.map((link) => (
                     <li key={link.href}>
                       <MegaLink link={link} onNavigate={closeMenu} />
@@ -229,8 +234,10 @@ export function NavigationMegaMenu({
             ))}
           </div>
 
-          <div className="mono-mega-footer">
-            <p>{note}</p>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-rule bg-sunk px-[1.35rem] py-2.5">
+            <p className="max-w-[64ch] font-mark text-[0.68rem] leading-[1.45] text-ink-faint">
+              {note}
+            </p>
             <MegaLink link={footerLink} onNavigate={closeMenu} compact />
           </div>
         </div>
@@ -247,18 +254,38 @@ function MegaFeature({
   onNavigate: () => void;
 }) {
   return (
-    <Link href={feature.href} className="mono-mega-feature" onClick={onNavigate}>
-      <span className="mono-mega-feature-eyebrow">{feature.eyebrow}</span>
-      <strong>{feature.title}</strong>
-      <small>{feature.description}</small>
-      <span className="mono-mega-feature-meta">
+    <Link
+      href={feature.href}
+      className="group grid content-start gap-2 bg-sunk px-[1.35rem] pt-5 pb-6 text-ink transition-colors duration-150 hover:bg-ink hover:text-stock active:translate-y-px"
+      onClick={onNavigate}
+    >
+      <span className="mono-mega-eyebrow inline-flex items-center gap-2 font-mark text-[0.6rem] tracking-[0.18em] uppercase">
+        {feature.eyebrow}
+      </span>
+      <strong className="text-[0.98rem] leading-[1.2] font-semibold tracking-[-0.025em]">
+        {feature.title}
+      </strong>
+      <small className="text-[0.74rem] leading-[1.5] opacity-70">
+        {feature.description}
+      </small>
+      <span className="flex flex-wrap gap-1.5">
         {feature.meta.map((entry) => (
-          <span key={entry}>{entry}</span>
+          <span
+            key={entry}
+            className="border border-current px-1.5 py-0.5 font-mark text-[0.6rem] opacity-70"
+          >
+            {entry}
+          </span>
         ))}
       </span>
-      <span className="mono-mega-feature-cta">
+      <span className="mt-0.5 inline-flex items-center gap-1.5 font-mark text-[0.66rem] font-semibold tracking-[0.06em] uppercase">
         Read the paper
-        <ArrowRight size={14} strokeWidth={1.5} aria-hidden="true" />
+        <ArrowRight
+          size={14}
+          strokeWidth={1.5}
+          aria-hidden="true"
+          className="transition-transform duration-150 group-hover:translate-x-1"
+        />
       </span>
     </Link>
   );
@@ -273,18 +300,46 @@ function MegaLink({
   onNavigate: () => void;
   compact?: boolean;
 }) {
-  const className = compact ? 'mono-mega-link mono-mega-link-compact' : 'mono-mega-link';
+  const base =
+    'group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 text-ink transition-colors duration-150 hover:bg-ink hover:text-stock focus-visible:bg-ink focus-visible:text-stock active:translate-y-px';
+  const className = compact
+    ? `${base} px-1.5 py-1 font-mark`
+    : `${base} px-2 py-2`;
+  const iconClass =
+    'text-rule transition duration-150 group-hover:translate-x-0.5 group-hover:text-stock';
   const icon = link.external ? (
-    <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
+    <ArrowUpRight
+      size={14}
+      strokeWidth={1.5}
+      aria-hidden="true"
+      className={iconClass}
+    />
   ) : (
-    <ArrowRight size={14} strokeWidth={1.5} aria-hidden="true" />
+    <ArrowRight
+      size={14}
+      strokeWidth={1.5}
+      aria-hidden="true"
+      className={iconClass}
+    />
   );
 
   const body = (
     <>
-      <span className="mono-mega-link-copy">
-        <strong>{link.label}</strong>
-        {compact ? null : <small>{link.description}</small>}
+      <span className="grid min-w-0 gap-0.5">
+        <strong
+          className={
+            compact
+              ? 'text-[0.68rem] font-semibold tracking-[0.08em] uppercase'
+              : 'text-[0.8rem] leading-[1.25] font-semibold'
+          }
+        >
+          {link.label}
+        </strong>
+        {compact ? null : (
+          <small className="text-[0.7rem] leading-[1.4] text-ink-faint group-hover:text-stock">
+            {link.description}
+          </small>
+        )}
       </span>
       {icon}
     </>

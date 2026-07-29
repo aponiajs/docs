@@ -35,7 +35,8 @@ ${pages}
 
 ## Optional
 
-- [Framework benchmark](${absoluteUrl('/#benchmark')}): Measured overhead against bare Elysia.
+- [Engineering goal](${absoluteUrl('/goal')}): What the framework layer costs per request, the mechanism behind it, and the gates every performance claim must pass.
+- [Full technical report](${absoluteUrl('/research.md')}): Source-, compiler-, and runtime-level investigation behind the goal.
 `;
 
   return new Response(content, {

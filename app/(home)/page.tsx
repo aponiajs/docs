@@ -11,6 +11,37 @@ import { absoluteUrl, siteConfig } from '@/lib/site';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  title: 'Modular TypeScript for Bun',
+  description:
+    'Decorated controllers register as routes on a single server instance. Providers resolve at startup, not per request. Modules, validation, and CLI schematics included.',
+  /*
+   * A nested `openGraph` replaces the root object rather than merging into it,
+   * so the image has to be repeated here or the page ships without one.
+   */
+  openGraph: {
+    type: 'website',
+    url: '/',
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
+    title: 'AponiaJS | Modular TypeScript framework for Bun',
+    description:
+      'Modules, controllers, decorators, and constructor injection on Bun. Providers resolve at startup, not per request.',
+    images: [
+      {
+        url: siteConfig.socialImage,
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name}: ${siteConfig.shortDescription}`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AponiaJS | Modular TypeScript framework for Bun',
+    description:
+      'Modules, controllers, decorators, and constructor injection on Bun.',
+    images: [siteConfig.socialImage],
+  },
   alternates: {
     canonical: '/',
     types: {
@@ -45,6 +76,18 @@ const softwareJsonLd = {
   keywords: siteConfig.keywords.join(', '),
   license: 'https://opensource.org/license/mit',
   isAccessibleForFree: true,
+  operatingSystem: 'Bun',
+  targetProduct: {
+    '@type': 'SoftwareApplication',
+    name: siteConfig.name,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Bun',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  },
 };
 
 export default function HomePage() {

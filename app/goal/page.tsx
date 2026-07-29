@@ -40,12 +40,23 @@ export const metadata: Metadata = {
       'Measured overhead, the Sucrose context-escape mechanism that generates it, a typed route IR with per-route semantic islands, and the falsifiable gates that decide how far the compiler can go.',
     publishedTime: '2026-07-28',
     modifiedTime: '2026-07-29',
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
+    images: [
+      {
+        url: siteConfig.socialImage,
+        width: 1200,
+        height: 630,
+        alt: 'AponiaJS engineering goal, stated with evidence',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'AponiaJS goal: compiling Nest-style authoring to native Elysia speed',
     description:
       'What AponiaJS costs on Bun and Elysia today, why it costs it, and how much a compiler can give back.',
+    images: [siteConfig.socialImage],
   },
 };
 
@@ -125,6 +136,9 @@ const workloads = [
   },
 ] as const;
 
+const paperBarLink =
+  'border-b border-transparent text-ink-faint transition-colors duration-150 hover:border-ink hover:text-ink';
+
 export default function GoalPage() {
   return (
     <>
@@ -144,29 +158,43 @@ export default function GoalPage() {
         <div id="paper-progress" className="paper-progress" aria-hidden="true" />
         <PaperReveal />
 
-        <header className="paper-bar">
-          <Link href="/" className="paper-bar-mark">
-            AponiaJS <span>Goal</span>
+        <header className="sticky top-0 z-40 grid grid-cols-[auto_1fr] items-center gap-4 border-b border-ink bg-stock/90 px-[var(--paper-gutter)] py-2.5 font-mark text-[0.7rem] tracking-[0.08em] uppercase backdrop-blur-md">
+          <Link
+            href="/"
+            className="inline-flex items-baseline gap-2 border-b border-transparent font-semibold text-ink"
+          >
+            AponiaJS <span className="text-ink-faint">Goal</span>
           </Link>
-          <nav className="paper-bar-links" aria-label="Paper links">
-            <Link href="/docs">Docs</Link>
+          <nav
+            className="flex items-center justify-self-end gap-3 md:gap-6"
+            aria-label="Paper links"
+          >
+            <Link href="/docs" className={paperBarLink}>
+              Docs
+            </Link>
             {/* The report is a static Markdown asset, not a route. */}
             {/* oxlint-disable-next-line next/no-html-link-for-pages */}
-            <a href="/research.md">Report</a>
-            <a href={siteConfig.repository}>Source</a>
+            <a href="/research.md" className={paperBarLink}>
+              Report
+            </a>
+            <a href={siteConfig.repository} className={paperBarLink}>
+              Source
+            </a>
           </nav>
         </header>
 
-        <div className="paper-hero">
+        <div className="grid gap-8 px-[var(--paper-gutter)] pt-12 pb-8 md:grid-cols-[minmax(0,1fr)_17rem] md:items-end md:gap-14 md:pt-26 md:pb-12">
           <div>
-            <p className="paper-eyebrow">Engineering goal, stated with evidence</p>
+            <p className="paper-eyebrow">
+              Engineering goal, stated with evidence
+            </p>
             <h1 className="paper-title">
               Compiling Nest-style authoring down to <em>native Elysia speed</em>
             </h1>
             <p className="paper-deck">{paper.deck}</p>
           </div>
 
-          <aside className="paper-byline">
+          <aside className="grid gap-4 border-t border-ink pt-5 font-face text-[0.84rem] text-ink-soft [&_b]:mb-0.5 [&_b]:block [&_b]:font-mark [&_b]:text-[0.66rem] [&_b]:font-medium [&_b]:tracking-[0.16em] [&_b]:text-ink-faint [&_b]:uppercase [&_p]:m-0">
             <p>
               <b>Authors</b>
               AponiaJS contributors
@@ -179,10 +207,17 @@ export default function GoalPage() {
               <b>Status</b>
               Open investigation, claims unsettled
             </p>
-            <div className="paper-pins">
-              <span className="paper-pin">aponiajs 0.6.0-alpha.14</span>
-              <span className="paper-pin">elysia 1.4.29</span>
-              <span className="paper-pin">bun 1.3.14</span>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {['aponiajs 0.6.0-alpha.14', 'elysia 1.4.29', 'bun 1.3.14'].map(
+                (pin) => (
+                  <span
+                    key={pin}
+                    className="border border-rule-soft px-2 py-1 font-mark text-[0.68rem] text-ink-soft"
+                  >
+                    {pin}
+                  </span>
+                ),
+              )}
             </div>
           </aside>
         </div>
@@ -1202,18 +1237,30 @@ const userController = slots[2]
           <PaperOutline entries={outline} />
         </div>
 
-        <footer className="paper-footer">
-          <div className="paper-footer-inner">
+        <footer className="border-t border-ink px-[var(--paper-gutter)] py-10 md:py-16">
+          <div className="grid gap-6 font-face text-[0.8rem] text-ink-faint md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
             <div>
-              <Link href="/" className="paper-footer-back">
-                <span aria-hidden="true">←</span> Back to AponiaJS
+              <Link
+                href="/"
+                className="group inline-flex items-center gap-2 border-b border-transparent text-[clamp(1.4rem,3vw,2.1rem)] font-semibold tracking-[-0.035em] text-ink"
+              >
+                <span
+                  aria-hidden="true"
+                  className="inline-block transition-transform duration-300 ease-editorial group-hover:-translate-x-1.5"
+                >
+                  ←
+                </span>{' '}
+                Back to AponiaJS
               </Link>
-              <p className="paper-footer-note">
+              <p className="mt-3 max-w-[46ch]">
                 Technical report · {paper.published}, revised {paper.revised} ·
                 Numbers hold only within the scope printed beside them.
               </p>
             </div>
-            <nav className="paper-footer-meta" aria-label="Paper footer">
+            <nav
+              className="flex flex-wrap gap-x-5 gap-y-1.5 font-mark text-[0.72rem] tracking-[0.04em] uppercase [&_a]:border-b [&_a]:border-transparent [&_a]:text-ink-faint hover:[&_a]:border-ink hover:[&_a]:text-ink"
+              aria-label="Paper footer"
+            >
               <Link href="/docs">Docs</Link>
               {/* oxlint-disable-next-line next/no-html-link-for-pages */}
               <a href="/research.md">Full report</a>

@@ -7,11 +7,11 @@ const socialImage =
 
 export const siteConfig = {
   name: 'AponiaJS',
-  title: 'AponiaJS | TypeScript Framework for Bun and Elysia',
+  title: 'AponiaJS | Modular TypeScript framework for Bun',
   description:
-    'Bun-first TypeScript framework powered by Elysia, with modules, dependency injection, validation, native plugin composition, Eden Treaty types, and CLI schematics.',
+    'Modular TypeScript framework for Bun. Modules, controllers, decorators, and constructor injection, with providers resolved at startup and routes registered on a single server instance.',
   shortDescription:
-    'Bun-first TypeScript framework for modular Elysia applications with dependency injection, validation, native plugins, Eden Treaty types, and CLI schematics.',
+    'Modular TypeScript framework for Bun: modules, controllers, decorators, dependency injection, schema validation, and CLI schematics.',
   url: siteUrl.toString().replace(/\/$/, ''),
   socialImage,
   logo: '/brand/aponiajs-mark.png',
@@ -21,19 +21,19 @@ export const siteConfig = {
   organization: 'https://github.com/aponiajs',
   keywords: [
     'AponiaJS',
+    'Bun framework',
     'Bun TypeScript framework',
-    'Elysia framework',
-    'Elysia dependency injection',
+    'TypeScript backend framework',
     'TypeScript decorators',
+    'dependency injection TypeScript',
     'modular application framework',
     'Standard Schema validation',
     'request parameter decorators',
-    'Elysia plugin composition',
-    'Eden Treaty types',
-    'Elysia route precompilation',
-    'Bun CLI',
-    'TypeScript schematics',
+    'end-to-end typed API client',
+    'Bun.serve routing',
+    'Bun CLI schematics',
     'Nest-inspired TypeScript framework',
+    'singleton provider container',
   ],
 } as const;
 

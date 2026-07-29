@@ -7,7 +7,6 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { AponiaLogo } from '@/components/brand/AponiaLogo';
 import { SectionNav, type SectionNavItem } from './SectionNav';
 import {
   NavigationMegaMenu,
@@ -143,7 +142,7 @@ export function LandingNavigation() {
   );
 
   useEffect(() => {
-    const mobileViewport = window.matchMedia('(max-width: 1079px)');
+    const mobileViewport = window.matchMedia('(max-width: 1023px)');
 
     function handleViewportChange(event: MediaQueryListEvent) {
       if (event.matches) return;
@@ -184,48 +183,60 @@ export function LandingNavigation() {
 
   return (
     <header className="mono-bar">
-      <Link href="#top" className="mono-bar-mark" aria-label="AponiaJS home">
-        <AponiaLogo />
-      </Link>
-
       <SectionNav items={sectionLinks} />
 
-      <div className="mono-bar-actions">
-          <NavigationMegaMenu
-            label="Goal"
-            feature={goalFeature}
-            columns={goalColumns}
-            note="Every published number carries its scope: pinned versions, execution state, and the caveats that bound it."
-            footerLink={megaFooterLink}
-          />
-        <Link href="/docs" className="mono-bar-docs">
+      {/* Static positioning: the mega panel anchors to the bar, not to this. */}
+      <div className="static flex items-stretch justify-self-end">
+        <NavigationMegaMenu
+          label="Goal"
+          feature={goalFeature}
+          columns={goalColumns}
+          note="Every published number carries its scope: pinned versions, execution state, and the caveats that bound it."
+          footerLink={megaFooterLink}
+        />
+
+        <Link
+          href="/docs"
+          className="hidden items-center gap-1.5 border-l border-rule bg-ink pr-[var(--gutter)] pl-[1.15rem] tracking-[0.1em] text-stock uppercase transition-colors duration-150 hover:bg-ink-soft active:translate-y-px lg:inline-flex"
+        >
           Docs <span aria-hidden="true">↗</span>
         </Link>
 
         <details
           ref={mobileMenu}
-          className="mono-sheet-toggle"
+          className="mono-sheet-toggle lg:hidden"
           onKeyDown={handleMenuKeyDown}
           onToggle={handleMobileMenuToggle}
         >
-          <summary>
+          <summary className="inline-flex h-[var(--bar)] cursor-pointer list-none items-center border-l border-rule pr-[var(--gutter)] pl-4 text-[0.7rem] tracking-[0.1em] text-ink uppercase">
             <span className="mono-menu-open">Menu</span>
             <span className="mono-menu-close">Close</span>
           </summary>
-          <nav aria-label="Mobile landing page">
-            <div className="mono-sheet">
+          <nav
+            className="fixed inset-x-0 top-[var(--bar)] bottom-0 overflow-y-auto overscroll-contain bg-stock px-[var(--gutter)] pb-12"
+            aria-label="Mobile landing page"
+          >
+            <div className="grid">
               {sectionLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={handleMobileNavigate}
+                  className="flex items-baseline justify-between gap-4 border-b border-rule py-4 text-[1.45rem] font-medium tracking-[-0.04em] text-ink active:translate-y-px"
                 >
                   <span>{link.label}</span>
+                  <span aria-hidden="true" className="font-mark text-[0.7rem] text-rule">
+                    {link.index}
+                  </span>
                 </Link>
               ))}
             </div>
-            <div className="mono-sheet mono-sheet-secondary">
-              <Link href="/docs" onClick={closeMobileMenu}>
+            <div className="grid">
+              <Link
+                href="/docs"
+                onClick={closeMobileMenu}
+                className="border-b border-rule py-3.5 font-mark text-[0.78rem] tracking-[0.06em] text-ink uppercase active:translate-y-px"
+              >
                 Docs <span aria-hidden="true">↗</span>
               </Link>
               {mobileMenuLinks.map((link) =>
@@ -234,21 +245,19 @@ export function LandingNavigation() {
                     key={link.href}
                     href={link.href}
                     target={link.external ? '_blank' : undefined}
-                    rel={
-                      link.external ? 'noopener noreferrer' : undefined
-                    }
+                    rel={link.external ? 'noopener noreferrer' : undefined}
                     onClick={closeMobileMenu}
+                    className="border-b border-rule py-3.5 font-mark text-[0.78rem] tracking-[0.06em] text-ink-faint uppercase active:translate-y-px"
                   >
                     {link.label}{' '}
-                    {link.external ? (
-                      <span aria-hidden="true">↗</span>
-                    ) : null}
+                    {link.external ? <span aria-hidden="true">↗</span> : null}
                   </a>
                 ) : (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={closeMobileMenu}
+                    className="border-b border-rule py-3.5 font-mark text-[0.78rem] tracking-[0.06em] text-ink-faint uppercase active:translate-y-px"
                   >
                     {link.label}
                   </Link>
