@@ -19,6 +19,11 @@ export function GET() {
       changeFrequency: 'weekly',
       priority: '1.0',
     },
+    {
+      url: absoluteUrl('/goal'),
+      changeFrequency: 'monthly',
+      priority: '0.8',
+    },
     ...source.getPages().map((page) => ({
       url: absoluteUrl(page.url),
       changeFrequency: 'weekly',

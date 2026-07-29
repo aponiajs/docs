@@ -10,8 +10,8 @@ export function GET() {
     start_url: '/',
     scope: '/',
     display: 'standalone',
-    background_color: '#0a0908',
-    theme_color: '#0a0908',
+    background_color: '#f4f1e8',
+    theme_color: '#f4f1e8',
     lang: siteConfig.language,
     icons: [
       {

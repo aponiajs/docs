@@ -1,10 +1,11 @@
-import { HeroSection } from '@/components/landing/HeroSection';
-import { TrustStrip } from '@/components/landing/TrustStrip';
-import { FeaturesSection } from '@/components/landing/FeaturesSection';
-import { BenchmarkSection } from '@/components/landing/BenchmarkSection';
-import { AponiaInterlude } from '@/components/landing/AponiaInterlude';
-import { CallToAction } from '@/components/landing/CallToAction';
 import { LandingNavigation } from '@/components/landing/LandingNavigation';
+import { LandingHero } from '@/components/landing/LandingHero';
+import { LandingPrinciples } from '@/components/landing/LandingPrinciples';
+import { LandingNumbers } from '@/components/landing/LandingNumbers';
+import { LandingIndex } from '@/components/landing/LandingIndex';
+import { LandingStart } from '@/components/landing/LandingStart';
+import { LandingFooter } from '@/components/landing/LandingFooter';
+import { RevealOnScroll } from '@/components/landing/RevealOnScroll';
 import { JsonLd } from '@/components/JsonLd';
 import { absoluteUrl, siteConfig } from '@/lib/site';
 import type { Metadata } from 'next';
@@ -53,17 +54,21 @@ export default function HomePage() {
       <a href="#main-content" className="mono-skip">
         Skip to content
       </a>
+      {/* Without JavaScript nothing observes the reveal state, so unhide. */}
+      <noscript>
+        <style>{
+          '[data-mono-reveal]{opacity:1 !important;transform:none !important}'
+        }</style>
+      </noscript>
       <LandingNavigation />
-      <main
-        id="main-content"
-        className="mono-root min-h-[100dvh] overflow-hidden"
-      >
-        <HeroSection />
-        <TrustStrip />
-        <FeaturesSection />
-        <BenchmarkSection />
-        <AponiaInterlude />
-        <CallToAction />
+      <RevealOnScroll />
+      <main id="main-content" className="mono-root">
+        <LandingHero />
+        <LandingPrinciples />
+        <LandingNumbers />
+        <LandingIndex />
+        <LandingStart />
+        <LandingFooter />
       </main>
     </>
   );

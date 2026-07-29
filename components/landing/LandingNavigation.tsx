@@ -8,51 +8,128 @@ import {
   useRef,
 } from 'react';
 import { AponiaLogo } from '@/components/brand/AponiaLogo';
-import { GooeyNav } from './GooeyNav';
+import { SectionNav, type SectionNavItem } from './SectionNav';
 import {
-  NavigationDropdown,
-  type NavigationDropdownItem,
-} from './NavigationDropdown';
+  NavigationMegaMenu,
+  type MegaMenuColumn,
+  type MegaMenuFeature,
+  type MegaMenuLink,
+} from './NavigationMegaMenu';
 
-const sectionLinks = [
-  { href: '#top', label: 'Overview' },
-  { href: '#work', label: 'Architecture' },
-  { href: '#manifesto', label: 'Experience' },
-  { href: '#benchmark', label: 'Benchmark' },
-  { href: '#namesake', label: 'Namesake' },
+const sectionLinks: readonly SectionNavItem[] = [
+  { href: '#top', label: 'Overview', index: '01' },
+  { href: '#principles', label: 'Position', index: '02' },
+  { href: '#numbers', label: 'Record', index: '03' },
+  { href: '#index', label: 'Index', index: '04' },
+  { href: '#start', label: 'Start', index: '05' },
 ];
 
-const resourceLinks: NavigationDropdownItem[] = [
+const goalFeature: MegaMenuFeature = {
+  href: '/goal',
+  eyebrow: 'Engineering goal',
+  title: 'Compiling Nest-style authoring down to native Elysia speed',
+  description:
+    'What the framework layer costs today, the Sucrose context escape that generates the cost, the typed route IR that removes it, and the gates every performance claim has to pass.',
+  meta: ['28 July 2026', 'Bun 1.3.14 · Elysia 1.4.29'],
+};
+
+const goalColumns: MegaMenuColumn[] = [
   {
-    href: 'https://github.com/aponiajs/aponiajs',
-    label: 'Source code',
-    description: 'Packages, examples, tests, and implementation',
-    external: true,
+    label: 'The argument',
+    links: [
+      {
+        href: '/goal#why',
+        label: 'The measured gap',
+        description: 'Artifact ratios, service proxy, and the overhead budget',
+      },
+      {
+        href: '/goal#mechanism',
+        label: 'How the cost is generated',
+        description: 'Context escape, the generic binder, and forced asynchrony',
+      },
+      {
+        href: '/goal#design',
+        label: 'Typed route IR',
+        description: 'Per-route lowering into semantic islands',
+      },
+      {
+        href: '/goal#ceiling',
+        label: 'How far it can go',
+        description: 'Scoped hypotheses and falsifiable 90–99.5% gates',
+      },
+    ],
   },
   {
-    href: 'https://github.com/aponiajs/aponiajs/tree/main/examples',
-    label: 'Examples',
-    description: 'Runnable applications for implemented framework features',
-    external: true,
+    label: 'Evidence',
+    links: [
+      {
+        href: '/research.md',
+        label: 'Full report',
+        description: 'Thirteen architectures, hot-path audit, 40 citations',
+        staticFile: true,
+      },
+      {
+        href: '/docs/benchmark',
+        label: 'Benchmark suite',
+        description: 'How the published measurements are produced',
+      },
+      {
+        href: '/docs/benchmark/interpreting-results',
+        label: 'Interpreting results',
+        description: 'Scope, warm state, and what a ratio does not prove',
+      },
+    ],
   },
   {
-    href: 'https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md',
-    label: 'Roadmap',
-    description: 'Current milestones, evidence, and planned capabilities',
-    external: true,
+    label: 'Project',
+    links: [
+      {
+        href: 'https://github.com/aponiajs/aponiajs',
+        label: 'Source code',
+        description: 'Packages, examples, tests, and implementation',
+        external: true,
+      },
+      {
+        href: 'https://github.com/aponiajs/aponiajs/tree/main/examples',
+        label: 'Examples',
+        description: 'Runnable applications for implemented features',
+        external: true,
+      },
+      {
+        href: 'https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md',
+        label: 'Roadmap',
+        description: 'Current milestones, evidence, and planned capabilities',
+        external: true,
+      },
+      {
+        href: 'https://github.com/aponiajs/aponiajs/issues',
+        label: 'Issue tracker',
+        description: 'Bugs, feature requests, and active work',
+        external: true,
+      },
+    ],
   },
+];
+
+const megaFooterLink: MegaMenuLink = {
+  href: '/llms.txt',
+  label: 'LLM index',
+  description: 'Plain-text documentation routes for AI tools',
+  staticFile: true,
+};
+
+// The mobile sheet lists destinations rather than the deep section anchors the
+// desktop panel can afford to show.
+const mobileMenuLinks: MegaMenuLink[] = [
   {
-    href: 'https://github.com/aponiajs/aponiajs/issues',
-    label: 'Issue tracker',
-    description: 'Bugs, feature requests, and active work',
-    external: true,
+    href: '/goal',
+    label: 'The goal',
+    description: 'Compiling Nest-style authoring to native Elysia speed',
   },
-  {
-    href: '/llms.txt',
-    label: 'LLM index',
-    description: 'Plain-text documentation routes for AI tools',
-    staticFile: true,
-  },
+  ...goalColumns
+    .flatMap((column) => column.links)
+    .filter((link) => !link.href.startsWith('/goal#')),
+  megaFooterLink,
 ];
 
 export function LandingNavigation() {
@@ -66,7 +143,7 @@ export function LandingNavigation() {
   );
 
   useEffect(() => {
-    const mobileViewport = window.matchMedia('(max-width: 980px)');
+    const mobileViewport = window.matchMedia('(max-width: 1079px)');
 
     function handleViewportChange(event: MediaQueryListEvent) {
       if (event.matches) return;
@@ -106,30 +183,28 @@ export function LandingNavigation() {
   }
 
   return (
-    <header className="mono-nav">
-      <div className="mono-nav-shell">
-        <Link
-          href="#top"
-          className="mono-nav-logo"
-          aria-label="AponiaJS home"
-        >
-          <AponiaLogo />
+    <header className="mono-bar">
+      <Link href="#top" className="mono-bar-mark" aria-label="AponiaJS home">
+        <AponiaLogo />
+      </Link>
+
+      <SectionNav items={sectionLinks} />
+
+      <div className="mono-bar-actions">
+          <NavigationMegaMenu
+            label="Goal"
+            feature={goalFeature}
+            columns={goalColumns}
+            note="Every published number carries its scope: pinned versions, execution state, and the caveats that bound it."
+            footerLink={megaFooterLink}
+          />
+        <Link href="/docs" className="mono-bar-docs">
+          Docs <span aria-hidden="true">↗</span>
         </Link>
-
-        <div className="mono-nav-primary">
-          <GooeyNav items={sectionLinks} />
-        </div>
-
-        <div className="mono-nav-actions">
-          <NavigationDropdown label="Resources" items={resourceLinks} />
-          <Link href="/docs" className="mono-nav-docs">
-            Docs <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
 
         <details
           ref={mobileMenu}
-          className="mono-nav-mobile"
+          className="mono-sheet-toggle"
           onKeyDown={handleMenuKeyDown}
           onToggle={handleMobileMenuToggle}
         >
@@ -138,7 +213,7 @@ export function LandingNavigation() {
             <span className="mono-menu-close">Close</span>
           </summary>
           <nav aria-label="Mobile landing page">
-            <div className="mono-mobile-links">
+            <div className="mono-sheet">
               {sectionLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -149,11 +224,11 @@ export function LandingNavigation() {
                 </Link>
               ))}
             </div>
-            <div className="mono-mobile-actions">
+            <div className="mono-sheet mono-sheet-secondary">
               <Link href="/docs" onClick={closeMobileMenu}>
                 Docs <span aria-hidden="true">↗</span>
               </Link>
-              {resourceLinks.map((link) =>
+              {mobileMenuLinks.map((link) =>
                 link.external || link.staticFile ? (
                   <a
                     key={link.href}
