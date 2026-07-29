@@ -101,24 +101,6 @@ body:has(.mono-root) {
   outline-offset: 2px;
 }
 
-.mono-skip {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  z-index: 90;
-}
-
-.mono-skip:focus {
-  left: 1rem;
-  top: 1rem;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--ink);
-  background: var(--stock);
-  color: var(--ink);
-  font-family: var(--mark);
-  font-size: 0.78rem;
-}
-
 /* Instrument bar ---------------------------------------------------------- */
 
 .mono-bar {

@@ -169,24 +169,6 @@ html:has(.paper-root) ::selection {
   color: var(--paper-ink);
 }
 
-.paper-skip {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  z-index: 80;
-}
-
-.paper-skip:focus {
-  left: 1rem;
-  top: 1rem;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--paper-ink);
-  background: var(--paper-card);
-  color: var(--paper-ink);
-  font-family: var(--paper-sans);
-  font-size: 0.85rem;
-}
-
 /* Title block ------------------------------------------------------------- */
 
 .paper-hero {
@@ -1083,8 +1065,7 @@ html:has(.paper-root) ::selection {
   .paper-bar,
   .paper-aside,
   .paper-progress,
-  .paper-grain,
-  .paper-skip {
+  .paper-grain {
     display: none;
   }
 
