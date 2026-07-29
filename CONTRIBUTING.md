@@ -25,10 +25,10 @@ Create a short, descriptive branch with one of these prefixes:
 Examples:
 
 ```text
-feature/artwork-gallery
+feature/goal-paper
 fix/mobile-navigation
-docs/mascot-identity
-chore/refresh-assets
+docs/route-validation
+chore/refresh-tokens
 ```
 
 Do not work directly on `main`.
@@ -37,14 +37,9 @@ Do not work directly on `main`.
 
 - Keep the branch limited to one coherent purpose.
 - Preserve unrelated work already present in the repository.
-- Update documentation when behavior, public content, artwork provenance, or
-  asset usage changes.
-- Store lossless artwork masters as PNG and use optimized WebP derivatives for
-  website delivery.
-- Record new, replaced, or removed artwork in
-  [ARTWORK_SOURCES.md](./ARTWORK_SOURCES.md).
-- Do not add third-party artwork without a verifiable source, rights-holder
-  context, and the credit required for its intended use.
+- Update documentation when behavior or public content changes.
+- Do not add third-party artwork. The site ships the project-owned brand mark
+  and nothing else.
 
 ## Open a pull request
 
