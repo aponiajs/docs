@@ -21,7 +21,7 @@
   --mono-paper: #e9eadf;
   --mono-muted: #9a9c90;
   --mono-accent: #d7ff43;
-  --mono-line: rgb(233 234 223 / 0.18);
+  --mono-line: rgb(233 234 223 / 0.3);
   --mono-line-strong: rgb(233 234 223 / 0.42);
   --mono-ease: cubic-bezier(0.16, 1, 0.3, 1);
   /* Instrument response: fast, linear, no easing theatre. */
@@ -56,7 +56,7 @@ body:has(.mono-root) {
   --mono-paper: #e9eadf;
   --mono-muted: #9a9c90;
   --mono-accent: #d7ff43;
-  --mono-line: rgb(233 234 223 / 0.18);
+  --mono-line: rgb(233 234 223 / 0.3);
   --mono-line-strong: rgb(233 234 223 / 0.42);
   --mono-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --mono-fast: 120ms linear;

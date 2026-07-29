@@ -66,11 +66,13 @@ See the [CLI reference](../cli) for command behavior and runtime limitations.
 
 ## Synchronized versions
 
-All five public packages use the same release version and publish to the npm
-`alpha` distribution tag; `latest` is reserved for the first stable release. Do
-not combine different AponiaJS versions in one application.
+All five public packages use the same release version and move to the same npm
+distribution tag together. The tag is derived from the version, never chosen by
+hand: `0.6.0-alpha.17` publishes to `alpha` and receives the `next` alias, while
+`latest` only ever holds a stable `X.Y.Z` release and therefore never points at
+an alpha. Do not combine different AponiaJS versions in one application.
 
-The audited source baseline is `0.6.0-alpha.12`. Because `0.y.z` releases are initial
+The audited source baseline is `0.6.0-alpha.17`. Because `0.y.z` releases are initial
 development versions, minor releases may contain breaking API changes. Check
 the package registry and source release notes for the version you install
 instead of assuming this page describes a future release.

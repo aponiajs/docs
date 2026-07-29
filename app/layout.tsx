@@ -113,8 +113,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
           }}
           theme={{
             defaultTheme: 'dark',
-            enableSystem: false,
-            forcedTheme: 'dark',
+            enableSystem: true,
           }}
         >
           {children}

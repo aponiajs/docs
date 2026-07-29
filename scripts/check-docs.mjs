@@ -9,6 +9,8 @@ import {
   sep,
 } from "node:path";
 
+import { frameworkVersion } from "../lib/shared.ts";
+
 const projectRoot = process.cwd();
 const docsRoot = resolve(projectRoot, "content/docs");
 const markdownExtensions = new Set([".md", ".mdx"]);
@@ -346,6 +348,25 @@ function validateHttpInstalls(path, source) {
   }
 }
 
+/*
+ * A stale baseline reads as a fact, so every prerelease version a page names
+ * has to be the one the docs were written against. Only prerelease versions
+ * are checked: stable versions, dependency ranges, and `0.y.z` policy text
+ * are not claims about the audited source.
+ */
+function validateFrameworkVersion(path, source) {
+  const pattern = /\b\d+\.\d+\.\d+-[A-Za-z][\w.-]*\b/gu;
+
+  for (const match of source.matchAll(pattern)) {
+    if (match[0] === frameworkVersion) continue;
+    report(
+      path,
+      `documented version "${match[0]}" does not match the source baseline "${frameworkVersion}" (lib/shared.ts)`,
+      lineAt(source, match.index),
+    );
+  }
+}
+
 function isMetaDecoration(page) {
   return (
     page === "..." ||
@@ -456,6 +477,7 @@ async function main() {
       validatePlaceholderRoute(path, source);
       validateImports(path, source);
       validateHttpInstalls(path, source);
+      validateFrameworkVersion(path, source);
       await validateLinks(path, source, routes);
     }),
   );
