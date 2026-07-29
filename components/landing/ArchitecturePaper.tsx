@@ -57,7 +57,7 @@ export function ArchitecturePaper() {
         <dl>
           <div>
             <dt>Version</dt>
-            <dd>0.6.0-alpha.12</dd>
+            <dd>0.6.0-alpha.17</dd>
           </div>
           <div>
             <dt>Runtime</dt>
