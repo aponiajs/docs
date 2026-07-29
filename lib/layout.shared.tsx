@@ -20,6 +20,32 @@ export function baseOptions(): BaseLayoutProps {
         url: '/',
         active: 'none',
       },
+      {
+        type: 'menu',
+        text: 'Goal',
+        url: '/goal',
+        items: [
+          {
+            text: 'The goal',
+            description:
+              'Compiling Nest-style authoring down to native Elysia speed',
+            url: '/goal',
+            active: 'url',
+          },
+          {
+            text: 'Full report',
+            description: 'Complete technical report in Markdown',
+            url: '/research.md',
+            external: true,
+          },
+          {
+            text: 'Benchmark suite',
+            description: 'How the published measurements are produced',
+            url: '/docs/benchmark',
+            active: 'nested-url',
+          },
+        ],
+      },
     ],
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
     themeSwitch: {

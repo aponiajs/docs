@@ -64,12 +64,12 @@ for (const file of requiredFiles) {
   );
 }
 
-for (const page of ['index.html', 'docs.html']) {
+for (const page of ['index.html', 'docs.html', 'goal.html']) {
   const html = readOutput(page);
   const expectedImageUrl =
-    page === 'index.html'
-      ? socialImageUrl
-      : new URL('/og/docs/image.png', `${baseUrl}/`).toString();
+    page === 'docs.html'
+      ? new URL('/og/docs/image.png', `${baseUrl}/`).toString()
+      : socialImageUrl;
 
   assert(html.includes('rel="canonical"'), `${page} has no canonical URL`);
   assert(html.includes('property="og:title"'), `${page} has no OG title`);
@@ -115,6 +115,7 @@ assert(
 const sitemap = readOutput('sitemap.xml');
 for (const path of [
   '/',
+  '/goal',
   '/docs',
   '/docs/getting-started',
   '/docs/concepts',

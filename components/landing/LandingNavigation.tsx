@@ -7,52 +7,128 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { AponiaLogo } from '@/components/brand/AponiaLogo';
-import { GooeyNav } from './GooeyNav';
+import { SectionNav, type SectionNavItem } from './SectionNav';
 import {
-  NavigationDropdown,
-  type NavigationDropdownItem,
-} from './NavigationDropdown';
+  NavigationMegaMenu,
+  type MegaMenuColumn,
+  type MegaMenuFeature,
+  type MegaMenuLink,
+} from './NavigationMegaMenu';
 
-const sectionLinks = [
-  { href: '#top', label: 'Overview' },
-  { href: '#work', label: 'Architecture' },
-  { href: '#manifesto', label: 'Experience' },
-  { href: '#benchmark', label: 'Benchmark' },
-  { href: '#namesake', label: 'Namesake' },
+const sectionLinks: readonly SectionNavItem[] = [
+  { href: '#top', label: 'Overview', index: '01' },
+  { href: '#principles', label: 'Position', index: '02' },
+  { href: '#numbers', label: 'Record', index: '03' },
+  { href: '#index', label: 'Index', index: '04' },
+  { href: '#start', label: 'Start', index: '05' },
 ];
 
-const resourceLinks: NavigationDropdownItem[] = [
+const goalFeature: MegaMenuFeature = {
+  href: '/goal',
+  eyebrow: 'Engineering goal',
+  title: 'Compiling Nest-style authoring down to native Elysia speed',
+  description:
+    'What the framework layer costs today, the Sucrose context escape that generates the cost, the typed route IR that removes it, and the gates every performance claim has to pass.',
+  meta: ['28 July 2026', 'Bun 1.3.14 · Elysia 1.4.29'],
+};
+
+const goalColumns: MegaMenuColumn[] = [
   {
-    href: 'https://github.com/aponiajs/aponiajs',
-    label: 'Source code',
-    description: 'Packages, examples, tests, and implementation',
-    external: true,
+    label: 'The argument',
+    links: [
+      {
+        href: '/goal#why',
+        label: 'The measured gap',
+        description: 'Artifact ratios, service proxy, and the overhead budget',
+      },
+      {
+        href: '/goal#mechanism',
+        label: 'How the cost is generated',
+        description: 'Context escape, the generic binder, and forced asynchrony',
+      },
+      {
+        href: '/goal#design',
+        label: 'Typed route IR',
+        description: 'Per-route lowering into semantic islands',
+      },
+      {
+        href: '/goal#ceiling',
+        label: 'How far it can go',
+        description: 'Scoped hypotheses and falsifiable 90–99.5% gates',
+      },
+    ],
   },
   {
-    href: 'https://github.com/aponiajs/aponiajs/tree/main/examples',
-    label: 'Examples',
-    description: 'Runnable applications for implemented framework features',
-    external: true,
+    label: 'Evidence',
+    links: [
+      {
+        href: '/research.md',
+        label: 'Full report',
+        description: 'Thirteen architectures, hot-path audit, 40 citations',
+        staticFile: true,
+      },
+      {
+        href: '/docs/benchmark',
+        label: 'Benchmark suite',
+        description: 'How the published measurements are produced',
+      },
+      {
+        href: '/docs/benchmark/interpreting-results',
+        label: 'Interpreting results',
+        description: 'Scope, warm state, and what a ratio does not prove',
+      },
+    ],
   },
   {
-    href: 'https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md',
-    label: 'Roadmap',
-    description: 'Current milestones, evidence, and planned capabilities',
-    external: true,
+    label: 'Project',
+    links: [
+      {
+        href: 'https://github.com/aponiajs/aponiajs',
+        label: 'Source code',
+        description: 'Packages, examples, tests, and implementation',
+        external: true,
+      },
+      {
+        href: 'https://github.com/aponiajs/aponiajs/tree/main/examples',
+        label: 'Examples',
+        description: 'Runnable applications for implemented features',
+        external: true,
+      },
+      {
+        href: 'https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md',
+        label: 'Roadmap',
+        description: 'Current milestones, evidence, and planned capabilities',
+        external: true,
+      },
+      {
+        href: 'https://github.com/aponiajs/aponiajs/issues',
+        label: 'Issue tracker',
+        description: 'Bugs, feature requests, and active work',
+        external: true,
+      },
+    ],
   },
+];
+
+const megaFooterLink: MegaMenuLink = {
+  href: '/llms.txt',
+  label: 'LLM index',
+  description: 'Plain-text documentation routes for AI tools',
+  staticFile: true,
+};
+
+// The mobile sheet lists destinations rather than the deep section anchors the
+// desktop panel can afford to show.
+const mobileMenuLinks: MegaMenuLink[] = [
   {
-    href: 'https://github.com/aponiajs/aponiajs/issues',
-    label: 'Issue tracker',
-    description: 'Bugs, feature requests, and active work',
-    external: true,
+    href: '/goal',
+    label: 'The goal',
+    description: 'Compiling Nest-style authoring to native Elysia speed',
   },
-  {
-    href: '/llms.txt',
-    label: 'LLM index',
-    description: 'Plain-text documentation routes for AI tools',
-    staticFile: true,
-  },
+  ...goalColumns
+    .flatMap((column) => column.links)
+    .filter((link) => !link.href.startsWith('/goal#')),
+  megaFooterLink,
 ];
 
 export function LandingNavigation() {
@@ -66,7 +142,7 @@ export function LandingNavigation() {
   );
 
   useEffect(() => {
-    const mobileViewport = window.matchMedia('(max-width: 980px)');
+    const mobileViewport = window.matchMedia('(max-width: 1023px)');
 
     function handleViewportChange(event: MediaQueryListEvent) {
       if (event.matches) return;
@@ -106,74 +182,82 @@ export function LandingNavigation() {
   }
 
   return (
-    <header className="mono-nav">
-      <div className="mono-nav-shell">
+    <header className="mono-bar">
+      <SectionNav items={sectionLinks} />
+
+      {/* Static positioning: the mega panel anchors to the bar, not to this. */}
+      <div className="static flex items-stretch justify-self-end">
+        <NavigationMegaMenu
+          label="Goal"
+          feature={goalFeature}
+          columns={goalColumns}
+          note="Every published number carries its scope: pinned versions, execution state, and the caveats that bound it."
+          footerLink={megaFooterLink}
+        />
+
         <Link
-          href="#top"
-          className="mono-nav-logo"
-          aria-label="AponiaJS home"
+          href="/docs"
+          className="hidden items-center gap-1.5 border-l border-rule bg-ink pr-[var(--gutter)] pl-[1.15rem] tracking-[0.1em] text-stock uppercase transition-colors duration-150 hover:bg-ink-soft active:translate-y-px lg:inline-flex"
         >
-          <AponiaLogo />
+          Docs <span aria-hidden="true">↗</span>
         </Link>
-
-        <div className="mono-nav-primary">
-          <GooeyNav items={sectionLinks} />
-        </div>
-
-        <div className="mono-nav-actions">
-          <NavigationDropdown label="Resources" items={resourceLinks} />
-          <Link href="/docs" className="mono-nav-docs">
-            Docs <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
 
         <details
           ref={mobileMenu}
-          className="mono-nav-mobile"
+          className="mono-sheet-toggle lg:hidden"
           onKeyDown={handleMenuKeyDown}
           onToggle={handleMobileMenuToggle}
         >
-          <summary>
+          <summary className="inline-flex h-[var(--bar)] cursor-pointer list-none items-center border-l border-rule pr-[var(--gutter)] pl-4 text-[0.7rem] tracking-[0.1em] text-ink uppercase">
             <span className="mono-menu-open">Menu</span>
             <span className="mono-menu-close">Close</span>
           </summary>
-          <nav aria-label="Mobile landing page">
-            <div className="mono-mobile-links">
+          <nav
+            className="fixed inset-x-0 top-[var(--bar)] bottom-0 overflow-y-auto overscroll-contain bg-stock px-[var(--gutter)] pb-12"
+            aria-label="Mobile landing page"
+          >
+            <div className="grid">
               {sectionLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={handleMobileNavigate}
+                  className="flex items-baseline justify-between gap-4 border-b border-rule py-4 text-[1.45rem] font-medium tracking-[-0.04em] text-ink active:translate-y-px"
                 >
                   <span>{link.label}</span>
+                  <span aria-hidden="true" className="font-mark text-[0.7rem] text-rule">
+                    {link.index}
+                  </span>
                 </Link>
               ))}
             </div>
-            <div className="mono-mobile-actions">
-              <Link href="/docs" onClick={closeMobileMenu}>
+            <div className="grid">
+              <Link
+                href="/docs"
+                onClick={closeMobileMenu}
+                className="border-b border-rule py-3.5 font-mark text-[0.78rem] tracking-[0.06em] text-ink uppercase active:translate-y-px"
+              >
                 Docs <span aria-hidden="true">↗</span>
               </Link>
-              {resourceLinks.map((link) =>
+              {mobileMenuLinks.map((link) =>
                 link.external || link.staticFile ? (
                   <a
                     key={link.href}
                     href={link.href}
                     target={link.external ? '_blank' : undefined}
-                    rel={
-                      link.external ? 'noopener noreferrer' : undefined
-                    }
+                    rel={link.external ? 'noopener noreferrer' : undefined}
                     onClick={closeMobileMenu}
+                    className="border-b border-rule py-3.5 font-mark text-[0.78rem] tracking-[0.06em] text-ink-faint uppercase active:translate-y-px"
                   >
                     {link.label}{' '}
-                    {link.external ? (
-                      <span aria-hidden="true">↗</span>
-                    ) : null}
+                    {link.external ? <span aria-hidden="true">↗</span> : null}
                   </a>
                 ) : (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={closeMobileMenu}
+                    className="border-b border-rule py-3.5 font-mark text-[0.78rem] tracking-[0.06em] text-ink-faint uppercase active:translate-y-px"
                   >
                     {link.label}
                   </Link>
