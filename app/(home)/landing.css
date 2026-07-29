@@ -192,7 +192,7 @@ body:has(.mono-root) {
 
 @media (min-width: 900px) {
   .mono-row::before {
-    color: var(--color-rule);
+    color: var(--color-ink-faint);
     content: counter(row, decimal-leading-zero);
     font-family: var(--font-mark);
     font-size: 0.66rem;
@@ -215,7 +215,7 @@ body:has(.mono-root) {
 }
 
 .mono-entry-meta::before {
-  color: var(--color-rule);
+  color: var(--color-ink-faint);
   content: counter(entry, decimal-leading-zero) ' / ';
   font-variant-numeric: tabular-nums;
 }

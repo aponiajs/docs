@@ -1258,7 +1258,7 @@ const userController = slots[2]
               </p>
             </div>
             <nav
-              className="flex flex-wrap gap-x-5 gap-y-1.5 font-mark text-[0.72rem] tracking-[0.04em] uppercase [&_a]:border-b [&_a]:border-transparent [&_a]:text-ink-faint hover:[&_a]:border-ink hover:[&_a]:text-ink"
+              className="flex flex-wrap gap-x-5 gap-y-1.5 font-mark text-[0.72rem] tracking-[0.04em] uppercase [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center [&_a]:border-b [&_a]:border-transparent [&_a]:text-ink-faint hover:[&_a]:border-ink hover:[&_a]:text-ink"
               aria-label="Paper footer"
             >
               <Link href="/docs">Docs</Link>

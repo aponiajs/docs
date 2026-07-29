@@ -12,12 +12,12 @@ html:has(.paper-root) {
 }
 
 html:has(.paper-root) body {
-  background: #ffffff;
+  background: var(--color-stock);
 }
 
 html:has(.paper-root) ::selection {
-  color: #ffffff;
-  background: #0f0f0f;
+  color: var(--color-stock);
+  background: var(--color-ink);
 }
 
 .paper-root {
@@ -32,7 +32,7 @@ html:has(.paper-root) ::selection {
   --paper-rule-strong: var(--color-rule-soft);
   --paper-accent: var(--color-ink);
   --paper-accent-soft: var(--color-wash);
-  --paper-manilla: #e4e4e4;
+  --paper-manilla: var(--color-wash);
   --paper-slate: var(--color-slate);
 
   --paper-serif: var(--font-book);
@@ -414,27 +414,27 @@ html:has(.paper-root) ::selection {
 }
 
 .paper-tag[data-kind='measured'] {
-  color: #404040;
+  color: var(--paper-body);
   background: var(--paper-manilla);
 }
 
 .paper-tag[data-kind='source'] {
-  color: #404040;
-  background: #ececec;
+  color: var(--paper-body);
+  background: var(--paper-accent-soft);
 }
 
 .paper-tag[data-kind='derived'] {
-  color: #404040;
-  background: #ececec;
+  color: var(--paper-body);
+  background: var(--paper-accent-soft);
 }
 
 .paper-tag[data-kind='hypothesis'] {
-  color: #404040;
+  color: var(--paper-body);
   background: var(--paper-accent-soft);
 }
 
 .paper-tag[data-kind='rejected'] {
-  color: #404040;
+  color: var(--paper-body);
   background: var(--paper-panel);
 }
 
@@ -594,7 +594,7 @@ html:has(.paper-root) ::selection {
   overflow-x: auto;
   border-left: 2px solid var(--paper-accent);
   background: var(--paper-slate);
-  color: #ededed;
+  color: var(--color-sunk);
   font-family: var(--paper-mono);
   font-size: 0.82rem;
   line-height: 1.7;
@@ -602,19 +602,19 @@ html:has(.paper-root) ::selection {
 }
 
 .paper-code b {
-  color: #c9c9c9;
+  color: var(--color-rule-soft);
   font-weight: 400;
 }
 
 .paper-code i {
-  color: #8a8a8a;
+  color: var(--color-ink-faint);
   font-style: normal;
 }
 
 .paper-code-label {
   display: block;
   margin-bottom: 0.7rem;
-  color: #8a8a8a;
+  color: var(--color-ink-faint);
   font-size: 0.66rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;

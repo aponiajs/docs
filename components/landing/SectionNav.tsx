@@ -25,7 +25,7 @@ export function SectionNav({ items }: { items: readonly SectionNavItem[] }) {
             >
               <span
                 aria-hidden="true"
-                className="tabular-nums text-rule transition-colors duration-150 group-hover:text-stock"
+                className="tabular-nums text-ink-faint transition-colors duration-150 group-hover:text-stock"
               >
                 {item.index}
               </span>

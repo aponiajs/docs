@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { AponiaLogo } from '@/components/brand/AponiaLogo';
 
 const footerLink =
-  'text-ink-faint transition-colors duration-150 hover:text-ink active:translate-y-px';
+  'inline-flex min-h-11 items-center text-ink-faint transition-colors duration-150 hover:text-ink active:translate-y-px';
 
 export function LandingFooter() {
   return (
@@ -22,7 +22,7 @@ export function LandingFooter() {
       </Link>
 
       <nav
-        className="flex flex-wrap gap-x-6 gap-y-1.5 border-t border-rule pt-4 font-mark text-[0.68rem] tracking-[0.1em] uppercase"
+        className="flex flex-wrap gap-x-6 border-t border-rule pt-1 font-mark text-[0.68rem] tracking-[0.1em] uppercase"
         aria-label="Footer"
       >
         <Link href="/docs" className={footerLink}>
