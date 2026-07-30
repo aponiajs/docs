@@ -32,11 +32,6 @@ ${pages}
 ## Full context
 
 - [Complete documentation](${absoluteUrl('/llms-full.txt')}): All current documentation in one Markdown document.
-
-## Optional
-
-- [Engineering goal](${absoluteUrl('/goal')}): What the framework layer costs per request, the mechanism behind it, and the gates every performance claim must pass.
-- [Full technical report](${absoluteUrl('/research.md')}): Source-, compiler-, and runtime-level investigation behind the goal.
 `;
 
   return new Response(content, {

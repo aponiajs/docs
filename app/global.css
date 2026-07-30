@@ -19,10 +19,10 @@
 }
 
 /*
- * Design tokens for the landing page and the goal paper, exposed to Tailwind
- * so both surfaces are written in utilities (`bg-stock`, `text-ink-faint`,
- * `border-rule`, `font-mark`) instead of bespoke class names. The docs keep
- * their own `--color-fd-*` variables below, which fumadocs reads directly.
+ * Design tokens for the landing page, exposed to Tailwind so the surface is
+ * written in utilities (`bg-stock`, `text-ink-faint`, `border-rule`,
+ * `font-mark`) instead of bespoke class names. The docs keep their own
+ * `--color-fd-*` variables below, which fumadocs reads directly.
  */
 @theme {
   --color-stock: #ffffff;
@@ -47,8 +47,8 @@
   color-scheme: light;
   /*
    * One monochrome palette across the site: white stock, black ink, and greys.
-   * The docs inherit it so they sit in the same family as the landing page
-   * and the goal paper. No hue anywhere.
+   * The docs inherit it so they sit in the same family as the landing page.
+   * No hue anywhere.
    */
   --color-fd-background: #ffffff;
   --color-fd-foreground: #0f0f0f;
@@ -144,16 +144,14 @@ html > body[data-scroll-locked] {
  * `:focus-visible` also keeps programmatic focus after navigation from
  * revealing it, while Tab still does.
  */
-.mono-skip,
-.paper-skip {
+.mono-skip {
   position: absolute;
   left: -9999px;
   top: 0;
   z-index: 90;
 }
 
-.mono-skip:focus-visible,
-.paper-skip:focus-visible {
+.mono-skip:focus-visible {
   left: 1rem;
   top: 1rem;
   padding: 0.6rem 1rem;
@@ -166,8 +164,7 @@ html > body[data-scroll-locked] {
 }
 
 @media print {
-  .mono-skip,
-  .paper-skip {
+  .mono-skip {
     display: none;
   }
 }

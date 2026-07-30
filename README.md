@@ -1,7 +1,6 @@
 # AponiaJS documentation site
 
-Source for the AponiaJS website: the landing page, the engineering goal paper,
-and the documentation set. Built with Next.js and fumadocs, rendered as a
+Source for the AponiaJS website: the landing page and the documentation set. Built with Next.js and fumadocs, rendered as a
 static export, deployed to Cloudflare Pages.
 
 ## Stack
@@ -51,9 +50,8 @@ request. `seo:check` reads the built `out/` directory, so build first.
 | Route | Source | Notes |
 | --- | --- | --- |
 | `/` | `app/(home)` | Landing page, five numbered sections |
-| `/goal` | `app/goal` | Engineering goal paper: measured overhead, the mechanism behind it, and the gates every performance claim must pass |
 | `/docs/*` | `content/docs` | Documentation, generated from MDX |
-| `/research.md` | `public` | Full technical report the goal paper summarises |
+| `/research.md` | `public` | Technical report on framework overhead, served as a static asset |
 | `/llms.txt`, `/llms-full.txt` | `app/llms*` | Plain-text discovery for AI tools |
 
 ## Design system

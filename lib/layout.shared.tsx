@@ -22,21 +22,14 @@ export function baseOptions(): BaseLayoutProps {
       },
       {
         type: 'menu',
-        text: 'Goal',
-        url: '/goal',
+        text: 'Project',
+        url: '/docs',
         items: [
           {
-            text: 'The goal',
-            description:
-              'Compiling Nest-style authoring down to native Elysia speed',
-            url: '/goal',
-            active: 'url',
-          },
-          {
-            text: 'Full report',
-            description: 'Complete technical report in Markdown',
-            url: '/research.md',
-            external: true,
+            text: 'Getting started',
+            description: 'Install, scaffold, and serve a first application',
+            url: '/docs/getting-started',
+            active: 'nested-url',
           },
           {
             text: 'Benchmark suite',

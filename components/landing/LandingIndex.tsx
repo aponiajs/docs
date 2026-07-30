@@ -14,10 +14,10 @@ const entries = [
     description: 'Modules, providers, lifecycle, validation.',
   },
   {
-    href: '/goal',
-    label: 'The goal',
-    meta: 'Paper',
-    description: 'What the layer costs, and what compiles away.',
+    href: '/docs/benchmark/interpreting-results',
+    label: 'Interpreting results',
+    meta: 'Docs',
+    description: 'Scope, warm state, what a ratio does not prove.',
   },
   {
     href: '/docs/benchmark',

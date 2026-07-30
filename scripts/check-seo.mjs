@@ -64,7 +64,7 @@ for (const file of requiredFiles) {
   );
 }
 
-for (const page of ['index.html', 'docs.html', 'goal.html']) {
+for (const page of ['index.html', 'docs.html']) {
   const html = readOutput(page);
   const expectedImageUrl =
     page === 'docs.html'
@@ -115,7 +115,6 @@ assert(
 const sitemap = readOutput('sitemap.xml');
 for (const path of [
   '/',
-  '/goal',
   '/docs',
   '/docs/getting-started',
   '/docs/concepts',
