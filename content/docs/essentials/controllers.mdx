@@ -55,12 +55,12 @@ Each decorator has three call signatures:
 @Get(findUserSchema)         // route schema only
 ```
 
-The schema form is described in [route validation](/docs/concepts/route-validation).
+The schema form is described in [route validation](/docs/essentials/validation).
 
 ## Handler arguments
 
 A handler declares what it needs with
-[request parameter decorators](/docs/concepts/request-parameters):
+[request parameter decorators](/docs/essentials/request-parameters):
 
 ```ts
 import { Body, Controller, Get, Param, Post, Query } from "@aponiajs/common";
@@ -126,5 +126,5 @@ missing `@Controller()` fails with `INVALID_CONTROLLER` before the server
 listens.
 
 For Elysia hooks, macros, or a route that needs Elysia's complete handler
-signature, use [native Elysia access](/docs/guides/native-elysia-access) or
+signature, use [native Elysia access](/docs/elysia/native-access) or
 `defineElysiaController()`.

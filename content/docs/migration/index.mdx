@@ -1,0 +1,18 @@
+---
+title: Migrate
+description: Move to AponiaJS from NestJS or from a hand-written Elysia application.
+---
+
+AponiaJS borrows NestJS vocabulary and runs on Elysia, so both migrations are
+incremental. Start with the comparison for the framework you are coming from,
+then check what is not implemented yet before committing to a schedule.
+
+<Cards>
+  <Card title="From NestJS" description="Concept-by-concept mapping and the gaps that remain." href="/docs/migration/from-nestjs" />
+  <Card title="From Elysia" description="Keep the native application and adopt modules gradually." href="/docs/migration/from-elysia" />
+</Cards>
+
+<Callout type="warn" title="Check the boundary first">
+  [Current limitations](/docs/project/current-limitations) lists what the
+  runtime does not do yet, and which CLI output is scaffold-only.
+</Callout>

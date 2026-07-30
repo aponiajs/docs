@@ -1,0 +1,53 @@
+---
+title: Essentials
+description: The runtime model behind AponiaJS — modules, dependency injection, routing, validation, errors, and the application lifecycle.
+---
+
+Everything in this section is implemented in `0.6.0-alpha.18` and covered by
+tests. Read it in order for a complete picture, or jump to the page for the
+piece you are wiring.
+
+AponiaJS separates application structure from the HTTP platform:
+
+```text
+Decorated classes
+  -> immutable module definitions
+  -> validated module graph
+  -> singleton container
+  -> Elysia plugins and routes
+```
+
+## Structure and dependencies
+
+<Cards>
+  <Card title="Modules" description="Define dependency and visibility boundaries." href="/docs/essentials/modules" />
+  <Card title="Providers" description="Construct reusable singleton dependencies." href="/docs/essentials/providers" />
+  <Card title="Tokens" description="Inject classes and explicit non-class values." href="/docs/essentials/tokens" />
+  <Card title="Visibility" description="Control what a module exports to its importers." href="/docs/essentials/visibility" />
+  <Card title="Dynamic modules" description="Build distinct configured module instances." href="/docs/essentials/dynamic-modules" />
+</Cards>
+
+## Handling requests
+
+<Cards>
+  <Card title="Controllers" description="Map HTTP routes to controller methods." href="/docs/essentials/controllers" />
+  <Card title="Request parameters" description="Inject body, query, params, headers, and context." href="/docs/essentials/request-parameters" />
+  <Card title="Validation" description="Reject invalid requests before the handler runs." href="/docs/essentials/validation" />
+  <Card title="Errors" description="Answer with RFC 9457 Problem Details." href="/docs/essentials/errors" />
+  <Card title="WebSockets" description="Serve native socket events from injected gateways." href="/docs/essentials/websockets" />
+</Cards>
+
+## Running the application
+
+<Cards>
+  <Card title="Bootstrap" description="Follow the complete create sequence." href="/docs/essentials/bootstrap" />
+  <Card title="Lifecycle" description="Listen, handle in process, and close cleanly." href="/docs/essentials/lifecycle" />
+  <Card title="Logging" description="Configure levels, JSON output, and custom loggers." href="/docs/essentials/logging" />
+</Cards>
+
+<Callout type="info" title="Platform-specific work lives next door">
+  Native Elysia access, plugin modules, typed plugin context, and Eden Treaty
+  are covered under [Elysia platform](/docs/elysia). Features that are not
+  implemented yet are listed under
+  [current limitations](/docs/project/current-limitations).
+</Callout>

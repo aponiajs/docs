@@ -1,5 +1,5 @@
 ---
-title: Route validation
+title: Validation
 description: Reject invalid requests with Standard Schema or platform-native validators before the handler runs.
 ---
 
@@ -213,7 +213,7 @@ Assert the status rather than the message body — see the
 <Callout type="info" title="Validation failures stay native">
   Rejected requests are Elysia's own `422` responses. For failures an
   application throws deliberately, `httpError` and `httpErrors` return RFC 9457
-  Problem Details — see [HTTP errors](/docs/guides/http-errors). Framework-owned
+  Problem Details — see [HTTP errors](/docs/essentials/errors). Framework-owned
   mapping of native validation failures, and the serialization policy, remain on
   the roadmap under "Validation, errors, and serialization".
 </Callout>

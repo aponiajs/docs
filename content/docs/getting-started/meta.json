@@ -1,11 +1,12 @@
 {
-  "title": "Getting Started",
+  "title": "Get started",
   "pages": [
     "index",
     "prerequisites",
     "create-a-project",
-    "existing-project",
     "first-route",
-    "project-structure"
+    "project-structure",
+    "existing-project",
+    "troubleshooting"
   ]
 }

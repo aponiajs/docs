@@ -8,7 +8,7 @@ const entries = [
     description: 'Install, scaffold, serve.',
   },
   {
-    href: '/docs/concepts',
+    href: '/docs/essentials',
     label: 'Concepts',
     meta: 'Docs',
     description: 'Modules, providers, lifecycle, validation.',

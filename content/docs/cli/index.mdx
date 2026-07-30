@@ -48,11 +48,21 @@ aponia version
     description="Control source roots, projects, specs, and flat output."
     href="/docs/cli/configuration"
   />
+  <Card
+    title="Module registration"
+    description="Understand when a generated file is imported automatically."
+    href="/docs/cli/module-registration"
+  />
+  <Card
+    title="Safety and errors"
+    description="Dry runs, overwrite rules, and the failure messages."
+    href="/docs/cli/safety-and-errors"
+  />
 </Cards>
 
 <Callout title="Generator support is not runtime support">
   The CLI can generate familiar Nest-style file shapes for capabilities the
   runtime does not execute yet. Guards, interceptors, middleware, filters,
-  GraphQL, WebSockets, and microservices are scaffolds only. Modules,
-  controllers, services, providers, and REST resources are runnable.
+  GraphQL, and microservices are scaffolds only. Modules, controllers,
+  services, providers, gateways, and REST and WebSocket resources are runnable.
 </Callout>

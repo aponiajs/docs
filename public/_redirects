@@ -1,0 +1,31 @@
+# https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# The documentation was reorganised into Essentials, Elysia platform, and
+# Project sections. These keep every previously published URL reachable.
+
+/docs/concepts/application-bootstrap    /docs/essentials/bootstrap          301
+/docs/concepts/modules                  /docs/essentials/modules            301
+/docs/concepts/controllers-and-routes   /docs/essentials/controllers        301
+/docs/concepts/request-parameters       /docs/essentials/request-parameters 301
+/docs/concepts/route-validation         /docs/essentials/validation         301
+/docs/concepts/websocket-gateways       /docs/essentials/websockets         301
+/docs/concepts/providers-and-di         /docs/essentials/providers          301
+/docs/concepts/tokens-and-injection     /docs/essentials/tokens             301
+/docs/concepts/visibility-and-exports   /docs/essentials/visibility         301
+/docs/concepts/dynamic-modules          /docs/essentials/dynamic-modules    301
+/docs/concepts                          /docs/essentials                    301
+
+/docs/guides/http-errors                /docs/essentials/errors             301
+/docs/guides/logging                    /docs/essentials/logging            301
+/docs/guides/application-lifecycle      /docs/essentials/lifecycle          301
+/docs/guides/native-elysia-access       /docs/elysia/native-access          301
+/docs/guides/elysia-plugin-modules      /docs/elysia/plugin-modules         301
+/docs/guides/plugin-context-types       /docs/elysia/plugin-context         301
+/docs/guides/eden-treaty                /docs/elysia/eden-treaty            301
+/docs/guides/low-level-descriptors      /docs/elysia/descriptors            301
+/docs/guides/in-process-requests        /docs/elysia/in-process-requests    301
+/docs/guides                            /docs/elysia                        301
+
+/docs/migration/current-limitations     /docs/project/current-limitations   301
+/docs/migration/version-compatibility   /docs/project/version-compatibility 301
+/docs/migration/troubleshooting         /docs/getting-started/troubleshooting 301

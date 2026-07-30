@@ -105,7 +105,7 @@ defineElysiaPlugin<TPlugin>(
 
 `ElysiaPluginImport` is the dynamic module with the plugin attached, so one
 export mounts the plugin and names its type. See
-[Elysia plugin modules](/docs/guides/elysia-plugin-modules).
+[Elysia plugin modules](/docs/elysia/plugin-modules).
 
 ## HTTP errors
 
@@ -124,7 +124,7 @@ throw httpError(422, "The submitted profile is invalid.", { code: "PROFILE_INVAL
 ```
 
 A thrown `HttpError` answers with its status, `application/problem+json`, and an
-RFC 9457 body. See [HTTP errors](/docs/guides/http-errors).
+RFC 9457 body. See [HTTP errors](/docs/essentials/errors).
 
 ## WebSocket types
 
@@ -135,7 +135,7 @@ Exports:
 
 These are the native Elysia socket wrapper and application types injected by
 `@ConnectedSocket()` and `@WebSocketServer()`. See
-[WebSocket gateways](/docs/concepts/websocket-gateways).
+[WebSocket gateways](/docs/essentials/websockets).
 
 ## Route context types
 
@@ -157,4 +157,4 @@ The first argument accepts either a route schema or the plugins whose types the
 handler reads. `ElysiaInputSchema` is Elysia's own `InputSchema`, re-exported so
 an application can declare its own context alias without importing `elysia`.
 
-See [typed plugin context](/docs/guides/plugin-context-types).
+See [typed plugin context](/docs/elysia/plugin-context).

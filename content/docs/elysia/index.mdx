@@ -1,0 +1,32 @@
+---
+title: Elysia platform
+description: Reach the native Elysia application, mount plugins through modules, type plugin context, and export client types with Eden Treaty.
+---
+
+AponiaJS owns authoring and dependency injection. Elysia owns the request
+engine. Nothing is hidden: the native application, its plugins, and its types
+stay reachable from an AponiaJS application, and the pages here are the
+supported ways to reach them.
+
+## Plugins and native access
+
+<Cards>
+  <Card title="Native access" description="Configure and read the underlying Elysia instance." href="/docs/elysia/native-access" />
+  <Card title="Plugin modules" description="Mount Elysia plugins through the module graph." href="/docs/elysia/plugin-modules" />
+  <Card title="Typed plugin context" description="Type a handler against the plugins it reads." href="/docs/elysia/plugin-context" />
+</Cards>
+
+## Types and low-level routes
+
+<Cards>
+  <Card title="Eden Treaty" description="Export a typed client contract from the application." href="/docs/elysia/eden-treaty" />
+  <Card title="Low-level descriptors" description="Register routes directly on the native application." href="/docs/elysia/descriptors" />
+  <Card title="In-process requests" description="Handle a Request without opening a port." href="/docs/elysia/in-process-requests" />
+</Cards>
+
+<Callout type="info" title="Version contract">
+  These pages assume the Elysia peer documented in
+  [version compatibility](/docs/project/version-compatibility). Elysia's own
+  behaviour is authoritative for anything the platform package passes through
+  unchanged.
+</Callout>
