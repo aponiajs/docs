@@ -48,7 +48,7 @@ try {
 These errors describe framework graph and lifecycle validation. Route input
 validation is performed by Elysia and answers `422`; for failures an application
 throws deliberately, use the Problem Details helpers in
-[HTTP errors](/docs/guides/http-errors). Assert the `code` rather than the
+[HTTP errors](/docs/essentials/errors). Assert the `code` rather than the
 message, which is not part of the contract.
 
 Graph errors through `MISSING_PROVIDER` are raised while the module graph

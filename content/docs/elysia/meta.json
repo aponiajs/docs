@@ -1,0 +1,12 @@
+{
+  "title": "Elysia platform",
+  "pages": [
+    "index",
+    "native-access",
+    "plugin-modules",
+    "plugin-context",
+    "eden-treaty",
+    "descriptors",
+    "in-process-requests"
+  ]
+}

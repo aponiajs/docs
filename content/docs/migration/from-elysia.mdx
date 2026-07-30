@@ -14,7 +14,7 @@ controllers in feature modules, and keep the root bootstrap small.
 
 Elysia route schemas port directly: the same `t` validators pass to a route
 decorator, and Standard Schema validators work in the same slots. See
-[route validation](/docs/concepts/route-validation).
+[route validation](/docs/essentials/validation).
 
 Continue to use native Elysia for:
 
@@ -43,4 +43,4 @@ Elysia.
 `createNative()` keeps native Elysia as the calling surface and preserves
 statically visible route types for Eden Treaty. Use `create()` instead when the
 managed Aponia lifecycle wrapper is more useful. See
-[Eden Treaty](/docs/guides/eden-treaty) for the exact inference boundary.
+[Eden Treaty](/docs/elysia/eden-treaty) for the exact inference boundary.

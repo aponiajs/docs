@@ -23,29 +23,44 @@ visibility, structured diagnostics, and a native Elysia integration.
     href="/docs/getting-started/create-a-project"
   />
   <Card
-    title="Add AponiaJS manually"
-    description="Install the HTTP platform in an existing Bun project."
+    title="Add to an existing project"
+    description="Install the HTTP platform in a Bun project you already have."
     href="/docs/getting-started/existing-project"
   />
+</Cards>
+
+## Browse the documentation
+
+<Cards>
   <Card
-    title="Understand the framework"
-    description="Learn modules, controllers, validation, providers, and visibility."
-    href="/docs/concepts"
+    title="Essentials"
+    description="Modules, dependency injection, routing, validation, errors, lifecycle."
+    href="/docs/essentials"
+  />
+  <Card
+    title="Elysia platform"
+    description="Native access, plugin modules, typed context, Eden Treaty."
+    href="/docs/elysia"
+  />
+  <Card
+    title="Recipes"
+    description="Task-shaped walkthroughs that combine the essentials."
+    href="/docs/recipes"
+  />
+  <Card
+    title="Migrate"
+    description="Move from NestJS, or adopt modules inside an Elysia application."
+    href="/docs/migration"
+  />
+  <Card
+    title="CLI"
+    description="Generate applications, resources, and components."
+    href="/docs/cli"
   />
   <Card
     title="API reference"
-    description="Review every public export in the alpha package surface."
+    description="Every public export in the alpha package surface."
     href="/docs/api-reference"
-  />
-  <Card
-    title="Use Eden Treaty"
-    description="Export the composed native Elysia type for end-to-end clients."
-    href="/docs/guides/eden-treaty"
-  />
-  <Card
-    title="Current limitations"
-    description="See exactly what is implemented, experimental, and planned."
-    href="/docs/migration/current-limitations"
   />
 </Cards>
 
@@ -102,14 +117,14 @@ await app.listen(3000);
 ## What is implemented
 
 - decorated modules, controllers, and the seven HTTP method decorators;
-- [request parameter decorators](/docs/concepts/request-parameters) for body,
+- [request parameter decorators](/docs/essentials/request-parameters) for body,
   query, params, headers, cookies, request, response settings, and context;
 - [Standard Schema](https://standardschema.dev) route validation — Zod,
   ArkType, Valibot — plus platform-native TypeBox and Elysia `t` validators,
   used raw or through named `@Validation()` model classes;
-- [WebSocket gateways](/docs/concepts/websocket-gateways) over the native
+- [WebSocket gateways](/docs/essentials/websockets) over the native
   Elysia and Bun socket runtime;
-- [RFC 9457 Problem Details](/docs/guides/http-errors) responses thrown with
+- [RFC 9457 Problem Details](/docs/essentials/errors) responses thrown with
   `httpError` and `httpErrors`;
 - singleton class, value, factory, and alias providers with explicit tokens;
 - native Elysia plugin imports, including typed plugin context;
@@ -135,6 +150,6 @@ from this site.
   <Card
     title="Version compatibility"
     description="Check the documented Bun, Elysia, and package version contract."
-    href="/docs/migration/version-compatibility"
+    href="/docs/project/version-compatibility"
   />
 </Cards>

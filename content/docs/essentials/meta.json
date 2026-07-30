@@ -1,0 +1,19 @@
+{
+  "title": "Essentials",
+  "pages": [
+    "index",
+    "modules",
+    "providers",
+    "tokens",
+    "visibility",
+    "dynamic-modules",
+    "controllers",
+    "request-parameters",
+    "validation",
+    "errors",
+    "websockets",
+    "bootstrap",
+    "lifecycle",
+    "logging"
+  ]
+}

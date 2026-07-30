@@ -36,7 +36,7 @@ const projectColumns: MegaMenuColumn[] = [
     label: 'Docs',
     links: [
       {
-        href: '/docs/concepts',
+        href: '/docs/essentials',
         label: 'Concepts',
         description: 'Modules, providers, lifecycle, validation',
       },

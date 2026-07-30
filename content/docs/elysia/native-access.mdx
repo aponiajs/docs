@@ -60,18 +60,18 @@ Use native access for behavior that the decorated surface does not implement:
 - an application-wide native plugin.
 
 Request binding and validation no longer require this escape hatch — see
-[request parameters](/docs/concepts/request-parameters) and
-[route validation](/docs/concepts/route-validation).
+[request parameters](/docs/essentials/request-parameters) and
+[route validation](/docs/essentials/validation).
 
 For reusable plugins owned by a module boundary, prefer
-[`ElysiaPluginModule`](/docs/guides/elysia-plugin-modules).
+[`ElysiaPluginModule`](/docs/elysia/plugin-modules).
 
 For an end-to-end typed client or a typed in-process request, see
-[Eden Treaty](/docs/guides/eden-treaty).
+[Eden Treaty](/docs/elysia/eden-treaty).
 
 <Callout type="info" title="Controller type boundary">
   State and decorators from module-imported plugins exist at runtime in every
   handler, but compiling a controller erases its module imports, so their types
   reach a handler only when the plugin is named — see
-  [typed plugin context](/docs/guides/plugin-context-types).
+  [typed plugin context](/docs/elysia/plugin-context).
 </Callout>

@@ -1,7 +1,10 @@
 {
   "title": "Project",
   "pages": [
+    "index",
     "status-and-roadmap",
+    "current-limitations",
+    "version-compatibility",
     "packages-and-versioning",
     "repository-development",
     "legal-and-attribution"

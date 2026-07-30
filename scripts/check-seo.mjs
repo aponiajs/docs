@@ -117,7 +117,7 @@ for (const path of [
   '/',
   '/docs',
   '/docs/getting-started',
-  '/docs/concepts',
+  '/docs/essentials',
   '/docs/api-reference',
 ]) {
   assert(

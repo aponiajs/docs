@@ -1,11 +1,12 @@
 {
   "title": "Recipes",
   "pages": [
-    "testing",
+    "index",
     "validated-resource",
+    "testing",
+    "custom-logger",
     "cors-plugin",
     "configured-plugin",
-    "custom-logger",
     "standalone-container"
   ]
 }

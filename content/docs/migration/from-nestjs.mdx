@@ -79,7 +79,7 @@ create(@Body() body: z.infer<(typeof createUser)["body"]>) {
 
 A rejected request answers `422` before the handler runs. There is no
 `class-validator`, `class-transformer`, or `ValidationPipe` equivalent. See
-[route validation](/docs/concepts/route-validation).
+[route validation](/docs/essentials/validation).
 
 ## Application layout
 
@@ -88,6 +88,6 @@ directly under `src`. Generated features live under `src/<feature>`.
 
 Do not migrate guards, interceptors, filters, or middleware yet — rewrite that
 behavior as Elysia hooks through
-[native access](/docs/guides/native-elysia-access) or a
-[plugin module](/docs/guides/elysia-plugin-modules) until the equivalent runtime
+[native access](/docs/elysia/native-access) or a
+[plugin module](/docs/elysia/plugin-modules) until the equivalent runtime
 contracts land.
