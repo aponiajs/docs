@@ -240,15 +240,31 @@ async function validateLinks(path, source, routes) {
       continue;
     }
 
-    if (
-      !target.startsWith("/") &&
-      !/^[a-z][a-z\d+.-]*:/iu.test(target) &&
-      markdownExtensions.has(extname(target))
-    ) {
+    if (target.startsWith("/") || /^[a-z][a-z\d+.-]*:/iu.test(target)) {
+      continue;
+    }
+
+    if (markdownExtensions.has(extname(target))) {
       const destination = resolve(dirname(path), target);
       if (!isInside(docsRoot, destination) || !(await exists(destination))) {
         report(path, `relative Markdown link does not exist: ${rawTarget}`, line);
       }
+      continue;
+    }
+
+    /*
+     * An extension-less relative link is resolved by the browser against the
+     * page URL, not against the source directory. On an index page those differ
+     * — `/docs/getting-started` + `./create-a-project` lands on
+     * `/docs/create-a-project`, which is not a route. Absolute targets have one
+     * meaning everywhere, so require them.
+     */
+    if (target.startsWith(".")) {
+      report(
+        path,
+        `use an absolute /docs route instead of a relative link: ${rawTarget}`,
+        line,
+      );
     }
   }
 }
