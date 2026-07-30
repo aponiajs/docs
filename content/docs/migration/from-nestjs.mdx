@@ -6,19 +6,21 @@ description: Map familiar Nest structure onto the smaller AponiaJS feature set.
 AponiaJS borrows structural vocabulary from NestJS, but it is not a drop-in
 replacement.
 
-| Nest concept | AponiaJS `0.6.0-alpha.17` |
+| Nest concept | AponiaJS `0.6.0-alpha.18` |
 | --- | --- |
 | Modules | Implemented with imports, controllers, providers, and exports. |
 | Singleton providers | Implemented. |
 | Class/value/factory/alias providers | Implemented synchronously. |
 | Decorated controllers | Implemented for all seven HTTP methods. |
 | Request parameter decorators | Implemented, including named selection. |
-| Validation | Implemented as route schemas, not pipes. |
+| Validation | Implemented as route schemas and `@Validation()` model classes, not pipes. |
+| Gateways | Implemented over native Elysia WebSockets, without Socket.IO semantics. |
+| Exception filters | Not implemented; throw `httpErrors.*` for Problem Details responses. |
 | Platform adapter | Elysia only. |
 | Guards/interceptors/filters/middleware runtime | Not implemented. |
 | Provider scopes and lifecycle hooks | Not implemented. |
 | Testing module and overrides | Not implemented. |
-| OpenAPI/auth/WebSockets/microservices | Not implemented. |
+| OpenAPI/auth/microservices | Not implemented. |
 
 ## Bootstrap
 

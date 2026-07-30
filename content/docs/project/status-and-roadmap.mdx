@@ -1,10 +1,10 @@
 ---
 title: Status and Roadmap
-description: Implemented, experimental, and planned AponiaJS capabilities at the 0.6.0-alpha.17 source baseline.
+description: Implemented, experimental, and planned AponiaJS capabilities at the 0.6.0-alpha.18 source baseline.
 ---
 
 <Callout title="Experimental software">
-  AponiaJS `0.6.0-alpha.17` is an initial-development release. It is not
+  AponiaJS `0.6.0-alpha.18` is an initial-development release. It is not
   recommended for production workloads, and its public API may change before
   1.0.
 </Callout>
@@ -34,6 +34,12 @@ The current source implements:
   Eden Treaty;
 - bootstrap-compiled decorated route invokers, direct root registration, and
   explicit Elysia `aot` / `precompile` policy;
+- named validation-model classes through `@Validation()`, accepted in every
+  route slot including `cookie`, with status-specific response maps;
+- `HttpError`, `httpError`, and `httpErrors` for RFC 9457 Problem Details
+  responses on deliberately thrown application failures;
+- WebSocket gateways with provider registration, message, socket, server, and
+  lifecycle decorators over the native Elysia and Bun socket runtime;
 - structured system logging, JSON logging, level filtering, and custom loggers;
 - project generation and the complete CLI file-schematic catalog, including
   REST resource validation models.
@@ -46,21 +52,24 @@ every generated Nest-style capability is implemented by the runtime.
 The runtime does not provide:
 
 - runtime guards, interceptors, middleware, or exception filters;
-- framework-owned error mapping, Problem Details bodies, or serialization;
+- framework-owned mapping of native validation failures, or a serialization
+  and unknown-field policy;
 - async providers or request and transient provider scopes;
 - lifecycle hooks or graceful drain coordination;
 - testing modules or provider overrides;
 - configuration, authentication, authorization, or rate-limiting packages;
 - OpenAPI generation or decorator-wide Eden Treaty inference;
 - a build-time module and route compiler;
-- GraphQL, WebSocket, or microservice platforms.
+- GraphQL or microservice platforms, and the transport-neutral adapter SPI,
+  handshake authentication, per-message schema policy, and connection limits
+  that follow the WebSocket preview.
 
 CLI output for these areas is scaffold-only.
 
 ## Milestones
 
-The source roadmap tracks 27 items across six milestones: 10 completed, 4 in
-progress, and 13 planned (`44.81%` overall):
+The source roadmap tracks 28 items across six milestones: 11 completed, 4 in
+progress, and 13 planned (`47.50%` overall):
 
 | Milestone | Target | Status |
 | --- | --- | --- |
@@ -72,18 +81,20 @@ progress, and 13 planned (`44.81%` overall):
 | Post-1.0 ecosystem | `1.1.0` | Planned |
 
 Active workstreams are foundation stabilization, dependency maintenance, native
-Elysia plugin type inference, and validation, errors, and serialization. Static
-native route composition is implemented; decorator-wide inference remains part
-of the native-plugin workstream. Async lifecycle and provider scopes, the
-platform and HTTP package split, and full Elysia lifecycle conformance remain
-planned for runtime maturity.
+Elysia plugin type inference, and validation, errors, and serialization — the
+last at 45% after validation models and Problem Details errors landed. The
+Elysia WebSocket gateway preview is complete, which moves runtime maturity to
+36.67% across six items. Static native route composition is implemented;
+decorator-wide inference remains part of the native-plugin workstream. Async
+lifecycle and provider scopes, the platform and HTTP package split, and full
+Elysia lifecycle conformance remain planned.
 
 Use the source implementation and package exports as the authority for current
 behavior:
 
 - [AponiaJS source repository](https://github.com/aponiajs/aponiajs)
-- [Roadmap at the audited commit](https://github.com/aponiajs/aponiajs/blob/9207e806b801c856583a9d04c66a2c5a04b4700b/ROADMAP.md)
-- [Learning path at the audited commit](https://github.com/aponiajs/aponiajs/blob/9207e806b801c856583a9d04c66a2c5a04b4700b/docs/learn/README.md)
+- [Roadmap at the audited commit](https://github.com/aponiajs/aponiajs/blob/a3ab9ff2f7fdc5571a5f8134c3c1e5eb8eb7de30/ROADMAP.md)
+- [Learning path at the audited commit](https://github.com/aponiajs/aponiajs/blob/a3ab9ff2f7fdc5571a5f8134c3c1e5eb8eb7de30/docs/learn/README.md)
 
 ## Benchmark status
 
@@ -96,5 +107,5 @@ on their Bun version, runner, workload, duration, and source revision and must
 not be presented as current production-capacity guarantees. Compare values only
 within the same published dataset.
 
-See [packages and versioning](./packages-and-versioning) before installing a
+See [packages and versioning](/docs/project/packages-and-versioning) before installing a
 release.

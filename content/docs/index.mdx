@@ -9,7 +9,7 @@ Schema route validation, singleton dependency injection, explicit provider
 visibility, structured diagnostics, and a native Elysia integration.
 
 <Callout type="warning" title="Experimental software">
-  AponiaJS `0.6.0-alpha.17` is under active development and is not recommended
+  AponiaJS `0.6.0-alpha.18` is under active development and is not recommended
   for production yet. The API is pre-1.0 and can change between releases. All
   public packages publish to the npm `alpha` channel.
 </Callout>
@@ -105,7 +105,12 @@ await app.listen(3000);
 - [request parameter decorators](/docs/concepts/request-parameters) for body,
   query, params, headers, cookies, request, response settings, and context;
 - [Standard Schema](https://standardschema.dev) route validation — Zod,
-  ArkType, Valibot — plus platform-native TypeBox and Elysia `t` validators;
+  ArkType, Valibot — plus platform-native TypeBox and Elysia `t` validators,
+  used raw or through named `@Validation()` model classes;
+- [WebSocket gateways](/docs/concepts/websocket-gateways) over the native
+  Elysia and Bun socket runtime;
+- [RFC 9457 Problem Details](/docs/guides/http-errors) responses thrown with
+  `httpError` and `httpErrors`;
 - singleton class, value, factory, and alias providers with explicit tokens;
 - native Elysia plugin imports, including typed plugin context;
 - managed and native application bootstraps, including statically composed
@@ -116,8 +121,8 @@ await app.listen(3000);
 
 ## Documentation baseline
 
-These docs were reviewed against AponiaJS `0.6.0-alpha.17` on
-[`9207e80`](https://github.com/aponiajs/aponiajs/tree/9207e806b801c856583a9d04c66a2c5a04b4700b).
+These docs were reviewed against AponiaJS `0.6.0-alpha.18` on
+[`a3ab9ff`](https://github.com/aponiajs/aponiajs/tree/a3ab9ff2f7fdc5571a5f8134c3c1e5eb8eb7de30).
 Source code and package exports are authoritative when a pre-1.0 release differs
 from this site.
 

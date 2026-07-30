@@ -8,7 +8,7 @@ description: Separate implemented AponiaJS behavior from CLI scaffolds and roadm
   issue tracker before adopting it for a long-lived workload.
 </Callout>
 
-Reviewed against `0.6.0-alpha.17`.
+Reviewed against `0.6.0-alpha.18`.
 
 ## Implemented
 
@@ -17,7 +17,12 @@ Reviewed against `0.6.0-alpha.17`.
   `@Cookie`, `@Ctx`, `@Req`, and `@Res` — in whole and named forms;
 - route validation with Standard Schema validators (Zod, ArkType, Valibot) and
   platform-native TypeBox or Elysia `t` validators across the `body`, `query`,
-  `params`, `headers`, and `response` slots;
+  `params`, `headers`, `cookie`, and `response` slots, as raw validators or as
+  `@Validation()` model classes;
+- RFC 9457 Problem Details responses thrown with `httpError` and `httpErrors`;
+- WebSocket gateways with `@WebSocketGateway`, `@SubscribeMessage`,
+  `@MessageBody`, `@ConnectedSocket`, `@WebSocketServer`, and the connection,
+  disconnect, and init lifecycle interfaces;
 - singleton class, value, factory, and alias providers;
 - class and explicit-token constructor injection;
 - module imports, exports, re-exports, and graph diagnostics;
@@ -36,25 +41,29 @@ Reviewed against `0.6.0-alpha.17`.
 ## Not implemented
 
 - runtime guards, interceptors, exception filters, or middleware;
-- framework-owned error mapping, Problem Details bodies, or serialization —
-  validation failures come from Elysia as `422`;
+- framework-owned mapping of native validation failures, which still come from
+  Elysia as `422`, or a serialization and unknown-field policy;
 - async provider factories, lifecycle hooks, and non-singleton scopes;
 - testing modules or provider overrides;
 - OpenAPI generation, decorator-wide Eden Treaty inference, and a build-time
   module compiler;
 - built-in configuration, secrets, authentication, authorization, or rate
   limiting;
-- GraphQL, WebSocket, or microservice platform packages.
+- GraphQL or microservice platform packages, and the WebSocket work that
+  follows the gateway preview: handshake authentication, per-message schema
+  policy, origin and connection limits, request scopes, and a
+  transport-neutral adapter SPI.
 
 ## CLI scaffolds are not runtime features
 
 The CLI can create files named guard, filter, interceptor, middleware, pipe,
-gateway, resolver, and non-REST resource transports. These are standalone
-scaffolds, not classes wired into an implemented runtime contract.
+resolver, and non-REST resource transports. These are standalone scaffolds, not
+classes wired into an implemented runtime contract.
 
 REST resources are the exception: their generated controller, service, module,
-`<name>.model.ts` validation model, DTOs, and entity run against the implemented
-runtime.
+`<name>.model.ts` validation models, and entity run against the implemented
+runtime. Generated gateways and WebSocket resources are implemented too — they
+mount on the native socket runtime.
 
 See [status and roadmap](/docs/project/status-and-roadmap) for the milestone
 each planned capability belongs to.

@@ -65,17 +65,18 @@ microservice
 ws
 ```
 
-A REST CRUD resource generates a controller, service, module, validation model,
-DTOs, and an entity. The `<name>.model.ts` file owns the route validators and
-route schemas from which both DTOs derive their types. GraphQL resources
-generate a resolver, and WebSocket resources generate a gateway.
+A REST CRUD resource generates a controller, service, module, entity, and a
+`<name>.model.ts` file whose `@Validation()` classes are used directly in the
+route slots. GraphQL and microservice resources generate a transport scaffold,
+and a `ws` resource generates a provider-registered WebSocket gateway with one
+`@SubscribeMessage()` handler per CRUD operation.
 
-<Callout title="Non-REST transports are scaffolds">
-  GraphQL, microservice, and WebSocket transports are not implemented by the
-  runtime. Those resources generate a class with conventional method names that
-  no platform package discovers. REST resources are fully runnable: their
-  handlers use request parameter decorators and the generated route schemas.
+<Callout title="GraphQL and microservice transports are scaffolds">
+  GraphQL and microservice transports are not implemented by the runtime. Those
+  resources generate a class with conventional method names that no platform
+  package discovers. REST and WebSocket resources are runnable: their handlers
+  use the request parameter or gateway decorators the runtime discovers.
 </Callout>
 
-See [schematics](./schematics) for the complete catalog and
-[module registration](./module-registration) for automatic imports.
+See [schematics](/docs/cli/schematics) for the complete catalog and
+[module registration](/docs/cli/module-registration) for automatic imports.

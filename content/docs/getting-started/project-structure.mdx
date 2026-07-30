@@ -38,9 +38,6 @@ src/
 ├── app.module.ts
 ├── main.ts
 └── greeting/
-    ├── dto/
-    │   ├── create-greeting.dto.ts
-    │   └── update-greeting.dto.ts
     ├── entities/
     │   └── greeting.entity.ts
     ├── greeting.controller.spec.ts
@@ -51,12 +48,13 @@ src/
     └── greeting.service.ts
 ```
 
-A REST CRUD resource generates the `dto/`, `entities/`, and `*.model.ts` files
-shown above. A plain `aponia g controller` or `aponia g service` generates only
-the matching file and its spec.
+A REST CRUD resource generates the `entities/` and `*.model.ts` files shown
+above; the model file holds the `@Validation()` classes the controller uses in
+its route slots. A plain `aponia g controller` or `aponia g service` generates
+only the matching file and its spec.
 
-Keep feature-owned controllers, services, modules, DTOs, entities, and tests
-together. Create top-level `common`, `config`, or `database` folders only for
+Keep feature-owned controllers, services, modules, validation models, entities,
+and tests together. Create top-level `common`, `config`, or `database` folders only for
 code genuinely shared by multiple features.
 
 ## File responsibilities
@@ -72,5 +70,5 @@ code genuinely shared by multiple features.
 | `test/*.e2e-spec.ts` | End-to-end tests for the application boundary. |
 | `aponia.json` | CLI source root, project, and generation defaults. |
 
-Use the [CLI generate reference](../cli/generate) to add files to this
+Use the [CLI generate reference](/docs/cli/generate) to add files to this
 structure.

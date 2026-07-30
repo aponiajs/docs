@@ -13,7 +13,7 @@ description: Complete AponiaJS CLI schematic catalog with aliases and runtime st
 | `controller` | `co`, `route`, `router`, `routes` | Decorated HTTP controller. |
 | `decorator` | `d` | Custom method decorator shape. |
 | `filter` | `f` | Exception-filter-shaped class. |
-| `gateway` | `ga` | WebSocket-gateway-shaped class. |
+| `gateway` | `ga` | `@WebSocketGateway()` class mounted on the native socket runtime. |
 | `guard` | `gu` | Guard-shaped class. |
 | `interface` | `itf` | TypeScript interface. |
 | `interceptor` | `itc` | Interceptor-shaped class. |
@@ -57,9 +57,6 @@ A REST CRUD resource generates a working feature:
 
 ```text
 src/users/
-├── dto/
-│   ├── create-user.dto.ts
-│   └── update-user.dto.ts
 ├── entities/
 │   └── user.entity.ts
 ├── users.controller.ts
@@ -68,30 +65,53 @@ src/users/
 └── users.service.ts
 ```
 
-`users.model.ts` owns the per-slot validators and the route schemas the
-controller passes to its decorators, built with Elysia's `t`. Both DTOs derive
-their types from those schemas with `Static<typeof …>`, so a field is declared
-once:
+`users.model.ts` keeps each validator beside one exported validation-model
+class, built with Elysia's `t`. A same-named interface derives its fields from
+the validator, so a field is declared once and the controller uses the class
+directly:
 
 ```ts
-export const createUserSchema = t.Object({
+const createUserSchema = t.Object({
   name: t.String({ minLength: 1 }),
 });
 
-export const createUserRoute = {
-  body: createUserSchema,
-};
+@Validation(createUserSchema)
+export class CreateUser {}
+export interface CreateUser extends InferValidatorOutput<typeof createUserSchema> {}
 ```
 
 ```ts
-@Post("/", createUserRoute)
-create(@Body() input: CreateUserDto) {
+@Post("/", { body: CreateUser })
+create(@Body() input: CreateUser) {
   return this.usersService.create(input);
+}
+
+@Patch(":id", { params: UserParams, body: UpdateUser })
+update(@Param() params: UserParams, @Body() input: UpdateUser) {
+  return this.usersService.update(params.id, input);
 }
 ```
 
 Swap in any [Standard Schema](https://standardschema.dev) validator — Zod,
 ArkType, Valibot — by editing that one file.
+
+## WebSocket resources
+
+A `ws` resource generates a provider-registered gateway instead of a controller.
+A CRUD WebSocket resource maps `<resource>.create`, `.findAll`, `.findOne`,
+`.update`, and `.remove` through `@SubscribeMessage()` and injects event data
+with `@MessageBody()`. A standalone `gateway` schematic is mountable as soon as
+it is registered as a provider:
+
+```ts
+import { WebSocketGateway } from "@aponiajs/common";
+
+@WebSocketGateway("/events")
+export class EventsGateway {}
+```
+
+See [WebSocket gateways](/docs/concepts/websocket-gateways) for the envelope and
+runtime behavior.
 
 ## Scaffold-only output
 
@@ -99,13 +119,12 @@ The CLI also generates Nest-familiar shapes before the corresponding AponiaJS
 runtime contracts exist:
 
 - filters;
-- gateways;
 - guards;
 - interceptors;
 - middleware;
 - pipes;
 - resolvers;
-- GraphQL, microservice, and WebSocket resources.
+- GraphQL and microservice resources.
 
 These classes have conventional method names but are not discovered or invoked
 by the framework runtime.

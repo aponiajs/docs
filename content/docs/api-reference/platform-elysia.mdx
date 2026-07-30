@@ -107,6 +107,36 @@ defineElysiaPlugin<TPlugin>(
 export mounts the plugin and names its type. See
 [Elysia plugin modules](/docs/guides/elysia-plugin-modules).
 
+## HTTP errors
+
+Exports:
+
+- `HttpError`
+- `httpError`
+- `httpErrors`
+- `HttpErrorFactories`, `HttpErrorFactory`, `HttpErrorOptions`
+- `HttpErrorStatus`, `HttpErrorStatusCode`, `HttpErrorStatusName`
+- `ProblemDetails`, `ResolveHttpErrorStatus`
+
+```ts
+throw httpErrors.notFound("User 42 does not exist.", { code: "USER_NOT_FOUND" });
+throw httpError(422, "The submitted profile is invalid.", { code: "PROFILE_INVALID" });
+```
+
+A thrown `HttpError` answers with its status, `application/problem+json`, and an
+RFC 9457 body. See [HTTP errors](/docs/guides/http-errors).
+
+## WebSocket types
+
+Exports:
+
+- `ElysiaWebSocket`
+- `ElysiaWebSocketServer`
+
+These are the native Elysia socket wrapper and application types injected by
+`@ConnectedSocket()` and `@WebSocketServer()`. See
+[WebSocket gateways](/docs/concepts/websocket-gateways).
+
 ## Route context types
 
 Exports:

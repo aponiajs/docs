@@ -1,0 +1,74 @@
+---
+title: HTTP errors
+description: Throw RFC 9457 Problem Details responses from controllers with httpError and httpErrors.
+---
+
+`@aponiajs/platform-elysia` exports intent-named error factories. A thrown
+`HttpError` travels Elysia's native error path and answers with status,
+`application/problem+json`, and an RFC 9457 Problem Details body.
+
+```ts
+import { httpErrors } from "@aponiajs/platform-elysia";
+
+const user = users.find(id);
+if (!user) {
+  throw httpErrors.notFound(`User ${id} does not exist.`, {
+    code: "USER_NOT_FOUND",
+  });
+}
+```
+
+```json
+{
+  "type": "about:blank",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "User 42 does not exist.",
+  "code": "USER_NOT_FOUND"
+}
+```
+
+## Factories
+
+`httpErrors` covers every 4xx and 5xx status in the supported Elysia version.
+
+| Factory | Status |
+| --- | ---: |
+| `httpErrors.badRequest()` | 400 |
+| `httpErrors.unauthorized()` | 401 |
+| `httpErrors.forbidden()` | 403 |
+| `httpErrors.notFound()` | 404 |
+| `httpErrors.conflict()` | 409 |
+| `httpErrors.unprocessableContent()` | 422 |
+| `httpErrors.tooManyRequests()` | 429 |
+| `httpErrors.internalServerError()` | 500 |
+| `httpErrors.badGateway()` | 502 |
+| `httpErrors.serviceUnavailable()` | 503 |
+
+Use `httpError` when a numeric code or a standard status name reads better:
+
+```ts
+import { httpError } from "@aponiajs/platform-elysia";
+
+throw httpError(422, "The submitted profile is invalid.", {
+  code: "PROFILE_INVALID",
+  type: "https://example.com/problems/profile-invalid",
+  instance: "/requests/42",
+  headers: { "retry-after": "30" },
+  extensions: { field: "email" },
+  cause: validationFailure,
+});
+```
+
+## What never reaches the client
+
+- `cause` stays on the server-side `Error` for logging.
+- Standard Problem Details members cannot be overwritten through `extensions`.
+- `name`, `message`, `stack`, and `cause` are filtered out of `extensions`.
+
+## Boundaries
+
+Route validation failures are still Elysia's native `422` responses —
+`HttpError` is for failures an application throws deliberately. Framework
+failures raise `AponiaError` with a code from a closed union; assert on the code
+rather than the message. See [error codes](/docs/api-reference/error-codes).
