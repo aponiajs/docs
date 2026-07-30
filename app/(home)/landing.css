@@ -145,41 +145,6 @@ body:has(.mono-root) {
   content: '';
 }
 
-.mono-cue {
-  position: absolute;
-  bottom: clamp(1rem, 2.5vw, 1.75rem);
-  left: var(--gutter);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: var(--color-ink-faint);
-  font-family: var(--font-mark);
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.mono-cue::after {
-  width: 1px;
-  height: 2rem;
-  background: linear-gradient(var(--color-ink), transparent);
-  content: '';
-  transform-origin: 0 0;
-  animation: mono-cue 2.4s var(--ease-editorial) infinite;
-}
-
-@keyframes mono-cue {
-  0%,
-  100% {
-    opacity: 0.2;
-    transform: scaleY(0.4);
-  }
-  45% {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
 /* Counters: the numbering down the position rows and the index. */
 
 .mono-rows {
@@ -258,24 +223,6 @@ body:has(.mono-root) {
   }
 }
 
-@media (min-width: 1280px) {
-  .mono-mega-column:last-child {
-    grid-column: auto;
-    border-top: 0;
-  }
-}
-
-@media (max-width: 1279px) {
-  .mono-mega-column:last-child {
-    grid-column: 2 / -1;
-    border-top: 1px solid var(--color-rule);
-  }
-
-  .mono-mega-column:last-child ul {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 /* Mobile sheet: `details` open state and the scroll lock it sets. */
 
 .mono-sheet-toggle summary::-webkit-details-marker {
@@ -313,10 +260,6 @@ html.mono-menu-lock body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mono-cue::after {
-    animation: none;
-  }
-
   [data-mono-reveal] {
     opacity: 1;
     transform: none;
@@ -330,7 +273,6 @@ html.mono-menu-lock body {
 
 @media print {
   .mono-bar,
-  .mono-cue,
   .mono-root::before {
     display: none;
   }

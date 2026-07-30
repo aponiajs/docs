@@ -7,6 +7,7 @@
     "controllers-and-routes",
     "request-parameters",
     "route-validation",
+    "websocket-gateways",
     "providers-and-di",
     "tokens-and-injection",
     "visibility-and-exports",

@@ -23,59 +23,32 @@ const sectionLinks: readonly SectionNavItem[] = [
   { href: '#start', label: 'Start', index: '05' },
 ];
 
-const goalFeature: MegaMenuFeature = {
-  href: '/goal',
-  eyebrow: 'Engineering goal',
-  title: 'Compiling Nest-style authoring down to native Elysia speed',
-  description:
-    'What the framework layer costs today, the Sucrose context escape that generates the cost, the typed route IR that removes it, and the gates every performance claim has to pass.',
-  meta: ['28 July 2026', 'Bun 1.3.14 · Elysia 1.4.29'],
+const projectFeature: MegaMenuFeature = {
+  href: '/docs/getting-started',
+  eyebrow: 'Documentation',
+  title: 'Modules, controllers, decorators, dependency injection on Bun',
+  description: 'Install, scaffold, serve. Implemented features only.',
+  meta: ['Bun 1.3.14', 'aponiajs 0.6.0-alpha.18'],
 };
 
-const goalColumns: MegaMenuColumn[] = [
+const projectColumns: MegaMenuColumn[] = [
   {
-    label: 'The argument',
+    label: 'Docs',
     links: [
       {
-        href: '/goal#why',
-        label: 'The measured gap',
-        description: 'Artifact ratios, service proxy, and the overhead budget',
+        href: '/docs/concepts',
+        label: 'Concepts',
+        description: 'Modules, providers, lifecycle, validation',
       },
       {
-        href: '/goal#mechanism',
-        label: 'How the cost is generated',
-        description: 'Context escape, the generic binder, and forced asynchrony',
-      },
-      {
-        href: '/goal#design',
-        label: 'Typed route IR',
-        description: 'Per-route lowering into semantic islands',
-      },
-      {
-        href: '/goal#ceiling',
-        label: 'How far it can go',
-        description: 'Scoped hypotheses and falsifiable 90–99.5% gates',
-      },
-    ],
-  },
-  {
-    label: 'Evidence',
-    links: [
-      {
-        href: '/research.md',
-        label: 'Full report',
-        description: 'Thirteen architectures, hot-path audit, 40 citations',
-        staticFile: true,
+        href: '/docs/api-reference',
+        label: 'API reference',
+        description: 'Application, decorators, CLI',
       },
       {
         href: '/docs/benchmark',
-        label: 'Benchmark suite',
-        description: 'How the published measurements are produced',
-      },
-      {
-        href: '/docs/benchmark/interpreting-results',
-        label: 'Interpreting results',
-        description: 'Scope, warm state, and what a ratio does not prove',
+        label: 'Benchmark',
+        description: 'Harness, pinned versions, scope',
       },
     ],
   },
@@ -84,26 +57,20 @@ const goalColumns: MegaMenuColumn[] = [
     links: [
       {
         href: 'https://github.com/aponiajs/aponiajs',
-        label: 'Source code',
-        description: 'Packages, examples, tests, and implementation',
-        external: true,
-      },
-      {
-        href: 'https://github.com/aponiajs/aponiajs/tree/main/examples',
-        label: 'Examples',
-        description: 'Runnable applications for implemented features',
+        label: 'Source',
+        description: 'Packages, examples, tests',
         external: true,
       },
       {
         href: 'https://github.com/aponiajs/aponiajs/blob/main/ROADMAP.md',
         label: 'Roadmap',
-        description: 'Current milestones, evidence, and planned capabilities',
+        description: 'Milestones and planned work',
         external: true,
       },
       {
         href: 'https://github.com/aponiajs/aponiajs/issues',
-        label: 'Issue tracker',
-        description: 'Bugs, feature requests, and active work',
+        label: 'Issues',
+        description: 'Bugs and active work',
         external: true,
       },
     ],
@@ -120,14 +87,7 @@ const megaFooterLink: MegaMenuLink = {
 // The mobile sheet lists destinations rather than the deep section anchors the
 // desktop panel can afford to show.
 const mobileMenuLinks: MegaMenuLink[] = [
-  {
-    href: '/goal',
-    label: 'The goal',
-    description: 'Compiling Nest-style authoring to native Elysia speed',
-  },
-  ...goalColumns
-    .flatMap((column) => column.links)
-    .filter((link) => !link.href.startsWith('/goal#')),
+  ...projectColumns.flatMap((column) => column.links),
   megaFooterLink,
 ];
 
@@ -188,10 +148,10 @@ export function LandingNavigation() {
       {/* Static positioning: the mega panel anchors to the bar, not to this. */}
       <div className="static flex items-stretch justify-self-end">
         <NavigationMegaMenu
-          label="Goal"
-          feature={goalFeature}
-          columns={goalColumns}
-          note="Every published number carries its scope: pinned versions, execution state, and the caveats that bound it."
+          label="Project"
+          feature={projectFeature}
+          columns={projectColumns}
+          note="Every published number carries its scope."
           footerLink={megaFooterLink}
         />
 

@@ -3,6 +3,7 @@
 import { ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import {
+  type CSSProperties,
   type FocusEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   useCallback,
@@ -212,13 +213,18 @@ export function NavigationMegaMenu({
           className="mono-mega-panel border-b border-ink bg-stock"
           onKeyDown={handlePanelKeyDown}
         >
-          <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1fr))] xl:grid-cols-[minmax(0,1.2fr)_repeat(3,minmax(0,1fr))]">
+          {/* One feature track plus one track per column, so the panel holds a
+              single row whatever it is given. */}
+          <div
+            className="grid grid-cols-[minmax(0,1.2fr)_repeat(var(--mega-columns),minmax(0,1fr))]"
+            style={{ '--mega-columns': columns.length } as CSSProperties}
+          >
             <MegaFeature feature={feature} onNavigate={closeMenu} />
 
             {columns.map((column) => (
               <section
                 key={column.label}
-                className="mono-mega-column min-w-0 border-l border-rule px-[1.15rem] pt-5 pb-6"
+                className="min-w-0 border-l border-rule px-[1.15rem] pt-5 pb-6"
               >
                 <h3 className="mb-3 pl-2 font-mark text-[0.62rem] font-medium tracking-[0.16em] text-ink-faint uppercase">
                   {column.label}
@@ -279,7 +285,7 @@ function MegaFeature({
         ))}
       </span>
       <span className="mt-0.5 inline-flex items-center gap-1.5 font-mark text-[0.66rem] font-semibold tracking-[0.06em] uppercase">
-        Read the paper
+        Open the docs
         <ArrowRight
           size={14}
           strokeWidth={1.5}

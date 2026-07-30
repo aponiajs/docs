@@ -5,6 +5,7 @@
     "eden-treaty",
     "elysia-plugin-modules",
     "plugin-context-types",
+    "http-errors",
     "logging",
     "application-lifecycle",
     "in-process-requests",

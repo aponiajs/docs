@@ -31,22 +31,77 @@ create(@Body() body: CreateUser) {
 }
 ```
 
-## Slots
+## Validation models
 
-`RouteSchema` declares five optional slots:
+A slot also accepts a class decorated with `@Validation()`. The class names one
+validator, and a same-named interface derives its fields from that validator, so
+a field is declared once and controller methods use the class directly:
 
-```ts
-interface RouteSchema {
-  readonly body?: RouteValidator;
-  readonly query?: RouteValidator;
-  readonly params?: RouteValidator;
-  readonly headers?: RouteValidator;
-  readonly response?: RouteValidator;
+```ts title="src/user.model.ts"
+import { Validation, type InferValidatorOutput } from "@aponiajs/common";
+import { z } from "zod";
+
+const createUserSchema = z.object({ name: z.string().min(2) });
+
+@Validation(createUserSchema)
+export class CreateUser {}
+export interface CreateUser extends InferValidatorOutput<typeof createUserSchema> {}
+```
+
+```ts title="src/user.controller.ts"
+@Controller("users")
+export class UserController {
+  @Post("/", { body: CreateUser })
+  create(@Body() body: CreateUser) {
+    return body;
+  }
 }
 ```
 
-The runtime constant `routeSchemaSlots` exports the same five names. A schema
+`@Validation()` takes exactly one complete validator, so distinct contracts use
+distinct classes — `CreateUser` for the POST body, `UpdateUser` for the PATCH
+body, `UserParams` for the shared identifier. `resolveRouteValidator(input)`
+returns the underlying validator for a raw validator or a model class, and an
+undecorated class raises `INVALID_VALIDATION_MODEL`.
+
+## Slots
+
+`RouteSchema` declares six optional slots:
+
+```ts
+interface RouteSchema {
+  readonly body?: RouteValidatorInput;
+  readonly query?: RouteValidatorInput;
+  readonly params?: RouteValidatorInput;
+  readonly headers?: RouteValidatorInput;
+  readonly cookie?: RouteValidatorInput;
+  readonly response?: RouteResponseSchema;
+}
+```
+
+A `RouteValidatorInput` is a raw validator or a validation-model class. The
+runtime constant `routeSchemaSlots` exports the same six names, and a schema
 whose slots are all absent is treated as no schema at all.
+
+Cookie schemas are handed to Elysia unchanged, so validation and
+`context.cookie.session.value` share one inferred value type.
+
+`response` accepts one success validator or a status-specific map, and the map
+narrows Elysia's `context.status` helper:
+
+```ts
+const findUser = {
+  response: {
+    200: t.Object({ id: t.Number() }),
+    404: t.Object({ code: t.Literal("USER_NOT_FOUND") }),
+  },
+};
+
+@Get(":id", findUser)
+find(context: ElysiaRouteContext<typeof findUser>) {
+  return context.status(404, { code: "USER_NOT_FOUND" });
+}
+```
 
 ## Accepted validators
 
@@ -155,8 +210,10 @@ Validation runs inside Elysia before the handler, so:
 Assert the status rather than the message body — see the
 [testing recipe](/docs/recipes/testing).
 
-<Callout type="info" title="No framework-level error mapping yet">
-  Validation failures are produced by Elysia. AponiaJS does not yet add its own
-  exception filters, Problem Details bodies, or serialization layer. The
-  roadmap tracks this under "Validation, errors, and serialization".
+<Callout type="info" title="Validation failures stay native">
+  Rejected requests are Elysia's own `422` responses. For failures an
+  application throws deliberately, `httpError` and `httpErrors` return RFC 9457
+  Problem Details — see [HTTP errors](/docs/guides/http-errors). Framework-owned
+  mapping of native validation failures, and the serialization policy, remain on
+  the roadmap under "Validation, errors, and serialization".
 </Callout>

@@ -25,7 +25,7 @@ Create a short, descriptive branch with one of these prefixes:
 Examples:
 
 ```text
-feature/goal-paper
+feature/mega-menu
 fix/mobile-navigation
 docs/route-validation
 chore/refresh-tokens

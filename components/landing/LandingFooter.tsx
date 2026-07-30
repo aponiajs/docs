@@ -28,9 +28,6 @@ export function LandingFooter() {
         <Link href="/docs" className={footerLink}>
           Docs
         </Link>
-        <Link href="/goal" className={footerLink}>
-          Goal
-        </Link>
         <a href="https://github.com/aponiajs/aponiajs" className={footerLink}>
           Source
         </a>

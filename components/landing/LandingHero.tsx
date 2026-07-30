@@ -1,5 +1,5 @@
 const plate = [
-  ['Release', '0.6.0-alpha.17'],
+  ['Release', '0.6.0-alpha.18'],
   ['Runtime', 'Bun'],
   ['Licence', 'MIT'],
 ] as const;
@@ -45,10 +45,6 @@ export function LandingHero() {
           ))}
         </dl>
       </div>
-
-      <p className="mono-cue" aria-hidden="true">
-        Scroll
-      </p>
     </section>
   );
 }

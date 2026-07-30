@@ -65,7 +65,7 @@ export function LandingNumbers() {
 
       <p className="mt-7 max-w-[62ch] border-l border-ink pl-4 text-[0.85rem] leading-[1.6] text-ink-faint text-pretty md:mt-11">
         Archived runs on pinned versions. Not a capacity claim. Method is in the
-        goal paper.
+        benchmark docs.
       </p>
     </section>
   );

@@ -21,6 +21,10 @@ the `@standard-schema/spec` types.
 | `Delete` | `RouteDecoratorFactory` |
 | `Head` | `RouteDecoratorFactory` |
 | `Options` | `RouteDecoratorFactory` |
+| `Validation` | `(validator: RouteValidator) => ClassDecorator` |
+| `WebSocketGateway` | `(options?: string \| WebSocketGatewayOptions) => ClassDecorator` |
+| `SubscribeMessage` | `(event: string) => MethodDecorator` |
+| `WebSocketServer` | `() => PropertyDecorator` |
 
 Every route decorator shares one factory type with three overloads:
 
@@ -41,6 +45,11 @@ Metadata readers are also public:
 - `getRouteMetadata()`
 - `getConstructorDependencies()`
 - `getRouteParameterMetadata()`
+- `getValidationMetadata()`
+- `getWebSocketGatewayMetadata()`
+- `getWebSocketMessageMetadata()`
+- `getWebSocketParameterMetadata()`
+- `getWebSocketServerProperties()`
 
 ## Request parameter decorators
 
@@ -65,28 +74,37 @@ See [request parameters](/docs/concepts/request-parameters).
 
 ```ts
 interface RouteSchema {
-  readonly body?: RouteValidator;
-  readonly query?: RouteValidator;
-  readonly params?: RouteValidator;
-  readonly headers?: RouteValidator;
-  readonly response?: RouteValidator;
+  readonly body?: RouteValidatorInput;
+  readonly query?: RouteValidatorInput;
+  readonly params?: RouteValidatorInput;
+  readonly headers?: RouteValidatorInput;
+  readonly cookie?: RouteValidatorInput;
+  readonly response?: RouteResponseSchema;
 }
 
 type RouteValidator = StandardSchemaV1 | NativeSchema;
+type RouteValidatorInput = RouteValidator | ValidationModelClass;
 ```
 
 | Export | Purpose |
 | --- | --- |
-| `routeSchemaSlots` | The five slot names as a readonly tuple. |
+| `routeSchemaSlots` | The six slot names as a readonly tuple. |
 | `isStandardSchema(validator)` | Narrow a validator to its Standard Schema form. |
+| `isRouteResponseSchemaMap(schema)` | Narrow a response schema to its status map form. |
+| `resolveRouteValidator(input)` | Return the validator behind a raw validator or model class. |
 | `RouteSchemaSlot` | Union of the slot names. |
 | `NativeSchema` | Structural contract for TypeBox and Elysia `t`. |
 | `InferValidatorOutput<T>` | Output type of either validator kind. |
 | `RouteContext<TSchema>` | Platform-neutral request context typed by a schema. |
+| `RouteCookie<TValue>` | One request cookie's value contract. |
+| `RouteResponseSchema`, `RouteResponseSchemaMap` | One success validator, or a status-keyed map. |
 | `RouteResponseSettings` | Mutable `status`, `headers`, and `redirect`. |
+| `ValidationMetadata`, `ValidationModelClass`, `RouteValidatorInput` | Validation-model contracts. |
 
-`RouteContext` exposes `body`, `query`, `params`, `headers`, `request`, `path`,
-and `set`. See [route validation](/docs/concepts/route-validation).
+`RouteContext` exposes `body`, `query`, `params`, `headers`, `cookie`,
+`request`, `path`, and `set`. An undecorated class in a slot fails with
+`INVALID_VALIDATION_MODEL`. See
+[route validation](/docs/concepts/route-validation).
 
 ## Module contracts
 
@@ -128,6 +146,23 @@ currently `"singleton"`.
 
 Public token types are `InjectionToken`, `ClassToken`, `Constructor`, `Token`,
 `TokenValue`, and `TokenValues`.
+
+## WebSocket gateways
+
+| Export | Injects or declares |
+| --- | --- |
+| `WebSocketGateway(options?)` | The gateway class and its upgrade path, default `/ws`. |
+| `SubscribeMessage(event)` | The handler for one envelope event name. |
+| `MessageBody(property?)` | The envelope `data` value, or one property of it. |
+| `ConnectedSocket()` | The native platform socket wrapper. |
+| `WebSocketServer()` | A property assigned the native server before `afterInit`. |
+
+Public types are `WebSocketGatewayOptions`, `WebSocketGatewayMetadata`,
+`WebSocketMessageMetadata`, `WebSocketParameterKind`,
+`WebSocketParameterMetadata`, `WsResponse`, and the `OnGatewayInit`,
+`OnGatewayConnection`, and `OnGatewayDisconnect` lifecycle interfaces.
+
+See [WebSocket gateways](/docs/concepts/websocket-gateways).
 
 ## Errors
 

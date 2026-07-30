@@ -17,9 +17,16 @@ structured `details`.
 | `PROVIDER_CYCLE` | Provider resolution returns to a provider being constructed. | Remove the constructor/factory cycle. |
 | `INVALID_CONTROLLER` | Missing decorator metadata, a non-callable route handler, or a controller factory that returned a non-Elysia value. | Add `@Controller()`, use callable methods, or return an Elysia plugin. |
 | `INVALID_MODULE` | A class root/import is missing `@Module()`. | Decorate it or pass a low-level definition. |
+| `INVALID_VALIDATION_MODEL` | A route slot received a class that is not decorated with `@Validation()`. | Decorate the model class or pass the validator directly. |
 | `INVALID_NATIVE_APPLICATION` | `configureNative` returned a different Elysia object. | Return the received instance after chaining methods. |
 | `APPLICATION_NOT_LISTENING` | `getUrl()` ran before `listen()`. | Listen first or avoid URL access in in-process tests. |
 | `UNSUPPORTED_CONTROLLER` | The Elysia platform received a controller descriptor owned by another platform kind. | Use a decorated controller or an Elysia controller descriptor. |
+| `INVALID_WEBSOCKET_GATEWAY` | A gateway has no message handlers, or a `@WebSocketServer()` property target is invalid. | Add a `@SubscribeMessage()` handler and annotate a writable property. |
+| `DUPLICATE_WEBSOCKET_GATEWAY` | Two gateways claim the same upgrade path. | Give each gateway a distinct path. |
+| `DUPLICATE_WEBSOCKET_HANDLER` | One gateway subscribes to the same event twice. | Keep one handler per event name. |
+| `INVALID_WEBSOCKET_MESSAGE` | A client frame is not a valid `{ event, data }` envelope. | Send the documented envelope. |
+| `UNKNOWN_WEBSOCKET_EVENT` | No handler is registered for the received event. | Subscribe the event or correct the client. |
+| `WEBSOCKET_HANDLER_ERROR` | A message handler threw. | Handle the failure inside the gateway. |
 
 ## Inspect an error
 
@@ -39,12 +46,17 @@ try {
 ```
 
 These errors describe framework graph and lifecycle validation. Route input
-validation is performed by Elysia and answers `422`; AponiaJS does not yet add
-its own exception filters or Problem Details error bodies. Assert the `code`
-rather than the message, which is not part of the contract.
+validation is performed by Elysia and answers `422`; for failures an application
+throws deliberately, use the Problem Details helpers in
+[HTTP errors](/docs/guides/http-errors). Assert the `code` rather than the
+message, which is not part of the contract.
 
 Graph errors through `MISSING_PROVIDER` are raised while the module graph
 compiles. Provider cycles are detected while singletons initialize, and
-controller or platform diagnostics are raised while routes mount. All occur
-during `AponiaFactory.create()` or `createNative()`, before the application can
-listen.
+controller, gateway, or platform diagnostics are raised while routes and
+sockets mount. All occur during `AponiaFactory.create()` or `createNative()`,
+before the application can listen.
+
+The three message-level WebSocket codes are the exception: they are produced
+after the application is listening and are returned to the client inside an
+`exception` envelope rather than thrown.

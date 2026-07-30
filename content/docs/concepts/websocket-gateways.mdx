@@ -1,0 +1,158 @@
+---
+title: WebSocket gateways
+description: Handle native Elysia and Bun WebSocket connections with Nest-style gateway classes and dependency injection.
+---
+
+A gateway is a provider that owns one WebSocket path. Elysia and Bun keep the
+native server, upgrade, socket, serialization, publish, subscription, and
+backpressure primitives; AponiaJS contributes the decorators and the container.
+
+```ts title="src/chat.gateway.ts"
+import {
+  ConnectedSocket,
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  type OnGatewayConnection,
+  type WsResponse,
+} from "@aponiajs/common";
+import type { ElysiaWebSocket } from "@aponiajs/platform-elysia";
+import { ChatService } from "./chat.service.ts";
+
+@WebSocketGateway("/chat")
+export class ChatGateway implements OnGatewayConnection<ElysiaWebSocket> {
+  constructor(private readonly chatService: ChatService) {}
+
+  handleConnection(client: ElysiaWebSocket): void {
+    client.subscribe("chat");
+  }
+
+  @SubscribeMessage("chat.send")
+  sendMessage(
+    @MessageBody("text") text: string,
+    @ConnectedSocket() client: ElysiaWebSocket,
+  ): WsResponse<{ readonly id: string; readonly text: string }> {
+    return {
+      event: "chat.message",
+      data: this.chatService.create(client.id, text),
+    };
+  }
+}
+```
+
+## Registration
+
+A gateway is constructed and mounted only when it is registered as a provider.
+Its constructor dependencies follow the same module visibility rules as every
+other provider.
+
+```ts title="src/chat.module.ts"
+import { Module } from "@aponiajs/common";
+import { ChatGateway } from "./chat.gateway.ts";
+import { ChatService } from "./chat.service.ts";
+
+@Module({
+  providers: [ChatGateway, ChatService],
+})
+export class ChatModule {}
+```
+
+`@WebSocketGateway()` defaults to the path `/ws`. A string argument sets the
+upgrade path and `{ path: "/chat" }` is the equivalent object form. Gateways
+share the HTTP application's server and port.
+
+## Message envelope
+
+Native WebSocket has no Socket.IO event names, so `@SubscribeMessage()` is
+carried by a small JSON envelope:
+
+```json
+{
+  "event": "chat.send",
+  "data": { "text": "Hello" }
+}
+```
+
+`@MessageBody()` injects the whole `data` value, `@MessageBody("text")` selects
+one property, and `@ConnectedSocket()` injects the native Elysia socket wrapper.
+
+Handler results follow fixed rules:
+
+- `undefined` sends no frame;
+- any other value, including `null`, `false`, and `0`, is sent as
+  `{ "event": "<subscribed event>", "data": value }`;
+- a `WsResponse` chooses a different response event;
+- promises, generators, and async generators are awaited or streamed in order.
+
+## Lifecycle and the native server
+
+```ts
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  type OnGatewayDisconnect,
+  type OnGatewayInit,
+} from "@aponiajs/common";
+import type {
+  ElysiaWebSocket,
+  ElysiaWebSocketServer,
+} from "@aponiajs/platform-elysia";
+
+@WebSocketGateway("/events")
+export class EventsGateway
+  implements OnGatewayInit<ElysiaWebSocketServer>, OnGatewayDisconnect<ElysiaWebSocket>
+{
+  @WebSocketServer()
+  server!: ElysiaWebSocketServer;
+
+  afterInit(server: ElysiaWebSocketServer): void {
+    void server;
+  }
+
+  handleDisconnect(client: ElysiaWebSocket): void {
+    void client;
+  }
+}
+```
+
+Every `@WebSocketServer()` property is assigned before `afterInit` runs.
+`handleConnection(client)` runs on open and `handleDisconnect(client)` on close.
+Lifecycle return values are ignored, though Elysia still awaits promises.
+
+The injected server is the real Elysia application and the injected client is
+the real Elysia socket wrapper, so `send`, `publish`, `subscribe`, `unsubscribe`,
+`close`, `ping`, and `pong` are available without an adapter object.
+
+`application.close()` closes active connections by default. Pass `false` only
+when the application drains connections itself.
+
+## Errors
+
+Invalid gateway contracts fail bootstrap before the application listens:
+duplicate paths, duplicate subscribed events, missing handlers, and invalid
+server-property targets raise `AponiaError` with the `INVALID_WEBSOCKET_GATEWAY`,
+`DUPLICATE_WEBSOCKET_GATEWAY`, and `DUPLICATE_WEBSOCKET_HANDLER` codes.
+
+Message failures answer with a safe envelope instead:
+
+```json
+{
+  "event": "exception",
+  "data": {
+    "code": "UNKNOWN_WEBSOCKET_EVENT",
+    "message": "No WebSocket handler is registered for this event."
+  }
+}
+```
+
+Malformed envelopes, unknown events, and handler failures never serialize a
+stack or cause to the client.
+
+<Callout type="info" title="Gateways are outside Eden inference">
+  Gateway metadata is discovered at runtime, so gateway events cannot appear in
+  the exported Eden Treaty application type. Use `configureNative` with Elysia's
+  typed `.ws()` API when a client needs static inference. Handshake hooks,
+  gateway-wide schemas, and origin policy also belong to that API; Socket.IO
+  namespaces, adapter-managed rooms, and acknowledgement callbacks are
+  deliberately not emulated.
+</Callout>

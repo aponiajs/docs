@@ -1,16 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-29T02:42:27Z",
+  "generatedAt": "2026-07-30T07:16:04Z",
   "project": {
     "id": "aponiajs",
     "name": "AponiaJS",
     "description": "A Bun-first, Nest-inspired application framework built around Elysia.",
     "repository": "https://github.com/aponiajs/aponiajs",
     "defaultBranch": "main",
-    "currentVersion": "0.6.0-alpha.17",
+    "currentVersion": "0.6.0-alpha.18",
     "runtime": "Bun 1.3.14",
     "packageManager": "Bun 1.3.14",
-    "sourceCommit": "9207e806b801c856583a9d04c66a2c5a04b4700b"
+    "sourceCommit": "a3ab9ff2f7fdc5571a5f8134c3c1e5eb8eb7de30"
   },
   "statusDefinitions": {
     "completed": {
@@ -33,11 +33,11 @@
     }
   },
   "summary": {
-    "total": 27,
-    "completed": 10,
+    "total": 28,
+    "completed": 11,
     "inProgress": 4,
     "planned": 13,
-    "completionPercent": 44.81
+    "completionPercent": 47.5
   },
   "milestones": [
     {
@@ -92,12 +92,13 @@
       "description": "Provider lifecycles, package boundaries, native plugin inference, phase conformance, and response contracts.",
       "order": 4,
       "status": "in_progress",
-      "progressPercent": 20,
+      "progressPercent": 36.67,
       "targetVersion": "0.7.0",
       "itemIds": [
         "async-lifecycle-and-scopes",
         "platform-and-http-package-split",
         "native-plugin-type-inference",
+        "elysia-websocket-gateway-preview",
         "elysia-lifecycle-conformance",
         "validation-errors-and-serialization"
       ]
@@ -129,7 +130,9 @@
       "status": "planned",
       "progressPercent": 0,
       "targetVersion": "1.1.0",
-      "itemIds": ["additional-transports-and-patterns"]
+      "itemIds": [
+        "additional-transports-and-patterns"
+      ]
     }
   ],
   "items": [
@@ -166,7 +169,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["bun", "vite-plus", "workspace"]
+      "tags": [
+        "bun",
+        "vite-plus",
+        "workspace"
+      ]
     },
     {
       "id": "common-authoring-api",
@@ -177,8 +184,12 @@
       "progressPercent": 100,
       "priority": "critical",
       "category": "architecture",
-      "packages": ["@aponiajs/common"],
-      "dependencies": ["bun-workspace-toolchain"],
+      "packages": [
+        "@aponiajs/common"
+      ],
+      "dependencies": [
+        "bun-workspace-toolchain"
+      ],
       "deliverables": [
         "Functional module and provider descriptors",
         "Nest-inspired decorators",
@@ -201,7 +212,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["contracts", "decorators", "tokens"]
+      "tags": [
+        "contracts",
+        "decorators",
+        "tokens"
+      ]
     },
     {
       "id": "core-module-graph",
@@ -212,8 +227,12 @@
       "progressPercent": 100,
       "priority": "critical",
       "category": "runtime",
-      "packages": ["@aponiajs/core"],
-      "dependencies": ["common-authoring-api"],
+      "packages": [
+        "@aponiajs/core"
+      ],
+      "dependencies": [
+        "common-authoring-api"
+      ],
       "deliverables": [
         "Module graph compilation",
         "Cycle, missing export, and ambiguity diagnostics",
@@ -236,7 +255,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["module-graph", "diagnostics", "dependency-injection"]
+      "tags": [
+        "module-graph",
+        "diagnostics",
+        "dependency-injection"
+      ]
     },
     {
       "id": "singleton-dependency-injection",
@@ -247,8 +270,13 @@
       "progressPercent": 100,
       "priority": "critical",
       "category": "runtime",
-      "packages": ["@aponiajs/core", "@aponiajs/common"],
-      "dependencies": ["core-module-graph"],
+      "packages": [
+        "@aponiajs/core",
+        "@aponiajs/common"
+      ],
+      "dependencies": [
+        "core-module-graph"
+      ],
       "deliverables": [
         "Singleton container",
         "Value, factory, class, and alias provider resolution",
@@ -271,7 +299,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["container", "providers", "singleton"]
+      "tags": [
+        "container",
+        "providers",
+        "singleton"
+      ]
     },
     {
       "id": "minimal-elysia-adapter",
@@ -282,8 +314,12 @@
       "progressPercent": 100,
       "priority": "critical",
       "category": "http",
-      "packages": ["@aponiajs/platform-elysia"],
-      "dependencies": ["singleton-dependency-injection"],
+      "packages": [
+        "@aponiajs/platform-elysia"
+      ],
+      "dependencies": [
+        "singleton-dependency-injection"
+      ],
       "deliverables": [
         "AponiaFactory application bootstrap",
         "Decorated route mapping",
@@ -306,7 +342,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["elysia", "adapter", "http"]
+      "tags": [
+        "elysia",
+        "adapter",
+        "http"
+      ]
     },
     {
       "id": "logging-foundation",
@@ -317,8 +357,14 @@
       "progressPercent": 100,
       "priority": "medium",
       "category": "observability",
-      "packages": ["@aponiajs/common", "@aponiajs/platform-elysia"],
-      "dependencies": ["common-authoring-api", "minimal-elysia-adapter"],
+      "packages": [
+        "@aponiajs/common",
+        "@aponiajs/platform-elysia"
+      ],
+      "dependencies": [
+        "common-authoring-api",
+        "minimal-elysia-adapter"
+      ],
       "deliverables": [
         "LoggerService contract",
         "Console logger",
@@ -336,10 +382,15 @@
           "ref": "packages/common/src/logging/console-logger.ts"
         }
       ],
-      "acceptanceCriteria": ["Applications can select log levels or replace the framework logger."],
+      "acceptanceCriteria": [
+        "Applications can select log levels or replace the framework logger."
+      ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["logging", "diagnostics"]
+      "tags": [
+        "logging",
+        "diagnostics"
+      ]
     },
     {
       "id": "cli-application-generator",
@@ -350,8 +401,13 @@
       "progressPercent": 100,
       "priority": "high",
       "category": "tooling",
-      "packages": ["@aponiajs/cli", "create-aponia"],
-      "dependencies": ["minimal-elysia-adapter"],
+      "packages": [
+        "@aponiajs/cli",
+        "create-aponia"
+      ],
+      "dependencies": [
+        "minimal-elysia-adapter"
+      ],
       "deliverables": [
         "aponia new command",
         "create-aponia entrypoint",
@@ -374,7 +430,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["cli", "generator", "starter"]
+      "tags": [
+        "cli",
+        "generator",
+        "starter"
+      ]
     },
     {
       "id": "cli-schematic-catalog",
@@ -385,8 +445,12 @@
       "progressPercent": 100,
       "priority": "high",
       "category": "tooling",
-      "packages": ["@aponiajs/cli"],
-      "dependencies": ["cli-application-generator"],
+      "packages": [
+        "@aponiajs/cli"
+      ],
+      "dependencies": [
+        "cli-application-generator"
+      ],
       "deliverables": [
         "Component and resource schematics",
         "Nearest-module registration",
@@ -409,7 +473,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["cli", "schematics", "ast"]
+      "tags": [
+        "cli",
+        "schematics",
+        "ast"
+      ]
     },
     {
       "id": "automated-version-and-publish-flow",
@@ -427,7 +495,9 @@
         "@aponiajs/cli",
         "create-aponia"
       ],
-      "dependencies": ["bun-workspace-toolchain"],
+      "dependencies": [
+        "bun-workspace-toolchain"
+      ],
       "deliverables": [
         "Synchronized Semantic Versions",
         "Version bump gate",
@@ -450,7 +520,11 @@
       ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["npm", "semver", "release"]
+      "tags": [
+        "npm",
+        "semver",
+        "release"
+      ]
     },
     {
       "id": "published-package-documentation",
@@ -468,7 +542,10 @@
         "@aponiajs/cli",
         "create-aponia"
       ],
-      "dependencies": ["automated-version-and-publish-flow", "cli-schematic-catalog"],
+      "dependencies": [
+        "automated-version-and-publish-flow",
+        "cli-schematic-catalog"
+      ],
       "deliverables": [
         "Package catalog with npm links",
         "CLI guide",
@@ -486,10 +563,16 @@
           "ref": "https://github.com/aponiajs/aponiajs/pull/18"
         }
       ],
-      "acceptanceCriteria": ["Public commands use Bun and link to the corresponding npm package."],
+      "acceptanceCriteria": [
+        "Public commands use Bun and link to the corresponding npm package."
+      ],
       "nextActions": [],
       "updatedAt": "2026-07-25",
-      "tags": ["documentation", "npm", "cli"]
+      "tags": [
+        "documentation",
+        "npm",
+        "cli"
+      ]
     },
     {
       "id": "foundation-stabilization",
@@ -500,7 +583,11 @@
       "progressPercent": 60,
       "priority": "critical",
       "category": "quality",
-      "packages": ["@aponiajs/common", "@aponiajs/core", "@aponiajs/platform-elysia"],
+      "packages": [
+        "@aponiajs/common",
+        "@aponiajs/core",
+        "@aponiajs/platform-elysia"
+      ],
       "dependencies": [
         "common-authoring-api",
         "core-module-graph",
@@ -533,7 +620,11 @@
         "Record architecture decisions for current decorator and platform boundaries."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["stabilization", "contracts", "types"]
+      "tags": [
+        "stabilization",
+        "contracts",
+        "types"
+      ]
     },
     {
       "id": "dependency-maintenance",
@@ -545,7 +636,9 @@
       "priority": "medium",
       "category": "release",
       "packages": [],
-      "dependencies": ["automated-version-and-publish-flow"],
+      "dependencies": [
+        "automated-version-and-publish-flow"
+      ],
       "deliverables": [
         "Validated Bun dependency updates",
         "Validated GitHub Actions updates",
@@ -571,7 +664,11 @@
         "Review the bumpp major update in PR 3 before merge."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["dependabot", "dependencies", "maintenance"]
+      "tags": [
+        "dependabot",
+        "dependencies",
+        "maintenance"
+      ]
     },
     {
       "id": "async-lifecycle-and-scopes",
@@ -582,8 +679,13 @@
       "progressPercent": 0,
       "priority": "critical",
       "category": "runtime",
-      "packages": ["@aponiajs/core", "@aponiajs/common"],
-      "dependencies": ["foundation-stabilization"],
+      "packages": [
+        "@aponiajs/core",
+        "@aponiajs/common"
+      ],
+      "dependencies": [
+        "foundation-stabilization"
+      ],
       "deliverables": [
         "Async provider resolution",
         "Request and transient scopes",
@@ -604,7 +706,11 @@
         "Implement async provider initialization and cleanup."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["lifecycle", "request-scope", "async"]
+      "tags": [
+        "lifecycle",
+        "request-scope",
+        "async"
+      ]
     },
     {
       "id": "platform-and-http-package-split",
@@ -615,8 +721,13 @@
       "progressPercent": 0,
       "priority": "high",
       "category": "architecture",
-      "packages": ["@aponiajs/platform", "@aponiajs/http"],
-      "dependencies": ["foundation-stabilization"],
+      "packages": [
+        "@aponiajs/platform",
+        "@aponiajs/http"
+      ],
+      "dependencies": [
+        "foundation-stabilization"
+      ],
       "deliverables": [
         "Platform adapter contract package",
         "Platform-neutral HTTP contract package",
@@ -637,7 +748,11 @@
         "Extract contracts without changing runtime behavior."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["platform", "http", "packages"]
+      "tags": [
+        "platform",
+        "http",
+        "packages"
+      ]
     },
     {
       "id": "native-plugin-type-inference",
@@ -648,8 +763,13 @@
       "progressPercent": 75,
       "priority": "critical",
       "category": "http",
-      "packages": ["@aponiajs/platform-elysia"],
-      "dependencies": ["platform-and-http-package-split", "async-lifecycle-and-scopes"],
+      "packages": [
+        "@aponiajs/platform-elysia"
+      ],
+      "dependencies": [
+        "platform-and-http-package-split",
+        "async-lifecycle-and-scopes"
+      ],
       "deliverables": [
         "Tuple-preserving native plugin registration",
         "Native application bootstrap with statically composed Eden route types",
@@ -691,7 +811,73 @@
         "Add bearer, CORS, JWT, OpenAPI, and deferred plugin fixtures."
       ],
       "updatedAt": "2026-07-28",
-      "tags": ["elysia", "type-inference", "plugins"]
+      "tags": [
+        "elysia",
+        "type-inference",
+        "plugins"
+      ]
+    },
+    {
+      "id": "elysia-websocket-gateway-preview",
+      "milestoneId": "milestone-runtime-maturity",
+      "title": "Elysia WebSocket gateway preview",
+      "description": "Provide the Nest gateway authoring model over the native Elysia and Bun WebSocket runtime without Socket.IO semantics.",
+      "status": "completed",
+      "progressPercent": 100,
+      "priority": "high",
+      "category": "transport",
+      "packages": [
+        "@aponiajs/common",
+        "@aponiajs/platform-elysia",
+        "@aponiajs/cli"
+      ],
+      "dependencies": [
+        "singleton-dependency-injection",
+        "minimal-elysia-adapter"
+      ],
+      "deliverables": [
+        "Provider-registered gateways with constructor injection",
+        "Message, socket, server, and lifecycle decorators",
+        "Native Elysia upgrade and socket runtime",
+        "Promise and iterator response handling with safe error envelopes",
+        "Gateway and WebSocket resource schematics"
+      ],
+      "evidence": [
+        {
+          "kind": "file",
+          "label": "Gateway metadata",
+          "ref": "packages/common/src/websockets/websocket-gateway.ts"
+        },
+        {
+          "kind": "file",
+          "label": "Elysia gateway runtime",
+          "ref": "packages/platform-elysia/src/websockets/websocket-gateway.ts"
+        },
+        {
+          "kind": "file",
+          "label": "WebSocket example",
+          "ref": "examples/websockets/src/chat.gateway.ts"
+        },
+        {
+          "kind": "doc",
+          "label": "WebSocket guide",
+          "ref": "docs/websockets.md"
+        }
+      ],
+      "acceptanceCriteria": [
+        "Gateways use the existing module provider instance rather than a second container.",
+        "Named messages dispatch through the documented { event, data } envelope.",
+        "Startup failures and client-visible errors have stable, tested codes.",
+        "Bun, Vite+, CLI, and executable WebSocket example coverage protect the public contract."
+      ],
+      "nextActions": [],
+      "updatedAt": "2026-07-30",
+      "tags": [
+        "websocket",
+        "gateway",
+        "elysia",
+        "bun"
+      ]
     },
     {
       "id": "elysia-lifecycle-conformance",
@@ -702,8 +888,13 @@
       "progressPercent": 0,
       "priority": "critical",
       "category": "http",
-      "packages": ["@aponiajs/platform-elysia"],
-      "dependencies": ["native-plugin-type-inference", "async-lifecycle-and-scopes"],
+      "packages": [
+        "@aponiajs/platform-elysia"
+      ],
+      "dependencies": [
+        "native-plugin-type-inference",
+        "async-lifecycle-and-scopes"
+      ],
       "deliverables": [
         "Phase-by-phase lifecycle compiler",
         "Scope propagation matrix",
@@ -724,7 +915,11 @@
         "Add short-circuit, native Response, stream, and abort fixtures."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["lifecycle", "conformance", "streaming"]
+      "tags": [
+        "lifecycle",
+        "conformance",
+        "streaming"
+      ]
     },
     {
       "id": "validation-errors-and-serialization",
@@ -732,11 +927,17 @@
       "title": "Validation, errors, and serialization",
       "description": "Add typed input and status-specific response contracts, RFC 9457 errors, coercion policy, and safe serialization.",
       "status": "in_progress",
-      "progressPercent": 25,
+      "progressPercent": 45,
       "priority": "high",
       "category": "http",
-      "packages": ["@aponiajs/http", "@aponiajs/validation", "@aponiajs/serialization"],
-      "dependencies": ["elysia-lifecycle-conformance"],
+      "packages": [
+        "@aponiajs/http",
+        "@aponiajs/validation",
+        "@aponiajs/serialization"
+      ],
+      "dependencies": [
+        "elysia-lifecycle-conformance"
+      ],
       "deliverables": [
         "Typed request and response schemas",
         "Problem Details errors",
@@ -758,11 +959,15 @@
         "Runtime validation and generated types agree for success and error responses."
       ],
       "nextActions": [
-        "Add Problem Details error responses.",
+        "Map native validation and framework failures to safe Problem Details without weakening Elysia lifecycle or Eden response contracts.",
         "Define the serialization and unknown-field policy."
       ],
-      "updatedAt": "2026-07-27",
-      "tags": ["validation", "errors", "serialization"]
+      "updatedAt": "2026-07-30",
+      "tags": [
+        "validation",
+        "errors",
+        "serialization"
+      ]
     },
     {
       "id": "configuration-secrets-and-redaction",
@@ -773,8 +978,14 @@
       "progressPercent": 0,
       "priority": "high",
       "category": "security",
-      "packages": ["@aponiajs/config", "@aponiajs/common"],
-      "dependencies": ["validation-errors-and-serialization", "logging-foundation"],
+      "packages": [
+        "@aponiajs/config",
+        "@aponiajs/common"
+      ],
+      "dependencies": [
+        "validation-errors-and-serialization",
+        "logging-foundation"
+      ],
       "deliverables": [
         "Typed configuration package",
         "Secret reference contract",
@@ -795,7 +1006,11 @@
         "Define secret-safe inspection and error output."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["config", "secrets", "redaction"]
+      "tags": [
+        "config",
+        "secrets",
+        "redaction"
+      ]
     },
     {
       "id": "http-security-hardening",
@@ -806,8 +1021,14 @@
       "progressPercent": 0,
       "priority": "critical",
       "category": "security",
-      "packages": ["@aponiajs/security", "@aponiajs/platform-elysia"],
-      "dependencies": ["elysia-lifecycle-conformance", "configuration-secrets-and-redaction"],
+      "packages": [
+        "@aponiajs/security",
+        "@aponiajs/platform-elysia"
+      ],
+      "dependencies": [
+        "elysia-lifecycle-conformance",
+        "configuration-secrets-and-redaction"
+      ],
       "deliverables": [
         "Admission and proxy policy",
         "Secure HTTP defaults",
@@ -828,7 +1049,11 @@
         "Implement bounded body, upload, host, and proxy policies."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["security", "cors", "csrf"]
+      "tags": [
+        "security",
+        "cors",
+        "csrf"
+      ]
     },
     {
       "id": "authentication-and-authorization",
@@ -839,8 +1064,14 @@
       "progressPercent": 0,
       "priority": "high",
       "category": "security",
-      "packages": ["@aponiajs/auth", "@aponiajs/auth-jwt", "@aponiajs/auth-session"],
-      "dependencies": ["http-security-hardening"],
+      "packages": [
+        "@aponiajs/auth",
+        "@aponiajs/auth-jwt",
+        "@aponiajs/auth-session"
+      ],
+      "dependencies": [
+        "http-security-hardening"
+      ],
       "deliverables": [
         "Authentication and policy contracts",
         "JWT integration",
@@ -861,7 +1092,11 @@
         "Integrate maintained Elysia authentication libraries."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["auth", "jwt", "session"]
+      "tags": [
+        "auth",
+        "jwt",
+        "session"
+      ]
     },
     {
       "id": "rate-limiting",
@@ -872,8 +1107,14 @@
       "progressPercent": 0,
       "priority": "high",
       "category": "security",
-      "packages": ["@aponiajs/rate-limit", "@aponiajs/rate-limit-redis"],
-      "dependencies": ["http-security-hardening", "authentication-and-authorization"],
+      "packages": [
+        "@aponiajs/rate-limit",
+        "@aponiajs/rate-limit-redis"
+      ],
+      "dependencies": [
+        "http-security-hardening",
+        "authentication-and-authorization"
+      ],
       "deliverables": [
         "In-memory limiter",
         "Distributed store contract",
@@ -894,7 +1135,11 @@
         "Select maintained local and Redis implementations."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["rate-limit", "redis", "security"]
+      "tags": [
+        "rate-limit",
+        "redis",
+        "security"
+      ]
     },
     {
       "id": "testing-packages",
@@ -905,8 +1150,14 @@
       "progressPercent": 0,
       "priority": "high",
       "category": "quality",
-      "packages": ["@aponiajs/testing", "@aponiajs/testing-elysia"],
-      "dependencies": ["async-lifecycle-and-scopes", "elysia-lifecycle-conformance"],
+      "packages": [
+        "@aponiajs/testing",
+        "@aponiajs/testing-elysia"
+      ],
+      "dependencies": [
+        "async-lifecycle-and-scopes",
+        "elysia-lifecycle-conformance"
+      ],
       "deliverables": [
         "TestModuleBuilder",
         "Typed provider and policy overrides",
@@ -927,7 +1178,11 @@
         "Add lifecycle leak and failure cleanup fixtures."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["testing", "overrides", "bun-test"]
+      "tags": [
+        "testing",
+        "overrides",
+        "bun-test"
+      ]
     },
     {
       "id": "observability-and-health",
@@ -938,8 +1193,15 @@
       "progressPercent": 0,
       "priority": "high",
       "category": "observability",
-      "packages": ["@aponiajs/observability", "@aponiajs/observability-otel", "@aponiajs/health"],
-      "dependencies": ["elysia-lifecycle-conformance", "configuration-secrets-and-redaction"],
+      "packages": [
+        "@aponiajs/observability",
+        "@aponiajs/observability-otel",
+        "@aponiajs/health"
+      ],
+      "dependencies": [
+        "elysia-lifecycle-conformance",
+        "configuration-secrets-and-redaction"
+      ],
       "deliverables": [
         "Request and trace propagation",
         "OpenTelemetry integration",
@@ -960,7 +1222,11 @@
         "Integrate the official Elysia OpenTelemetry plugin."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["opentelemetry", "metrics", "health"]
+      "tags": [
+        "opentelemetry",
+        "metrics",
+        "health"
+      ]
     },
     {
       "id": "openapi-and-eden",
@@ -971,8 +1237,14 @@
       "progressPercent": 0,
       "priority": "medium",
       "category": "http",
-      "packages": ["@aponiajs/openapi", "@aponiajs/platform-elysia"],
-      "dependencies": ["validation-errors-and-serialization", "native-plugin-type-inference"],
+      "packages": [
+        "@aponiajs/openapi",
+        "@aponiajs/platform-elysia"
+      ],
+      "dependencies": [
+        "validation-errors-and-serialization",
+        "native-plugin-type-inference"
+      ],
       "deliverables": [
         "OpenAPI metadata compiler",
         "Official Elysia OpenAPI plugin integration",
@@ -993,7 +1265,11 @@
         "Add mixed native and Aponia route fixtures."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["openapi", "eden", "schema"]
+      "tags": [
+        "openapi",
+        "eden",
+        "schema"
+      ]
     },
     {
       "id": "decorators-package-extraction",
@@ -1004,8 +1280,14 @@
       "progressPercent": 0,
       "priority": "medium",
       "category": "architecture",
-      "packages": ["@aponiajs/decorators", "@aponiajs/common"],
-      "dependencies": ["foundation-stabilization", "validation-errors-and-serialization"],
+      "packages": [
+        "@aponiajs/decorators",
+        "@aponiajs/common"
+      ],
+      "dependencies": [
+        "foundation-stabilization",
+        "validation-errors-and-serialization"
+      ],
       "deliverables": [
         "Optional decorators package",
         "Descriptor equivalence tests",
@@ -1026,7 +1308,11 @@
         "Move decorator exports without breaking the functional API."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["decorators", "optional", "descriptors"]
+      "tags": [
+        "decorators",
+        "optional",
+        "descriptors"
+      ]
     },
     {
       "id": "foundation-release-candidate",
@@ -1076,7 +1362,11 @@
         "Run pack, compatibility, security, and provenance gates."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["release-candidate", "version-one", "quality-gates"]
+      "tags": [
+        "release-candidate",
+        "version-one",
+        "quality-gates"
+      ]
     },
     {
       "id": "additional-transports-and-patterns",
@@ -1095,7 +1385,9 @@
         "@aponiajs/events",
         "@aponiajs/cache"
       ],
-      "dependencies": ["foundation-release-candidate"],
+      "dependencies": [
+        "foundation-release-candidate"
+      ],
       "deliverables": [
         "Additional transport adapters",
         "Architecture pattern packages",
@@ -1116,7 +1408,11 @@
         "Prioritize integrations from demonstrated application demand."
       ],
       "updatedAt": "2026-07-25",
-      "tags": ["graphql", "websockets", "microservices"]
+      "tags": [
+        "graphql",
+        "websockets",
+        "microservices"
+      ]
     }
   ]
 }
