@@ -3,6 +3,7 @@ import './global.css';
 import type { Metadata, Viewport } from 'next';
 import { JsonLd } from '@/components/JsonLd';
 import { absoluteUrl, siteConfig } from '@/lib/site';
+import { frameworkVersion } from '@/lib/shared';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -101,6 +102,7 @@ const websiteJsonLd = {
       '@type': 'Organization',
       '@id': absoluteUrl('/#organization'),
       name: siteConfig.name,
+      alternateName: [...siteConfig.alternateNames],
       url: siteConfig.url,
       logo: absoluteUrl(siteConfig.logo),
       sameAs: [siteConfig.organization, siteConfig.repository],
@@ -109,9 +111,39 @@ const websiteJsonLd = {
       '@type': 'WebSite',
       '@id': absoluteUrl('/#website'),
       name: siteConfig.name,
+      alternateName: [...siteConfig.alternateNames],
       url: siteConfig.url,
       description: siteConfig.description,
       inLanguage: siteConfig.language,
+      publisher: {
+        '@id': absoluteUrl('/#organization'),
+      },
+    },
+    /*
+     * Declared on every page, not only the landing page: a docs page is
+     * frequently the entry point from search, and its TechArticle `about`
+     * reference has to resolve to something in the same graph.
+     */
+    {
+      '@type': 'SoftwareApplication',
+      '@id': absoluteUrl('/#software'),
+      name: siteConfig.name,
+      alternateName: [...siteConfig.alternateNames],
+      url: siteConfig.url,
+      description: siteConfig.shortDescription,
+      applicationCategory: 'DeveloperApplication',
+      applicationSubCategory: 'Web application framework',
+      operatingSystem: 'Bun',
+      softwareVersion: frameworkVersion,
+      softwareRequirements: 'Bun runtime',
+      programmingLanguage: 'TypeScript',
+      license: 'https://opensource.org/license/mit',
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
       publisher: {
         '@id': absoluteUrl('/#organization'),
       },

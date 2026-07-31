@@ -1,7 +1,16 @@
 ---
 title: From Elysia
-description: Introduce module boundaries and DI while preserving direct native Elysia access.
+description: The same Elysia application rewritten as modules and providers, one construct at a time, with the native instance still reachable.
+keywords:
+  - Elysia to AponiaJS
+  - structure Elysia application
+  - Elysia dependency injection migration
+  - Elysia modules controllers
 ---
+
+This migration is additive. AponiaJS compiles to an Elysia application, so
+nothing has to move at once — chained routes and decorated modules run in the
+same process.
 
 Add the platform packages:
 
@@ -9,38 +18,230 @@ Add the platform packages:
 bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
 ```
 
-Move reusable business behavior into providers, group providers and decorated
-controllers in feature modules, and keep the root bootstrap small.
+## Bootstrap
 
-Elysia route schemas port directly: the same `t` validators pass to a route
-decorator, and Standard Schema validators work in the same slots. See
-[route validation](/docs/essentials/validation).
+<CodeCompare>
+<CodeCompareSide label="Elysia" note="The application is the composition root.">
 
-Continue to use native Elysia for:
+```ts
+import { Elysia } from "elysia";
+
+new Elysia().use(users).use(orders).listen(3000);
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="A root module is the composition root; the factory builds the application from it.">
+
+```ts
+import { Module } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+@Module({ imports: [UserModule, OrderModule] })
+class AppModule {}
+
+const application = await AponiaFactory.create(AppModule);
+await application.listen(3000);
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+Use `createNative()` instead of `create()` when you want the native Elysia
+instance as the calling surface and statically visible route types for Eden
+Treaty. See [bootstrap](/docs/essentials/bootstrap).
+
+## Routes become controllers
+
+<CodeCompare>
+<CodeCompareSide label="Elysia" note="Path, method, and handler in one chain.">
+
+```ts
+const users = new Elysia({ prefix: "/users" })
+  .get("/", () => repository.list())
+  .get("/:id", ({ params }) => repository.find(params.id))
+  .post("/", ({ body }) => repository.create(body));
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Prefix on the class, path on the method.">
+
+```ts
+@Controller("users")
+class UserController {
+  constructor(private readonly repository: UserRepository) {}
+
+  @Get()
+  list() {
+    return this.repository.list();
+  }
+
+  @Get(":id")
+  find(@Param("id") id: string) {
+    return this.repository.find(id);
+  }
+
+  @Post()
+  create(@Body() body: CreateUser) {
+    return this.repository.create(body);
+  }
+}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+Handler arguments are selected by [parameter
+decorators](/docs/essentials/request-parameters) rather than destructured from
+one context object.
+
+## `decorate` becomes a provider
+
+The dependency stops travelling on the request context and starts being
+declared.
+
+<CodeCompare>
+<CodeCompareSide label="Elysia" note="Visible to everything downstream of the call.">
+
+```ts
+const users = new Elysia()
+  .decorate("repository", new UserRepository())
+  .get("/users/:id", ({ params, repository }) =>
+    repository.find(params.id),
+  );
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Constructed once at startup, injected where declared.">
+
+```ts
+@Injectable()
+class UserRepository {
+  find(id: string) {
+    return { id };
+  }
+}
+
+@Module({
+  controllers: [UserController],
+  providers: [UserRepository],
+  exports: [UserRepository],
+})
+class UserModule {}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+`state` and `derive` have no direct equivalent. Per-request derivation stays in
+Elysia, because [providers](/docs/essentials/providers) are singletons and
+there are no request-scoped providers yet.
+
+## Validation ports unchanged
+
+Route schemas are the one construct that transfers verbatim.
+
+<CodeCompare>
+<CodeCompareSide label="Elysia" note="Schema in the route options object.">
+
+```ts
+.post("/users", ({ body }) => body, {
+  body: t.Object({ name: t.String({ minLength: 2 }) }),
+})
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Same validators, passed to the decorator.">
+
+```ts
+const createUser = {
+  body: t.Object({ name: t.String({ minLength: 2 }) }),
+};
+
+@Post("/", createUser)
+create(@Body() body: Static<(typeof createUser)["body"]>) {
+  return body;
+}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+Elysia's `t`, TypeBox, and any [Standard Schema](https://standardschema.dev)
+validator all work across the `body`, `query`, `params`, `headers`, `cookie`,
+and `response` slots. See [validation](/docs/essentials/validation).
+
+## Plugins become plugin modules
+
+<CodeCompare>
+<CodeCompareSide label="Elysia" note="Registered in composition order.">
+
+```ts
+new Elysia().use(cors()).use(users).listen(3000);
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Imported by the module graph, still a real Elysia plugin.">
+
+```ts
+@Module({
+  imports: [ElysiaPluginModule.forPlugin(cors()), UserModule],
+})
+class AppModule {}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+Plugins that need injected configuration use the DI-configured variant. Neither
+form hides the plugin from Elysia; see
+[plugin modules](/docs/elysia/plugin-modules) and
+[typed plugin context](/docs/elysia/plugin-context).
+
+## What stays in native Elysia
+
+Do not try to port these. They have no decorator equivalent and are meant to
+stay where they are:
 
 - hooks, macros, error handlers, and lifecycle events;
 - application-wide state declared outside any module;
 - routes that need Elysia's complete handler signature;
 - plugins that depend on Elysia's accumulated types.
 
+<CodeCompare>
+<CodeCompareSide label="Before" note="A native route among the chained ones.">
+
 ```ts
-import { Module } from "@aponiajs/common";
-import { AponiaFactory } from "@aponiajs/platform-elysia";
+new Elysia().get("/native-health", () => ({ ok: true }));
+```
 
-@Module({})
-class AppModule {}
+</CodeCompareSide>
+<CodeCompareSide label="After" variant="after" note="The same route, kept native, mounted alongside the modules.">
 
+```ts
 const app = await AponiaFactory.createNative(AppModule, {
   configureNative: (elysia) =>
     elysia.get("/native-health", () => ({ ok: true })),
 });
 ```
 
-Reusable plugins can move into `ElysiaPluginModule` imports. This gives them
-module ordering and DI-configured construction without hiding the plugin from
-Elysia.
+</CodeCompareSide>
+</CodeCompare>
 
-`createNative()` keeps native Elysia as the calling surface and preserves
-statically visible route types for Eden Treaty. Use `create()` instead when the
-managed Aponia lifecycle wrapper is more useful. See
-[Eden Treaty](/docs/elysia/eden-treaty) for the exact inference boundary.
+`createNative()` preserves statically visible route types for Eden Treaty; the
+managed `create()` wrapper does not infer decorated routes. The exact inference
+boundary is in [Eden Treaty](/docs/elysia/eden-treaty), and
+[low-level descriptors](/docs/elysia/descriptors) covers registering routes
+directly when a decorator cannot express them.
+
+## A suggested order
+
+1. add the packages and wrap the existing application with an empty root
+   module using `createNative()`;
+2. move one feature's dependencies into providers and a module;
+3. convert that feature's routes to a controller;
+4. repeat per feature, leaving hooks and macros native throughout.
+
+<Callout type="info" title="Deciding rather than porting">
+  [AponiaJS vs Elysia](/docs/compare/elysia) covers what the module graph costs
+  as well as what it adds.
+</Callout>

@@ -1,0 +1,132 @@
+---
+title: AponiaJS vs Hono
+description: Hono runs the same code on Workers, Deno, Bun, Node, and Lambda. AponiaJS runs only on Bun and spends what it saves on structure.
+keywords:
+  - AponiaJS vs Hono
+  - Hono alternative
+  - Hono vs Elysia
+  - Bun web framework
+  - Cloudflare Workers TypeScript framework
+  - Hono RPC vs Eden Treaty
+  - multi runtime TypeScript framework
+faq:
+  - question: Can AponiaJS run on Cloudflare Workers or Deno?
+    answer: >-
+      No. AponiaJS requires Bun and the Elysia platform package. If you need to
+      deploy to Workers, Deno, or Lambda from one codebase, Hono is the
+      framework designed for that and AponiaJS is not a candidate.
+  - question: How does Eden Treaty compare to Hono RPC?
+    answer: >-
+      Both infer a typed client from the server's route types with no code
+      generation step. Hono RPC infers from the chained app type; Eden Treaty
+      infers from the composed Elysia routes, which in AponiaJS means the
+      statically registered native routes rather than every decorated route.
+  - question: Is Hono smaller than AponiaJS?
+    answer: >-
+      Considerably. Hono is a deliberately tiny router and middleware layer.
+      AponiaJS adds a module graph, a container, decorator metadata, and the
+      Elysia runtime underneath it.
+---
+
+Hono's defining decision is portability: one application object that runs on
+Cloudflare Workers, Deno, Bun, Node, and Lambda, built on Web standard
+`Request` and `Response`. AponiaJS made the opposite decision and targets one
+runtime.
+
+<Verdict>
+  If you deploy to the edge or to more than one runtime, this is not a real
+  choice — take **Hono**. **AponiaJS** only makes sense when Bun is the single
+  target and you want structure the framework enforces rather than a convention
+  you maintain.
+</Verdict>
+
+## At a glance
+
+<CompareMatrix
+  a="AponiaJS 0.6.0-alpha.18"
+  b="Hono"
+  rows={[
+    { feature: 'Runtime', a: { status: 'no', text: 'Bun only' }, b: { status: 'yes', text: 'Workers, Deno, Bun, Node, Lambda, others' } },
+    { feature: 'Maturity', a: { status: 'no', text: 'Alpha' }, b: { status: 'yes', text: 'Stable' } },
+    { feature: 'Size', a: { status: 'partial', text: 'Framework plus Elysia' }, b: { status: 'yes', text: 'Very small' } },
+    { feature: 'Composition', a: { status: 'info', text: 'Module graph with imports and exports' }, b: { status: 'info', text: 'app.route() and middleware' } },
+    { feature: 'Dependency injection', a: { status: 'yes', text: 'Constructor injection with a container' }, b: { status: 'no', text: 'c.set and c.get, or your own' } },
+    { feature: 'Validation', a: { status: 'yes', text: 'Route schemas rejected before the handler' }, b: { status: 'yes', text: 'Validator middleware, commonly with Zod' } },
+    { feature: 'Typed client', a: { status: 'partial', text: 'Eden Treaty, native routes only' }, b: { status: 'yes', text: 'Hono RPC' } },
+    { feature: 'Error format', a: { status: 'yes', text: 'RFC 9457 Problem Details built in' }, b: { status: 'partial', text: 'HTTPException, shaped by you' } },
+    { feature: 'Edge deployment', a: { status: 'no', text: 'Not possible' }, b: { status: 'yes', text: 'The primary use case' } },
+  ]}
+/>
+
+## Portability is the whole comparison
+
+If any of these are true, the decision is already made and it is not AponiaJS:
+
+- you deploy to Cloudflare Workers, Deno Deploy, or Lambda;
+- the same handlers must run in more than one runtime;
+- cold start time dominates your latency budget;
+- you want the smallest dependency footprint you can get.
+
+Hono is built for that. AponiaJS depends on Bun and on Elysia, and neither is
+optional.
+
+## What you get for giving that up
+
+```ts
+// Hono
+const app = new Hono();
+app.get("/users/:id", (c) => c.json({ id: c.req.param("id") }));
+```
+
+```ts
+// AponiaJS
+@Controller("users")
+class UserController {
+  constructor(private readonly users: UserService) {}
+
+  @Get(":id")
+  find(@Param("id") id: string) {
+    return this.users.find(id);
+  }
+}
+```
+
+For one route, Hono is obviously better. The AponiaJS version starts paying off
+when there are forty routes, a dozen services, and more than one team touching
+them — [modules](/docs/essentials/modules) declare boundaries,
+[providers](/docs/essentials/providers) are constructed once at startup, and
+the graph is validated before the server listens.
+
+Hono can be organised well; `app.route()` and per-file routers get you a long
+way. It just does not have an opinion about how, and it has no container.
+
+## Typed clients, two routes to the same place
+
+Neither framework generates code. Hono RPC infers a client from the app type;
+[Eden Treaty](/docs/elysia/eden-treaty) infers one from the composed Elysia
+routes. The AponiaJS caveat is worth knowing before you plan around it:
+decorator-wide Eden inference is not implemented, so full client types come
+from statically composed native routes. It is in
+[current limitations](/docs/project/current-limitations).
+
+## Which one to pick
+
+<ChoiceCards>
+<Choice title="Choose Hono when">
+
+- you deploy to the edge, or to more than one runtime;
+- you want the smallest, fastest-to-start framework available;
+- middleware composition is enough structure for your application;
+- you are shipping to production now.
+
+</Choice>
+<Choice title="Choose AponiaJS when" tone="aponia">
+
+- Bun is the only deployment target and that will not change;
+- you want modules, controllers, and constructor injection rather than
+  assembling a convention;
+- Elysia is already the server;
+- alpha software is acceptable for this codebase.
+
+</Choice>
+</ChoiceCards>

@@ -1,0 +1,149 @@
+---
+title: AponiaJS vs Fastify
+description: Fastify organises applications with encapsulated plugins and JSON Schema validation. AponiaJS organises them with a validated module graph and constructor injection on Bun.
+keywords:
+  - AponiaJS vs Fastify
+  - Fastify alternative
+  - Fastify alternative Bun
+  - Fastify vs Elysia
+  - schema validation TypeScript framework
+  - Fastify dependency injection
+faq:
+  - question: Does AponiaJS support JSON Schema like Fastify?
+    answer: >-
+      Indirectly. Route schemas accept TypeBox, which is JSON Schema, as well
+      as Elysia's t and any Standard Schema validator such as Zod, ArkType, or
+      Valibot. What AponiaJS does not have is Fastify's compiled
+      schema-based response serialization.
+  - question: Is Fastify's plugin encapsulation the same as an AponiaJS module?
+    answer: >-
+      They solve the same problem differently. Fastify encapsulation scopes
+      decorators and hooks to a plugin subtree at registration time. An
+      AponiaJS module declares its providers and exports statically, and the
+      graph is validated during bootstrap before anything is constructed.
+  - question: Can Fastify run on Bun?
+    answer: >-
+      Fastify targets Node and relies on Node's HTTP layer, which Bun
+      implements. It generally works, but Fastify is not designed around Bun
+      the way Elysia is.
+---
+
+Fastify is the closest thing in Node to what AponiaJS is aiming at: an
+opinionated, schema-driven, performance-conscious framework with a real
+composition model. It is also stable, and AponiaJS is not.
+
+<Verdict>
+  **Fastify** is the closest stable equivalent, and it wins on hooks,
+  serialization, and OpenAPI. **AponiaJS** differs in three places worth
+  wanting: Bun, constructor injection instead of instance decoration, and
+  validators you already use rather than JSON Schema.
+</Verdict>
+
+## At a glance
+
+<CompareMatrix
+  a="AponiaJS 0.6.0-alpha.18"
+  b="Fastify"
+  rows={[
+    { feature: 'Runtime', a: { status: 'partial', text: 'Bun only' }, b: { status: 'yes', text: 'Node, and Bun' } },
+    { feature: 'Maturity', a: { status: 'no', text: 'Alpha' }, b: { status: 'yes', text: 'Stable, widely deployed' } },
+    { feature: 'Composition', a: { status: 'info', text: 'Module graph, imports and exports' }, b: { status: 'info', text: 'Plugins with encapsulation contexts' } },
+    { feature: 'Wiring', a: { status: 'yes', text: 'Constructor injection from a container' }, b: { status: 'partial', text: 'decorate on the instance or scope' } },
+    { feature: 'Validation', a: { status: 'yes', text: 'Standard Schema, TypeBox, Elysia t' }, b: { status: 'yes', text: 'JSON Schema, compiled with Ajv' } },
+    { feature: 'Response serialization', a: { status: 'partial', text: "Elysia's; no unknown-field policy" }, b: { status: 'yes', text: 'Compiled from the response schema' } },
+    { feature: 'Lifecycle hooks', a: { status: 'no', text: 'Not implemented' }, b: { status: 'yes', text: 'A documented hook at every request phase' } },
+    { feature: 'Error format', a: { status: 'yes', text: 'RFC 9457 Problem Details built in' }, b: { status: 'yes', text: 'Fastify shape, customisable' } },
+    { feature: 'OpenAPI', a: { status: 'no', text: 'Not implemented' }, b: { status: 'yes', text: '@fastify/swagger from route schemas' } },
+    { feature: 'Ecosystem', a: { status: 'partial', text: 'Elysia plugins' }, b: { status: 'yes', text: 'Large first-party plugin set' } },
+  ]}
+/>
+
+## Two ways to scope a dependency
+
+Fastify scopes by registration tree. A decorator added inside a plugin is
+visible to that plugin and its children, and disappears outside it:
+
+```ts
+fastify.register(async (instance) => {
+  instance.decorate("repository", new UserRepository());
+  instance.get("/users/:id", async (request) =>
+    instance.repository.find(request.params.id),
+  );
+});
+```
+
+AponiaJS scopes by declaration. A module lists what it provides and what it
+exports, and importers see exactly the exported set:
+
+```ts
+@Module({
+  controllers: [UserController],
+  providers: [UserRepository],
+  exports: [UserRepository],
+})
+class UserModule {}
+```
+
+The practical difference is when a mistake surfaces. Reaching for an
+undecorated property in Fastify is a runtime failure on the request that hits
+it. Injecting a provider a module never exported is a startup error with a
+diagnostic, described in [visibility](/docs/essentials/visibility).
+
+## Where Fastify is clearly ahead
+
+**Hooks.** `onRequest`, `preValidation`, `preHandler`, `onSend`, `onResponse`,
+and the rest give you a defined place for authentication, logging, and
+transformation. AponiaJS has no hook runtime of its own; that work goes through
+Elysia via [native access](/docs/elysia/native-access).
+
+**Serialization.** Fastify compiles the response schema into a fast serializer,
+which is both a performance and a data-leak-prevention feature. AponiaJS
+validates response slots but does not own a serialization or unknown-field
+policy — it is listed in
+[current limitations](/docs/project/current-limitations).
+
+**OpenAPI.** Route schemas feed `@fastify/swagger` directly. AponiaJS does not
+generate OpenAPI documents.
+
+**Maturity.** Stable releases, a long deprecation policy, and production usage
+at scale.
+
+## Where AponiaJS differs meaningfully
+
+**Validator choice.** Fastify's schema language is JSON Schema. AponiaJS takes
+any [Standard Schema](https://standardschema.dev) validator, so the types your
+application already uses can be the types the route validates with. See
+[validation](/docs/essentials/validation).
+
+**Injection instead of decoration.** Constructor injection with explicit
+[tokens](/docs/essentials/tokens) rather than properties attached to a shared
+instance.
+
+**Typed client.** Eden Treaty infers a client from the composed routes; see
+[Eden Treaty](/docs/elysia/eden-treaty).
+
+**Runtime.** Bun and Elysia rather than Node and Fastify's HTTP layer.
+
+## Which one to pick
+
+<ChoiceCards>
+<Choice title="Choose Fastify when">
+
+- you deploy to Node and want a stable, schema-first framework;
+- request lifecycle hooks are part of your design;
+- compiled response serialization matters to you;
+- you want OpenAPI generated from the schemas you already wrote;
+- you are shipping to production now.
+
+</Choice>
+<Choice title="Choose AponiaJS when" tone="aponia">
+
+- Bun is the runtime;
+- you want declared module boundaries rather than encapsulation by
+  registration order;
+- your validators are Zod, ArkType, or Valibot and you would rather not
+  translate them to JSON Schema;
+- alpha software is acceptable for this codebase.
+
+</Choice>
+</ChoiceCards>

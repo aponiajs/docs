@@ -43,67 +43,82 @@
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/*
+ * The `--color-fd-*` scale is read only by the documentation UI. The landing
+ * page draws from the `@theme` block above and never touches these, so the
+ * docs can be tuned for long reading sessions without the editorial surface
+ * moving with them.
+ *
+ * The values are deliberately not #fff on #000. Maximum contrast is not
+ * maximum legibility: paper white behind near-black text is what makes an hour
+ * of documentation tiring, so the stock is softened a step and the ink stops
+ * short of black. Body text still clears WCAG AA comfortably at roughly 13:1,
+ * and the greys keep their ordering.
+ */
 :root {
   color-scheme: light;
-  /*
-   * One monochrome palette across the site: white stock, black ink, and greys.
-   * The docs inherit it so they sit in the same family as the landing page.
-   * No hue anywhere.
-   */
-  --color-fd-background: #ffffff;
-  --color-fd-foreground: #0f0f0f;
-  --color-fd-primary: #0f0f0f;
-  --color-fd-primary-foreground: #ffffff;
-  /* Hairlines carry the structure, so they stay visible: ~2.3:1 on the page. */
-  --color-fd-border: rgb(15 15 15 / 0.26);
-  --color-fd-ring: #0f0f0f;
-  --color-fd-accent: #f2f2f2;
-  --color-fd-accent-foreground: #333333;
-  --color-fd-muted: #f2f2f2;
-  --color-fd-muted-foreground: #6d6d6d;
-  --color-fd-secondary: #ececec;
-  --color-fd-secondary-foreground: #0f0f0f;
+  --color-fd-background: #faf9f7;
+  --color-fd-foreground: #2b2925;
+  --color-fd-primary: #2b2925;
+  --color-fd-primary-foreground: #faf9f7;
+  /* Hairlines carry the structure, but at 0.26 they read as ruled paper. */
+  --color-fd-border: rgb(43 41 37 / 0.16);
+  --color-fd-ring: #2b2925;
+  --color-fd-accent: #f0eeea;
+  --color-fd-accent-foreground: #3b3833;
+  --color-fd-muted: #f2f0ec;
+  --color-fd-muted-foreground: #6f6b64;
+  --color-fd-secondary: #ebe9e4;
+  --color-fd-secondary-foreground: #2b2925;
+  /* Cards sit a step above the stock rather than blending into it. */
   --color-fd-card: #ffffff;
-  --color-fd-card-foreground: #0f0f0f;
+  --color-fd-card-foreground: #2b2925;
   --color-fd-popover: #ffffff;
-  --color-fd-popover-foreground: #0f0f0f;
+  --color-fd-popover-foreground: #2b2925;
   --font-sans: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'Geist Editorial Mono', 'SFMono-Regular', Consolas, monospace;
   --font-display: 'Geist Editorial', 'Helvetica Neue', Arial, sans-serif;
   --fd-layout-width: 1400px;
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  --radius-2xl: 0;
+  /*
+   * The landing page uses no rounded utility and no fumadocs component, so a
+   * small radius here softens the documentation alone.
+   */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
 }
 
 .dark {
   color-scheme: dark;
-  /* Night edition: the stock inverts, the system does not change. */
-  --color-fd-background: #0f0f0f;
-  --color-fd-foreground: #f2f2f2;
-  --color-fd-primary: #f2f2f2;
-  --color-fd-primary-foreground: #0f0f0f;
-  --color-fd-border: rgb(242 242 242 / 0.26);
-  --color-fd-ring: #f2f2f2;
-  --color-fd-accent: #242424;
-  --color-fd-accent-foreground: #f2f2f2;
-  --color-fd-muted: #171717;
-  --color-fd-muted-foreground: #a0a0a0;
-  --color-fd-secondary: #1c1c1c;
-  --color-fd-secondary-foreground: #f2f2f2;
-  --color-fd-card: #181818;
-  --color-fd-card-foreground: #f2f2f2;
-  --color-fd-popover: #1c1c1c;
-  --color-fd-popover-foreground: #f2f2f2;
-  --color-fd-overlay: rgb(0 0 0 / 0.7);
-  --color-fd-info: #f2f2f2;
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  --radius-2xl: 0;
+  /*
+   * Night edition. Pure black behind near-white text haloes on an LCD, so the
+   * background lifts off zero and the text stops short of white.
+   */
+  --color-fd-background: #1a1917;
+  --color-fd-foreground: #ddd9d2;
+  --color-fd-primary: #ddd9d2;
+  --color-fd-primary-foreground: #1a1917;
+  --color-fd-border: rgb(221 217 210 / 0.15);
+  --color-fd-ring: #ddd9d2;
+  --color-fd-accent: #2b2926;
+  --color-fd-accent-foreground: #ddd9d2;
+  --color-fd-muted: #232220;
+  --color-fd-muted-foreground: #a5a099;
+  --color-fd-secondary: #262421;
+  --color-fd-secondary-foreground: #ddd9d2;
+  --color-fd-card: #201f1c;
+  --color-fd-card-foreground: #ddd9d2;
+  --color-fd-popover: #232220;
+  --color-fd-popover-foreground: #ddd9d2;
+  --color-fd-overlay: rgb(0 0 0 / 0.6);
+  --color-fd-info: #ddd9d2;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
 }
 
 html {

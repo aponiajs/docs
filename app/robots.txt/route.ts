@@ -2,59 +2,27 @@ import { absoluteUrl } from '@/lib/site';
 
 export const revalidate = false;
 
-const searchAndRetrievalAgents = [
-  'Googlebot',
-  'bingbot',
-  'Applebot',
-  'OAI-SearchBot',
-  'ChatGPT-User',
-  'Claude-SearchBot',
-  'Claude-User',
-  'PerplexityBot',
-  'Perplexity-User',
-  'Amzn-SearchBot',
-  'Amzn-User',
-];
-
-const trainingAgents = [
-  'GPTBot',
-  'ClaudeBot',
-  'Google-Extended',
-  'Applebot-Extended',
-  'Amazonbot',
-  'CCBot',
-];
-
+/*
+ * Every crawler is welcome on every route, search and AI alike. There is no
+ * per-agent block list, so a bot that did not exist when this file was written
+ * is allowed by the wildcard group without an edit, and the Content-Signal
+ * policy grants it the same rights it grants a browser.
+ */
 const contentSignal =
-  'Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference';
+  'Content-Signal: search=yes, ai-input=yes, ai-train=yes, use=reference';
 
 export function GET() {
-  const searchRules = [
-    ...searchAndRetrievalAgents.map((agent) => `User-agent: ${agent}`),
-    contentSignal,
-    'Allow: /',
-    'Disallow: /api/search',
-  ];
-  const trainingRules = trainingAgents.flatMap((agent) => [
-    `User-agent: ${agent}`,
-    'Disallow: /',
-    '',
-  ]);
-  const defaultRules = [
+  const body = [
     'User-agent: *',
     contentSignal,
     'Allow: /',
-    'Disallow: /api/search',
     '',
     `Sitemap: ${absoluteUrl('/sitemap.xml')}`,
-  ];
+  ].join('\n');
 
-  return new Response(
-    [...searchRules, '', ...trainingRules, ...defaultRules].join('\n'),
-    {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-      },
+  return new Response(body, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
     },
-  );
+  });
 }

@@ -1,0 +1,166 @@
+---
+title: AponiaJS vs NestJS
+description: NestJS is a mature, platform-agnostic Node framework with a complete request pipeline. AponiaJS reuses its vocabulary on Bun with a much smaller feature set.
+keywords:
+  - AponiaJS vs NestJS
+  - NestJS alternative
+  - NestJS alternative for Bun
+  - NestJS on Bun
+  - NestJS style framework Bun
+  - decorators dependency injection Bun
+  - NestJS Elysia
+faq:
+  - question: Can I run NestJS on Bun instead of using AponiaJS?
+    answer: >-
+      Often yes. NestJS runs on Bun for many applications, and if your code
+      depends on guards, interceptors, exception filters, provider scopes, or
+      the testing module, that is the right path — AponiaJS does not implement
+      any of them. AponiaJS is worth considering when you want the Elysia
+      request engine and Eden Treaty types underneath a Nest-shaped codebase.
+  - question: Is AponiaJS a fork of NestJS?
+    answer: >-
+      No. It is an independent implementation that borrows naming so the
+      concepts transfer. There is no shared code, no platform adapter
+      abstraction, and no compatibility guarantee with Nest packages.
+  - question: Do NestJS decorators work in AponiaJS?
+    answer: >-
+      The names match but the packages do not. Import decorators from
+      "@aponiajs/common" and the factory from "@aponiajs/platform-elysia".
+      Nest packages such as @nestjs/common are not compatible.
+---
+
+NestJS is the reference point for this project, so the honest comparison is
+mostly a list of what NestJS has and AponiaJS does not.
+
+<Verdict>
+  Use **NestJS** unless you have already committed to Bun and Elysia. It does
+  everything AponiaJS does, plus the entire request pipeline, and it is stable.
+  AponiaJS is worth a look when you want that structure on Bun and can live
+  with alpha software.
+</Verdict>
+
+## At a glance
+
+<CompareMatrix
+  a="AponiaJS 0.6.0-alpha.18"
+  b="NestJS"
+  rows={[
+    { feature: 'Runtime', a: { status: 'partial', text: 'Bun only' }, b: { status: 'yes', text: 'Node, and Bun in practice' } },
+    { feature: 'HTTP platform', a: { status: 'partial', text: 'Elysia only' }, b: { status: 'yes', text: 'Express or Fastify adapter' } },
+    { feature: 'Maturity', a: { status: 'no', text: 'Alpha, API changes between releases' }, b: { status: 'yes', text: 'Stable, years of production use' } },
+    { feature: 'Modules and imports', a: { status: 'yes', text: 'Implemented' }, b: { status: 'yes', text: 'Implemented' } },
+    { feature: 'Constructor injection', a: { status: 'partial', text: 'Implemented, singleton only' }, b: { status: 'yes', text: 'Request and transient scopes too' } },
+    { feature: 'Controllers and decorators', a: { status: 'yes', text: 'All seven methods, whole and named parameters' }, b: { status: 'yes', text: 'Implemented' } },
+    { feature: 'Validation', a: { status: 'yes', text: 'Route schemas and @Validation() models' }, b: { status: 'yes', text: 'ValidationPipe with class-validator' } },
+    { feature: 'Guards, interceptors, pipes, filters', a: { status: 'no', text: 'Not implemented' }, b: { status: 'yes', text: 'Implemented' } },
+    { feature: 'Lifecycle hooks', a: { status: 'no', text: 'Not implemented' }, b: { status: 'yes', text: 'OnModuleInit, OnApplicationShutdown, others' } },
+    { feature: 'Testing module and overrides', a: { status: 'no', text: 'Not implemented' }, b: { status: 'yes', text: 'Implemented' } },
+    { feature: 'OpenAPI, microservices, GraphQL, queues', a: { status: 'no', text: 'Not implemented' }, b: { status: 'yes', text: 'First-party packages' } },
+    { feature: 'Typed HTTP client', a: { status: 'partial', text: 'Eden Treaty from native routes' }, b: { status: 'partial', text: 'Generated from OpenAPI, or manual' } },
+  ]}
+/>
+
+## The code looks familiar
+
+```ts
+import { Body, Controller, Get, Injectable, Module, Param, Post } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+@Injectable()
+class UserService {
+  findOne(id: string) {
+    return { id };
+  }
+}
+
+@Controller("users")
+class UserController {
+  constructor(private readonly users: UserService) {}
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.users.findOne(id);
+  }
+}
+
+@Module({ controllers: [UserController], providers: [UserService] })
+class AppModule {}
+
+const app = await AponiaFactory.create(AppModule);
+await app.listen(3000);
+```
+
+Anyone who has written NestJS can read that. The differences start one layer
+down.
+
+### `@Injectable()` carries less meaning
+
+In AponiaJS the decorator exists so TypeScript emits constructor parameter
+types for the container. It does not attach scope metadata, because there are
+no scopes — every provider is a singleton constructed once at startup. See
+[providers](/docs/essentials/providers).
+
+### Validation is a schema, not a pipe
+
+There is no `ValidationPipe`, no `class-validator`, and no
+`class-transformer`. A schema goes on the route decorator and a rejected
+request is answered before the handler runs:
+
+```ts
+const createUser = { body: z.object({ name: z.string().min(2) }) };
+
+@Post("/", createUser)
+create(@Body() body: z.infer<(typeof createUser)["body"]>) {
+  return body;
+}
+```
+
+Any [Standard Schema](https://standardschema.dev) validator works — Zod,
+ArkType, Valibot — alongside TypeBox and Elysia's `t`. Details in
+[validation](/docs/essentials/validation).
+
+### There is no request pipeline to hook into
+
+This is the largest gap. NestJS gives you four extension points around a
+handler; AponiaJS gives you none of them yet. Cross-cutting behaviour is
+written as Elysia hooks instead, through
+[native access](/docs/elysia/native-access) or a
+[plugin module](/docs/elysia/plugin-modules). That works, but it is Elysia's
+model, not Nest's, and it does not participate in the module graph.
+
+### Errors are Problem Details
+
+`httpErrors.notFound("...")` produces an RFC 9457 body with `type`, `title`,
+`status`, and `detail`. NestJS produces its own shape from `HttpException`.
+See [errors](/docs/essentials/errors).
+
+## Which one to pick
+
+<ChoiceCards>
+<Choice title="Choose NestJS when">
+
+- you are shipping to production;
+- you need guards, interceptors, pipes, or exception filters;
+- you deploy to Node, or to a platform that does not run Bun;
+- you want OpenAPI documents generated from decorators;
+- you need microservices, GraphQL, queues, scheduling, or caching packages;
+- you want a testing module with provider overrides;
+- you are hiring, and Nest experience is a common line on a CV.
+
+</Choice>
+<Choice title="Choose AponiaJS when" tone="aponia">
+
+- Bun is already the runtime and Elysia is already the server;
+- module boundaries and constructor injection are what you miss from Nest, not
+  the request pipeline;
+- you want Eden Treaty end-to-end types rather than a generated OpenAPI client;
+- alpha software is acceptable for this codebase.
+
+</Choice>
+</ChoiceCards>
+
+<Callout type="info" title="Porting an existing Nest application">
+  [From NestJS](/docs/migration/from-nestjs) has the concept-by-concept
+  mapping, and [current limitations](/docs/project/current-limitations) lists
+  every runtime feature that is still missing.
+</Callout>

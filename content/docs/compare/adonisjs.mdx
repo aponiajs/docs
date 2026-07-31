@@ -1,0 +1,154 @@
+---
+title: AponiaJS vs AdonisJS
+description: AdonisJS is a batteries-included full-stack Node framework with an ORM, auth, and validation. AponiaJS is an HTTP and dependency injection layer on Bun, and nothing more.
+keywords:
+  - AponiaJS vs AdonisJS
+  - AdonisJS alternative
+  - AdonisJS alternative for Bun
+  - AdonisJS vs NestJS
+  - full stack TypeScript framework
+  - Bun MVC framework
+  - Lucid ORM alternative
+faq:
+  - question: Does AponiaJS have an ORM like Lucid?
+    answer: >-
+      No. AponiaJS has no database layer at all. You register a database client
+      as a provider and inject it, which means you choose Drizzle, Prisma,
+      Kysely, or Bun's own SQL APIs yourself and own the migration story.
+  - question: Does AponiaJS have built-in authentication?
+    answer: >-
+      No. AdonisJS ships session, token, and basic-auth guards plus Bouncer for
+      authorization. AponiaJS ships neither, and it has no guard runtime to
+      hang authorization on yet, so authentication is written as an Elysia hook.
+  - question: Can AdonisJS run on Bun?
+    answer: >-
+      AdonisJS targets Node.js. Some of it works under Bun, but the supported
+      runtime is Node, and its tooling assumes it. AponiaJS requires Bun and
+      does not run on Node.
+---
+
+These two frameworks answer different questions. AdonisJS answers "how do I
+build a whole product"; AponiaJS answers "how do I organise an HTTP service on
+Bun".
+
+<Verdict>
+  These two barely overlap. Pick **AdonisJS** if you want a database, auth, and
+  views decided for you. Pick **AponiaJS** if you want an HTTP layer on Bun and
+  nothing else — every other decision stays yours, including the ones AdonisJS
+  would have made well.
+</Verdict>
+
+## At a glance
+
+<CompareMatrix
+  a="AponiaJS 0.6.0-alpha.18"
+  b="AdonisJS"
+  rows={[
+    { feature: 'Runtime', a: { status: 'partial', text: 'Bun only' }, b: { status: 'partial', text: 'Node.js' } },
+    { feature: 'Scope', a: { status: 'info', text: 'HTTP layer and DI container' }, b: { status: 'info', text: 'Full-stack application framework' } },
+    { feature: 'Maturity', a: { status: 'no', text: 'Alpha' }, b: { status: 'yes', text: 'Stable, with a long release history' } },
+    { feature: 'Dependency injection', a: { status: 'partial', text: 'Constructor injection, singleton only' }, b: { status: 'yes', text: 'IoC container with @inject()' } },
+    { feature: 'ORM', a: { status: 'no', text: 'None — bring your own client' }, b: { status: 'yes', text: 'Lucid, Active Record and query builder' } },
+    { feature: 'Validation', a: { status: 'yes', text: 'Standard Schema, TypeBox, Elysia t' }, b: { status: 'yes', text: 'VineJS' } },
+    { feature: 'Authentication and authorization', a: { status: 'no', text: 'None' }, b: { status: 'yes', text: 'Auth guards and Bouncer policies' } },
+    { feature: 'Sessions, views, and frontend', a: { status: 'no', text: 'Cookie access only' }, b: { status: 'yes', text: 'Sessions, Edge templates, Vite and Inertia' } },
+    { feature: 'Config, mail, queues, events, i18n', a: { status: 'no', text: 'None' }, b: { status: 'yes', text: 'First-party packages' } },
+    { feature: 'CLI', a: { status: 'yes', text: 'Project and component schematics' }, b: { status: 'yes', text: 'Ace, with generators and custom commands' } },
+  ]}
+/>
+
+## Routing is where they diverge first
+
+AdonisJS keeps routes in a route file and points them at controller methods:
+
+```ts
+// start/routes.ts
+import router from "@adonisjs/core/services/router";
+const UsersController = () => import("#controllers/users_controller");
+
+router.get("/users/:id", [UsersController, "show"]);
+```
+
+AponiaJS puts the path on the method:
+
+```ts
+import { Controller, Get, Param } from "@aponiajs/common";
+
+@Controller("users")
+export class UserController {
+  @Get(":id")
+  show(@Param("id") id: string) {
+    return { id };
+  }
+}
+```
+
+Neither is better. A route file gives you one place to read the whole URL
+surface; decorators keep the path next to the code it runs. AponiaJS chose
+decorators because the module graph, not the router, is the organising idea —
+see [controllers](/docs/essentials/controllers).
+
+## What AdonisJS gives you that you would have to build
+
+Everything below is a first-party AdonisJS package and an unsolved problem in
+an AponiaJS application:
+
+- **Database.** Lucid models, migrations, seeders, and relationships. In
+  AponiaJS you register a client as a [provider](/docs/essentials/providers)
+  and inject it.
+- **Authentication and authorization.** Guards and policies. In AponiaJS,
+  authentication is an Elysia hook installed through
+  [native access](/docs/elysia/native-access), and there is no authorization
+  primitive to attach a policy to.
+- **Configuration.** Typed config files and validated environment variables.
+  In AponiaJS, configuration is a value provider you wire yourself, usually
+  with a [dynamic module](/docs/essentials/dynamic-modules).
+- **Mail, queues, events, i18n, health checks, templating.** No equivalents.
+
+The corresponding AponiaJS argument is that you were going to choose those
+libraries anyway, and a smaller framework has less to disagree with. That is a
+real preference, not a technical advantage.
+
+## What AponiaJS gives you that AdonisJS does not
+
+- **Bun as the runtime**, with Elysia's request handling rather than Node's
+  HTTP server.
+- **End-to-end typed clients** through Eden Treaty, inferred from the composed
+  Elysia routes rather than generated from a spec. See
+  [Eden Treaty](/docs/elysia/eden-treaty).
+- **Validator freedom.** VineJS is the AdonisJS validator. AponiaJS accepts any
+  Standard Schema validator, plus TypeBox and Elysia's `t`, described in
+  [validation](/docs/essentials/validation).
+- **RFC 9457 Problem Details** as the default error shape, in
+  [errors](/docs/essentials/errors).
+
+## Which one to pick
+
+<ChoiceCards>
+<Choice title="Choose AdonisJS when">
+
+- you are building a product, not a service, and want the database, auth, and
+  admin surface decided for you;
+- you deploy to Node;
+- you want server-rendered views or Inertia alongside the API;
+- you want one vendor to own upgrades across the whole stack;
+- you are shipping to production now.
+
+</Choice>
+<Choice title="Choose AponiaJS when" tone="aponia">
+
+- the service is an API, the storage decision is already made, and you do not
+  want an ORM opinion attached to the router;
+- Bun is a requirement rather than a preference;
+- you want the module and injection model without the rest of a full-stack
+  framework;
+- alpha software is acceptable for this codebase.
+
+</Choice>
+</ChoiceCards>
+
+<Callout type="warn" title="No migration path is published">
+  There is no AdonisJS migration guide, because the frameworks do not overlap
+  enough for a mechanical port. Moving between them is a rewrite of the routing
+  and data layers.
+</Callout>

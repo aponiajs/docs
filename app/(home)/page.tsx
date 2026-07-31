@@ -59,10 +59,15 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+ * The application entity itself is declared once in the root layout under
+ * `/#software`, so this node describes the source code and points at it rather
+ * than restating it under the same identifier.
+ */
 const softwareJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareSourceCode',
-  '@id': absoluteUrl('/#software'),
+  '@id': absoluteUrl('/#source-code'),
   name: siteConfig.name,
   description: siteConfig.description,
   url: siteConfig.url,
@@ -78,15 +83,7 @@ const softwareJsonLd = {
   isAccessibleForFree: true,
   operatingSystem: 'Bun',
   targetProduct: {
-    '@type': 'SoftwareApplication',
-    name: siteConfig.name,
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'Bun',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
+    '@id': absoluteUrl('/#software'),
   },
 };
 

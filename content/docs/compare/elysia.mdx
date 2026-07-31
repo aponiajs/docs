@@ -1,0 +1,168 @@
+---
+title: AponiaJS vs Elysia
+description: Elysia is the runtime AponiaJS is built on. This page is about what the module graph adds, what it costs, and when the plain chained application is still the better answer.
+keywords:
+  - AponiaJS vs Elysia
+  - Elysia dependency injection
+  - Elysia modules
+  - Elysia controllers decorators
+  - structure large Elysia application
+  - Bun framework on Elysia
+faq:
+  - question: Does AponiaJS replace Elysia?
+    answer: >-
+      No. AponiaJS compiles a decorated module graph into a single Elysia
+      application, and the native instance stays reachable. Elysia plugins,
+      hooks, and types keep working, which is why the Elysia platform section
+      of these docs exists.
+  - question: Is AponiaJS slower than plain Elysia?
+    answer: >-
+      The structural work happens at startup, not per request. Modules are
+      validated and providers constructed once during bootstrap, then routes
+      are registered on one Elysia instance, so the request path is Elysia's.
+      Startup does more work than a chained application does.
+  - question: Can I add AponiaJS to an existing Elysia application?
+    answer: >-
+      Yes, incrementally. Keep the native application, mount decorated modules
+      alongside it, and move routes across when it pays off. The from-Elysia
+      migration page walks through it.
+---
+
+Elysia is not a competitor. It is the server AponiaJS runs on, and every
+AponiaJS application is an Elysia application underneath.
+
+The question is whether the layer on top earns its place.
+
+<Verdict>
+  Not a competition — AponiaJS *is* an Elysia application underneath. Stay on
+  plain **Elysia** until wiring becomes the hard part of your codebase. At that
+  point **AponiaJS** trades type inference for declared module boundaries, and
+  the native instance stays reachable either way.
+</Verdict>
+
+## At a glance
+
+<CompareMatrix
+  a="AponiaJS 0.6.0-alpha.18"
+  b="Elysia"
+  rows={[
+    { feature: 'Composition', a: { status: 'info', text: 'Module graph with imports and exports' }, b: { status: 'info', text: 'Method chaining and plugins' } },
+    { feature: 'Dependency injection', a: { status: 'yes', text: 'Constructor injection with a container' }, b: { status: 'partial', text: 'decorate, state, derive, resolve' } },
+    { feature: 'Type inference', a: { status: 'partial', text: 'Explicit annotations on handlers' }, b: { status: 'yes', text: 'Inferred through the chain' } },
+    { feature: 'Eden Treaty', a: { status: 'partial', text: 'Statically composed native routes' }, b: { status: 'yes', text: 'Inferred directly' } },
+    { feature: 'Startup validation', a: { status: 'yes', text: 'Graph diagnostics before listening' }, b: { status: 'no', text: 'None; mistakes surface per request' } },
+    { feature: 'Maturity', a: { status: 'no', text: 'Alpha' }, b: { status: 'yes', text: 'Stable' } },
+  ]}
+/>
+
+## The same endpoint, twice
+
+Elysia:
+
+```ts
+import { Elysia, t } from "elysia";
+
+const users = new Elysia({ prefix: "/users" })
+  .decorate("repository", new UserRepository())
+  .get("/:id", ({ params, repository }) => repository.find(params.id), {
+    params: t.Object({ id: t.String() }),
+  });
+
+new Elysia().use(users).listen(3000);
+```
+
+AponiaJS:
+
+```ts
+import { Controller, Get, Injectable, Module, Param } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+@Injectable()
+class UserRepository {
+  find(id: string) {
+    return { id };
+  }
+}
+
+@Controller("users")
+class UserController {
+  constructor(private readonly repository: UserRepository) {}
+
+  @Get(":id")
+  find(@Param("id") id: string) {
+    return this.repository.find(id);
+  }
+}
+
+@Module({ controllers: [UserController], providers: [UserRepository] })
+class AppModule {}
+
+await (await AponiaFactory.create(AppModule)).listen(3000);
+```
+
+At this size Elysia wins on every axis that matters: fewer lines, fewer
+concepts, and full type inference without a single annotation.
+
+## What changes at scale
+
+The chained form couples three things that grow at different rates: the
+dependency wiring, the URL surface, and the handler bodies. Past a certain
+number of features, teams end up inventing a convention for splitting them.
+AponiaJS is that convention, made explicit.
+
+- **Dependencies are declared, not threaded.** `decorate` puts a value on the
+  context for everything downstream. A [module](/docs/essentials/modules)
+  declares what it provides and what it
+  [exports](/docs/essentials/visibility), so a dependency reaching the wrong
+  file is a startup error rather than a merge conflict.
+- **Construction happens once.** Providers are singletons built during
+  bootstrap. See [providers](/docs/essentials/providers).
+- **The graph is validated.** Missing providers, cycles, and unexported
+  dependencies are reported at startup with diagnostics, not discovered at
+  request time.
+
+The cost is real: more files, explicit handler parameter types instead of
+inference through the chain, and an alpha framework between you and a stable
+one.
+
+## Nothing is hidden
+
+The escape hatches are the point of the [Elysia platform](/docs/elysia)
+section:
+
+- [native access](/docs/elysia/native-access) hands you the underlying
+  application to configure or extend;
+- [plugin modules](/docs/elysia/plugin-modules) mount Elysia plugins through
+  the module graph, with DI-configured variants;
+- [typed plugin context](/docs/elysia/plugin-context) types a handler against
+  the plugins it actually reads;
+- [low-level descriptors](/docs/elysia/descriptors) register routes directly on
+  the native application when a decorator cannot express them;
+- [Eden Treaty](/docs/elysia/eden-treaty) exports the composed route types to a
+  client.
+
+## Which one to pick
+
+<ChoiceCards>
+<Choice title="Choose plain Elysia when">
+
+- the service is small, or one team owns all of it;
+- inference through the chain is worth more to you than declared boundaries;
+- you want the stable, documented, widely used option;
+- you use Elysia features that AponiaJS has not surfaced yet.
+
+</Choice>
+<Choice title="Choose AponiaJS when" tone="aponia">
+
+- the application has enough features that wiring has become the hard part;
+- you want module boundaries and constructor injection without leaving Bun;
+- coming from NestJS, the structure is what you miss;
+- alpha software is acceptable for this codebase.
+
+</Choice>
+</ChoiceCards>
+
+<Callout type="info" title="Adopt it gradually">
+  [From Elysia](/docs/migration/from-elysia) keeps the native application and
+  introduces modules a route at a time.
+</Callout>

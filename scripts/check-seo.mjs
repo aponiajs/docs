@@ -91,22 +91,70 @@ for (const page of ['index.html', 'docs.html']) {
   );
 }
 
+/*
+ * Comparison pages are the entry point for anyone searching by the name of the
+ * framework they already use, and they only work if the page states its own
+ * subject to a crawler: a title, a keyword set, a breadcrumb trail, and FAQ
+ * structured data backed by text that is actually rendered.
+ */
+const comparisonPages = [
+  // Only a title that already names the project opts out of the "| AponiaJS"
+  // template, so the hub keeps the suffix and the versus pages do not.
+  ['docs/compare.html', 'Compare frameworks | AponiaJS'],
+  ['docs/compare/nestjs.html', 'AponiaJS vs NestJS'],
+  ['docs/compare/adonisjs.html', 'AponiaJS vs AdonisJS'],
+  ['docs/compare/elysia.html', 'AponiaJS vs Elysia'],
+  ['docs/compare/express.html', 'AponiaJS vs Express'],
+  ['docs/compare/fastify.html', 'AponiaJS vs Fastify'],
+  ['docs/compare/hono.html', 'AponiaJS vs Hono'],
+];
+
+for (const [page, expectedTitle] of comparisonPages) {
+  const html = readOutput(page);
+
+  assert(
+    html.includes(`<title>${expectedTitle}</title>`),
+    `${page} has the wrong title, expected "${expectedTitle}"`,
+  );
+  assert(
+    html.includes('name="keywords" content="'),
+    `${page} has no keyword metadata`,
+  );
+  assert(
+    html.includes('"@type":"BreadcrumbList"'),
+    `${page} has no breadcrumb structured data`,
+  );
+  assert(
+    html.includes('"@type":"FAQPage"'),
+    `${page} has no FAQ structured data`,
+  );
+  // FAQ structured data is invalid unless the reader sees the same answers.
+  assert(
+    html.includes('id="faq"'),
+    `${page} declares FAQ structured data without rendering the questions`,
+  );
+}
+
+const docsHome = readOutput('docs.html');
+assert(
+  docsHome.includes('/docs/compare'),
+  'The documentation index does not link to the comparison pages',
+);
+
 const robots = readOutput('robots.txt');
 assert(
   robots.includes(
-    'Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference',
+    'Content-Signal: search=yes, ai-input=yes, ai-train=yes, use=reference',
   ),
   'robots.txt is missing the Content-Signal policy',
 );
-for (const agent of [
-  'OAI-SearchBot',
-  'Claude-SearchBot',
-  'PerplexityBot',
-  'GPTBot',
-  'ClaudeBot',
-]) {
-  assert(robots.includes(`User-agent: ${agent}`), `Missing ${agent} rule`);
-}
+assert(robots.includes('User-agent: *'), 'robots.txt has no wildcard group');
+assert(robots.includes('Allow: /'), 'robots.txt does not allow the site root');
+// Every crawler is allowed everywhere; a Disallow line is a regression.
+assert(
+  !robots.includes('Disallow:'),
+  'robots.txt blocks a crawler, but every route is meant to be open',
+);
 assert(
   robots.includes(`Sitemap: ${baseUrl}/sitemap.xml`),
   'robots.txt has the wrong sitemap URL',
@@ -119,12 +167,18 @@ for (const path of [
   '/docs/getting-started',
   '/docs/essentials',
   '/docs/api-reference',
+  '/docs/compare',
+  '/docs/compare/nestjs',
+  '/docs/compare/adonisjs',
 ]) {
   assert(
     sitemap.includes(`<loc>${baseUrl}${path}</loc>`),
     `sitemap.xml is missing ${path}`,
   );
 }
+// A `lastmod` on every URL means the git history was unreadable and the dates
+// were invented; none at all means the same thing in the other direction.
+assert(sitemap.includes('<lastmod>'), 'sitemap.xml has no lastmod dates');
 
 const llms = readOutput('llms.txt');
 assert(llms.startsWith('# AponiaJS'), 'llms.txt has the wrong heading');

@@ -19,6 +19,13 @@ export const siteConfig = {
   locale: 'en_US',
   repository: 'https://github.com/aponiajs/aponiajs',
   organization: 'https://github.com/aponiajs',
+  alternateNames: ['Aponia', 'Aponia.js', 'aponiajs'],
+  /*
+   * Two vocabularies. The first is what the framework is, the second is what
+   * people type when they do not know it exists yet — almost always the name
+   * of the framework they already use. Every comparison term here is backed by
+   * a real page under /docs/compare; a keyword with nothing behind it is spam.
+   */
   keywords: [
     'AponiaJS',
     'Bun framework',
@@ -34,6 +41,16 @@ export const siteConfig = {
     'Bun CLI schematics',
     'Nest-inspired TypeScript framework',
     'singleton provider container',
+    'Elysia framework',
+    'RFC 9457 Problem Details',
+    'WebSocket gateway TypeScript',
+    'NestJS alternative',
+    'NestJS alternative for Bun',
+    'AdonisJS alternative',
+    'Express alternative TypeScript',
+    'Fastify alternative',
+    'Hono alternative',
+    'Elysia dependency injection',
   ],
 } as const;
 

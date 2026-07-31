@@ -1,0 +1,116 @@
+---
+title: Compare frameworks
+description: How AponiaJS compares to NestJS, AdonisJS, Elysia, Express, Fastify, and Hono — architecture, runtime, validation, and what each one is good at.
+keywords:
+  - NestJS alternative
+  - AdonisJS alternative
+  - Bun backend framework comparison
+  - TypeScript backend framework comparison
+  - Elysia vs NestJS
+  - Express alternative TypeScript
+  - Fastify alternative Bun
+  - Hono vs Elysia
+  - best Bun framework
+faq:
+  - question: Is AponiaJS an alternative to NestJS?
+    answer: >-
+      It is a smaller one. AponiaJS reuses the NestJS structural vocabulary —
+      modules, decorated controllers, providers, constructor injection — but it
+      runs only on Bun through Elysia and it does not implement guards,
+      interceptors, pipes, exception filters, provider scopes, a testing module,
+      or OpenAPI generation. NestJS is production software; AponiaJS is
+      pre-1.0 alpha.
+  - question: How is AponiaJS different from AdonisJS?
+    answer: >-
+      AdonisJS is a full-stack Node.js framework that ships an ORM, validation,
+      authentication, authorization, sessions, templating, and configuration.
+      AponiaJS ships an HTTP layer and a dependency injection container on Bun,
+      and nothing else. You bring your own database, auth, and config.
+  - question: Should I use AponiaJS or plain Elysia?
+    answer: >-
+      Use plain Elysia for a small service where a single chained application
+      file is still readable. Use AponiaJS when you want module boundaries,
+      constructor injection, and controller classes on top of the same Elysia
+      runtime — the native Elysia instance stays reachable either way.
+  - question: Which Bun framework is fastest?
+    answer: >-
+      AponiaJS registers routes on a single Elysia instance and resolves
+      providers once at startup, so request-path throughput tracks Elysia
+      closely. Numbers are only meaningful with their scope attached; the
+      benchmark section publishes the harness, pinned versions, and phases
+      rather than a single ratio.
+  - question: Can I use AponiaJS in production?
+    answer: >-
+      Not yet. AponiaJS 0.6.0-alpha.18 is experimental pre-1.0 software with a
+      changing API. For a production workload today, choose NestJS, AdonisJS,
+      Fastify, or Hono, and revisit AponiaJS when it reaches a stable release.
+---
+
+Every framework here is a reasonable choice for some project. These pages exist
+so you can tell quickly whether AponiaJS is the wrong tool for yours, which is
+the more common answer while it is pre-1.0.
+
+<Callout type="warning" title="Read this before comparing anything">
+  AponiaJS `0.6.0-alpha.18` is experimental. NestJS, AdonisJS, Express,
+  Fastify, Hono, and Elysia are all stable, production-proven projects. If you
+  are shipping to users this quarter, pick one of them.
+</Callout>
+
+## Pick by what you need
+
+<FrameworkList
+  items={[
+    { name: 'AponiaJS', runtime: 'Bun', bestFor: 'Modules, DI, and decorated controllers on Bun, when alpha software is acceptable.' },
+    { name: 'NestJS', href: '/docs/compare/nestjs', stable: true, runtime: 'Node, Bun', bestFor: 'The same structure with a complete request pipeline, OpenAPI, and production maturity.' },
+    { name: 'AdonisJS', href: '/docs/compare/adonisjs', stable: true, runtime: 'Node', bestFor: 'A whole product: ORM, auth, sessions, and views decided for you.' },
+    { name: 'Elysia', href: '/docs/compare/elysia', stable: true, runtime: 'Bun', bestFor: 'The fastest path on Bun when one chained application file is still readable.' },
+    { name: 'Express', href: '/docs/compare/express', stable: true, runtime: 'Node, Bun', bestFor: 'The largest middleware ecosystem, and no opinion about anything else.' },
+    { name: 'Fastify', href: '/docs/compare/fastify', stable: true, runtime: 'Node, Bun', bestFor: 'Schema-first Node services with hooks and compiled serialization.' },
+    { name: 'Hono', href: '/docs/compare/hono', stable: true, runtime: 'Everywhere', bestFor: 'One codebase deployed to Workers, Deno, Bun, Node, and Lambda.' },
+  ]}
+/>
+
+## Compared page by page
+
+<Cards>
+  <Card title="AponiaJS vs NestJS" description="Same vocabulary, one runtime, a much smaller feature set." href="/docs/compare/nestjs" />
+  <Card title="AponiaJS vs AdonisJS" description="Batteries-included full-stack against a thin HTTP and DI layer." href="/docs/compare/adonisjs" />
+  <Card title="AponiaJS vs Elysia" description="What the module graph adds to the runtime it is built on." href="/docs/compare/elysia" />
+  <Card title="AponiaJS vs Express" description="Unopinionated middleware against an opinionated class model." href="/docs/compare/express" />
+  <Card title="AponiaJS vs Fastify" description="Plugin encapsulation against a validated module graph." href="/docs/compare/fastify" />
+  <Card title="AponiaJS vs Hono" description="Run anywhere against Bun-only structure." href="/docs/compare/hono" />
+</Cards>
+
+## How to read these comparisons
+
+Three questions decide most of them.
+
+**Which runtime do you deploy to?** AponiaJS and Elysia require Bun. Hono runs
+on Workers, Deno, Bun, Node, and Lambda. NestJS, AdonisJS, Express, and Fastify
+target Node, and run on Bun with varying amounts of friction. A framework that
+cannot run where you deploy is not a candidate, whatever else it does well.
+
+**How much does the framework decide for you?** AdonisJS decides the database
+layer, the auth layer, and the directory structure. Express decides nothing.
+AponiaJS decides how code is organised and wired, and leaves storage, auth, and
+configuration entirely to you.
+
+**How much churn can you absorb?** Everything in the table above except
+AponiaJS has a stable major release and a migration guide culture. AponiaJS
+changes between alpha releases.
+
+## Where AponiaJS actually fits
+
+A narrow band: you are already committed to Bun and Elysia, the single-file
+chained application has stopped scaling for your team, you want NestJS-style
+modules and constructor injection without the Node-shaped baggage, and you can
+tolerate alpha software.
+
+Outside that band, one of the other five is the better answer, and these pages
+say so on each one.
+
+<Cards>
+  <Card title="Current limitations" description="Exactly what is not implemented yet." href="/docs/project/current-limitations" />
+  <Card title="Benchmark" description="The harness, the pinned versions, and the scope of every number." href="/docs/benchmark" />
+  <Card title="Migrate" description="Step-by-step ports from NestJS and from Elysia." href="/docs/migration" />
+</Cards>

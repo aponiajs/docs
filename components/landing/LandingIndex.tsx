@@ -14,6 +14,12 @@ const entries = [
     description: 'Modules, providers, lifecycle, validation.',
   },
   {
+    href: '/docs/compare',
+    label: 'Compare frameworks',
+    meta: 'Docs',
+    description: 'NestJS, AdonisJS, Elysia, Express, Fastify, Hono.',
+  },
+  {
     href: '/docs/benchmark/interpreting-results',
     label: 'Interpreting results',
     meta: 'Docs',

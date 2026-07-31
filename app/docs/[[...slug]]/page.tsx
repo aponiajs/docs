@@ -15,6 +15,33 @@ import { gitConfig } from '@/lib/shared';
 import { JsonLd } from '@/components/JsonLd';
 import { absoluteUrl, siteConfig } from '@/lib/site';
 
+/*
+ * A crawler infers hierarchy from the URL alone unless it is stated. Each
+ * ancestor segment is resolved back to its own index page so the trail carries
+ * the section's real title rather than a de-slugged guess, and only falls back
+ * to the segment when a folder has no index page.
+ */
+function breadcrumbItems(slugs: readonly string[]) {
+  const trail = [
+    { name: 'Documentation', url: absoluteUrl('/docs') },
+    ...slugs.map((segment, index) => {
+      const ancestor = source.getPage(slugs.slice(0, index + 1));
+
+      return {
+        name: ancestor?.data.title ?? segment.replace(/-/g, ' '),
+        url: absoluteUrl(`/docs/${slugs.slice(0, index + 1).join('/')}`),
+      };
+    }),
+  ];
+
+  return trail.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: item.url,
+  }));
+}
+
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
   const page = source.getPage(params.slug);
@@ -23,6 +50,29 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page).url;
   const imageUrl = getPageImageUrl(page).url;
+  const faq = page.data.faq;
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${absoluteUrl(page.url)}#breadcrumb`,
+    itemListElement: breadcrumbItems(page.slugs),
+  };
+  const faqJsonLd = faq?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        '@id': `${absoluteUrl(page.url)}#faq`,
+        inLanguage: siteConfig.language,
+        mainEntity: faq.map((entry) => ({
+          '@type': 'Question',
+          name: entry.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: entry.answer,
+          },
+        })),
+      }
+    : undefined;
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -42,15 +92,33 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
     },
     image: absoluteUrl(imageUrl),
     isAccessibleForFree: true,
+    breadcrumb: {
+      '@id': `${absoluteUrl(page.url)}#breadcrumb`,
+    },
+    ...(page.data.keywords?.length
+      ? { keywords: page.data.keywords.join(', ') }
+      : {}),
+    about: {
+      '@id': absoluteUrl('/#software'),
+    },
   };
 
   return (
     <DocsPage
-      toc={page.data.toc}
+      toc={
+        faq?.length
+          ? [
+              ...page.data.toc,
+              { title: 'Frequently asked questions', url: '#faq', depth: 2 },
+            ]
+          : page.data.toc
+      }
       full={page.data.full}
       className="aponia-docs-page"
     >
       <JsonLd data={articleJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
+      {faqJsonLd ? <JsonLd data={faqJsonLd} /> : null}
       <DocsTitle className="aponia-docs-title">{page.data.title}</DocsTitle>
       <DocsDescription className="aponia-docs-description">
         {page.data.description}
@@ -73,6 +141,28 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
             a: createRelativeLink(source, page),
           })}
         />
+        {faq?.length ? (
+          /*
+           * Rendered, not just serialised. FAQ structured data is only valid
+           * when it summarises content the reader can see, so the frontmatter
+           * is the single source for both the markup and the JSON-LD above.
+           */
+          <section aria-labelledby="faq">
+            <h2 id="faq">Frequently asked questions</h2>
+            <dl className="grid gap-6">
+              {faq.map((entry) => (
+                <div key={entry.question} className="grid gap-2">
+                  <dt className="font-semibold text-fd-foreground">
+                    {entry.question}
+                  </dt>
+                  <dd className="m-0 text-fd-muted-foreground">
+                    {entry.answer}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ) : null}
       </DocsBody>
     </DocsPage>
   );
@@ -87,9 +177,26 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
+  /*
+   * The root template appends "| AponiaJS". A title that already names the
+   * project — "AponiaJS vs NestJS" — would repeat it, and a repeated brand
+   * costs characters in a result that is already truncated, so those opt out
+   * of the template instead.
+   */
+  const title = page.data.title.includes(siteConfig.name)
+    ? { absolute: page.data.title }
+    : page.data.title;
+
   return {
-    title: page.data.title,
+    title,
     description: page.data.description,
+    /*
+     * Only page-specific terms. Omitting the field inherits the sitewide list
+     * from the root layout, which is the right answer for a page that has
+     * nothing of its own to add — repeating one list across sixty pages says
+     * nothing about any of them.
+     */
+    ...(page.data.keywords?.length ? { keywords: [...page.data.keywords] } : {}),
     alternates: {
       canonical: page.url,
       types: {
