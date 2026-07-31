@@ -1,10 +1,19 @@
 ---
 title: From NestJS
-description: Map familiar Nest structure onto the smaller AponiaJS feature set.
+description: Every NestJS construct next to its AponiaJS equivalent, side by side, including the ones that have no equivalent yet.
+keywords:
+  - NestJS to AponiaJS migration
+  - migrate NestJS to Bun
+  - NestJS Elysia migration
+  - port NestJS application
 ---
 
-AponiaJS borrows structural vocabulary from NestJS, but it is not a drop-in
-replacement.
+AponiaJS borrows structural vocabulary from NestJS, so most of a port is
+mechanical. This page puts the two versions of each construct next to each
+other. If you are still choosing rather than porting, read
+[AponiaJS vs NestJS](/docs/compare/nestjs) first.
+
+## What ports and what does not
 
 | Nest concept | AponiaJS `0.6.0-alpha.18` |
 | --- | --- |
@@ -22,24 +31,120 @@ replacement.
 | Testing module and overrides | Not implemented. |
 | OpenAPI/auth/microservices | Not implemented. |
 
+## Packages
+
+The decorator names survive the port. The imports do not.
+
+<CodeCompare>
+<CodeCompareSide label="NestJS" note="Core package plus a platform adapter.">
+
+```ts
+import { Body, Controller, Get, Injectable, Module, Param, Post } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Decorators from common, the factory from the platform.">
+
+```ts
+import { Body, Controller, Get, Injectable, Module, Param, Post } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+```bash
+bun add @aponiajs/common@alpha @aponiajs/platform-elysia@alpha elysia@^1.4.29
+```
+
 ## Bootstrap
+
+<CodeCompare>
+<CodeCompareSide label="NestJS" note="The factory chooses an HTTP adapter.">
+
+```ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+
+bootstrap();
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Top-level await; the platform is always Elysia.">
 
 ```ts
 const application = await AponiaFactory.create(AppModule);
 await application.listen(3000);
 ```
 
-The factory shape is familiar, but imports come from
-`@aponiajs/platform-elysia`.
+</CodeCompareSide>
+</CodeCompare>
+
+## Modules
+
+Identical, minus the features that have no runtime behind them yet.
+
+<CodeCompare>
+<CodeCompareSide label="NestJS">
+
+```ts
+@Module({
+  imports: [DatabaseModule],
+  controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService],
+})
+export class UserModule {}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Same four keys, validated at startup.">
+
+```ts
+@Module({
+  imports: [DatabaseModule],
+  controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService],
+})
+export class UserModule {}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+A provider a module never exported is a bootstrap error with a diagnostic
+rather than a runtime failure. See [visibility](/docs/essentials/visibility).
 
 ## Controllers
 
-Method and parameter decorators keep their Nest names and are all imported from
-`@aponiajs/common`:
+<CodeCompare>
+<CodeCompareSide label="NestJS">
 
 ```ts
-import { Body, Controller, Get, Param, Post } from "@aponiajs/common";
+@Controller("users")
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.userService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() body: CreateUserDto) {
+    return this.userService.create(body);
+  }
+}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Same decorators; the body type is annotated, not inferred from a DTO class.">
+
+```ts
 @Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -56,20 +161,109 @@ export class UserController {
 }
 ```
 
-Two differences matter when porting code:
+</CodeCompareSide>
+</CodeCompare>
 
-- there is no `@Injectable()`-driven metadata for method decorators;
+Two differences that bite during a port:
+
+- there is no `@Injectable()`-driven metadata for method decorators.
   `@Injectable()` exists only so TypeScript emits constructor parameter types;
 - handler parameter types come from your annotations, not from schema
   inference, so keep the schema in a `const` and derive with `z.infer` or
   `Static<typeof …>`.
 
-## Validation instead of pipes
+## Providers
 
-Nest validation pipes become a schema on the route decorator:
+<CodeCompare>
+<CodeCompareSide label="NestJS" note="Scope is a decorator option.">
 
 ```ts
-const createUser = { body: z.object({ name: z.string().min(2) }) };
+@Injectable({ scope: Scope.DEFAULT })
+export class UserService {
+  findOne(id: string) {
+    return { id };
+  }
+}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="No scopes exist. Every provider is a startup singleton.">
+
+```ts
+@Injectable()
+export class UserService {
+  findOne(id: string) {
+    return { id };
+  }
+}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+Non-class dependencies use an explicit token on both sides.
+
+<CodeCompare>
+<CodeCompareSide label="NestJS">
+
+```ts
+@Module({
+  providers: [{ provide: "CONFIG", useValue: { url: "…" } }],
+})
+export class ConfigModule {}
+
+constructor(@Inject("CONFIG") private readonly config: Config) {}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Same shape; see tokens and injection.">
+
+```ts
+@Module({
+  providers: [{ provide: "CONFIG", useValue: { url: "…" } }],
+})
+export class ConfigModule {}
+
+constructor(@Inject("CONFIG") private readonly config: Config) {}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+Async factory providers do not port — `useFactory` is synchronous. See
+[providers](/docs/essentials/providers) and
+[tokens](/docs/essentials/tokens).
+
+## Validation replaces pipes
+
+This is the largest rewrite in a typical port: `class-validator` DTO classes
+become schemas attached to the route.
+
+<CodeCompare>
+<CodeCompareSide label="NestJS" note="A DTO class, decorators, and a global ValidationPipe.">
+
+```ts
+export class CreateUserDto {
+  @IsString()
+  @MinLength(2)
+  name: string;
+}
+
+app.useGlobalPipes(new ValidationPipe());
+
+@Post()
+create(@Body() body: CreateUserDto) {
+  return body;
+}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="A schema on the decorator, rejected before the handler runs.">
+
+```ts
+const createUser = {
+  body: z.object({ name: z.string().min(2) }),
+};
 
 @Post("/", createUser)
 create(@Body() body: z.infer<(typeof createUser)["body"]>) {
@@ -77,17 +271,158 @@ create(@Body() body: z.infer<(typeof createUser)["body"]>) {
 }
 ```
 
-A rejected request answers `422` before the handler runs. There is no
-`class-validator`, `class-transformer`, or `ValidationPipe` equivalent. See
-[route validation](/docs/essentials/validation).
+</CodeCompareSide>
+</CodeCompare>
 
-## Application layout
+Any [Standard Schema](https://standardschema.dev) validator works — Zod,
+ArkType, Valibot — as do TypeBox and Elysia's `t`. A rejected request answers
+`422`. If you prefer the DTO-shaped arrangement, `@Validation()` model classes
+keep the schema in a named class; see
+[validation](/docs/essentials/validation).
 
-Generated applications keep `AppModule`, controller, service, and `main.ts`
-directly under `src`. Generated features live under `src/<feature>`.
+## Errors replace exception filters
 
-Do not migrate guards, interceptors, filters, or middleware yet — rewrite that
-behavior as Elysia hooks through
-[native access](/docs/elysia/native-access) or a
-[plugin module](/docs/elysia/plugin-modules) until the equivalent runtime
-contracts land.
+<CodeCompare>
+<CodeCompareSide label="NestJS" note="HttpException, optionally reshaped by a filter.">
+
+```ts
+throw new NotFoundException("User not found");
+
+@Catch(HttpException)
+export class HttpFilter implements ExceptionFilter {
+  catch(exception: HttpException, host: ArgumentsHost) {
+    // reshape the response
+  }
+}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="RFC 9457 Problem Details, no filter layer.">
+
+```ts
+throw httpErrors.notFound("User not found");
+
+// {
+//   "type": "about:blank",
+//   "title": "Not Found",
+//   "status": 404,
+//   "detail": "User not found"
+// }
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+There is no exception filter runtime. The response shape is the framework's,
+documented in [errors](/docs/essentials/errors).
+
+## Gateways
+
+<CodeCompare>
+<CodeCompareSide label="NestJS" note="Socket.IO semantics by default.">
+
+```ts
+@WebSocketGateway()
+export class EventsGateway {
+  @SubscribeMessage("events")
+  handle(@MessageBody() data: string) {
+    return { event: "events", data };
+  }
+}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Native Elysia and Bun sockets, same decorator names.">
+
+```ts
+@WebSocketGateway()
+export class EventsGateway {
+  @SubscribeMessage("events")
+  handle(@MessageBody() data: string) {
+    return { event: "events", data };
+  }
+}
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+The decorators match; the transport does not. There are no rooms, namespaces,
+acknowledgements, or Socket.IO clients — messages are a plain
+`{ event, data }` envelope over a native WebSocket. See
+[websockets](/docs/essentials/websockets).
+
+## Guards, interceptors, and middleware
+
+These have no equivalent. Nothing ports; the behaviour is rewritten as an
+Elysia hook.
+
+<CodeCompare>
+<CodeCompareSide label="NestJS" note="Four extension points around the handler.">
+
+```ts
+@UseGuards(AuthGuard)
+@UseInterceptors(LoggingInterceptor)
+@Get()
+findAll() {
+  return this.service.findAll();
+}
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="An Elysia hook installed through native access.">
+
+```ts
+const application = await AponiaFactory.create(AppModule, {
+  configureNative: (elysia) =>
+    elysia.onBeforeHandle(({ request, status }) => {
+      if (!request.headers.get("authorization")) return status(401);
+    }),
+});
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+The hook is not part of the module graph and cannot be applied per controller
+method. Details in [native access](/docs/elysia/native-access) and
+[plugin modules](/docs/elysia/plugin-modules).
+
+## Project layout
+
+<CodeCompare>
+<CodeCompareSide label="NestJS">
+
+```text
+src/
+  app.module.ts
+  main.ts
+  users/
+    users.controller.ts
+    users.service.ts
+    users.module.ts
+    dto/create-user.dto.ts
+```
+
+</CodeCompareSide>
+<CodeCompareSide label="AponiaJS" variant="after" note="Same idea; DTO classes become model files.">
+
+```text
+src/
+  app.module.ts
+  main.ts
+  users/
+    users.controller.ts
+    users.service.ts
+    users.module.ts
+    users.model.ts
+```
+
+</CodeCompareSide>
+</CodeCompare>
+
+<Callout type="warn" title="Do the gap analysis before scheduling">
+  [Current limitations](/docs/project/current-limitations) lists every runtime
+  feature that is missing. Guards, interceptors, filters, middleware, provider
+  scopes, lifecycle hooks, and the testing module are all on it.
+</Callout>

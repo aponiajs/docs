@@ -46,6 +46,11 @@ const projectColumns: MegaMenuColumn[] = [
         description: 'Application, decorators, CLI',
       },
       {
+        href: '/docs/compare',
+        label: 'Compare',
+        description: 'NestJS, AdonisJS, Elysia, Express, Fastify, Hono',
+      },
+      {
         href: '/docs/benchmark',
         label: 'Benchmark',
         description: 'Harness, pinned versions, scope',

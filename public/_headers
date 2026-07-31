@@ -23,19 +23,15 @@
 /llms.txt
   Content-Type: text/plain; charset=utf-8
   Cache-Control: public,max-age=3600
-  X-Robots-Tag: noindex, follow
 
 /llms-full.txt
   Content-Type: text/plain; charset=utf-8
   Cache-Control: public,max-age=3600
-  X-Robots-Tag: noindex, follow
 
 /llms.mdx/*
   Content-Type: text/markdown; charset=utf-8
   Cache-Control: public,max-age=3600
-  X-Robots-Tag: noindex, follow
 
 /api/search
   Content-Type: application/json; charset=utf-8
   Cache-Control: public,max-age=3600
-  X-Robots-Tag: noindex, nofollow

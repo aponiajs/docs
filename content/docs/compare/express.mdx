@@ -1,0 +1,156 @@
+---
+title: AponiaJS vs Express
+description: Express decides almost nothing and has the largest middleware ecosystem in Node. AponiaJS decides how the application is structured and runs only on Bun.
+keywords:
+  - AponiaJS vs Express
+  - Express alternative
+  - Express alternative TypeScript
+  - Express alternative Bun
+  - TypeScript framework instead of Express
+  - Express dependency injection
+faq:
+  - question: Is AponiaJS faster than Express?
+    answer: >-
+      An AponiaJS application is an Elysia application on Bun, and that stack
+      is designed for higher throughput than Express on Node. A ratio without a
+      workload attached is not worth much, though — the benchmark section
+      publishes the harness, pinned versions, and phases so the number can be
+      checked.
+  - question: Can I use Express middleware with AponiaJS?
+    answer: >-
+      No. Express middleware expects Express request and response objects.
+      AponiaJS runs on Elysia, which uses Web standard Request and Response, so
+      you need Elysia plugins or your own hooks instead.
+  - question: Does Express run on Bun?
+    answer: >-
+      Yes, Bun implements enough of Node for Express to work. Running Express
+      on Bun is a legitimate option and keeps the middleware ecosystem; it just
+      does not give you Elysia's routing or typing.
+---
+
+Express is the baseline the rest of the Node ecosystem is measured against. It
+is small, stable, unopinionated, and has more middleware written for it than
+every other framework here combined.
+
+<Verdict>
+  **Express** if the middleware ecosystem is load-bearing, or the service is
+  small enough that structure was never the problem. **AponiaJS** if you were
+  going to assemble validation, typing, and a folder convention on top of
+  Express anyway — and you are on Bun.
+</Verdict>
+
+## At a glance
+
+<CompareMatrix
+  a="AponiaJS 0.6.0-alpha.18"
+  b="Express"
+  rows={[
+    { feature: 'Runtime', a: { status: 'partial', text: 'Bun only' }, b: { status: 'yes', text: 'Node, and Bun' } },
+    { feature: 'Age and stability', a: { status: 'no', text: 'Alpha' }, b: { status: 'yes', text: 'The most widely deployed Node framework' } },
+    { feature: 'TypeScript', a: { status: 'yes', text: 'Written in TypeScript, types first-class' }, b: { status: 'partial', text: 'Types come from @types/express' } },
+    { feature: 'Structure', a: { status: 'yes', text: 'Modules, controllers, providers' }, b: { status: 'no', text: 'Whatever you build' } },
+    { feature: 'Dependency injection', a: { status: 'yes', text: 'Constructor injection' }, b: { status: 'no', text: 'None' } },
+    { feature: 'Validation', a: { status: 'yes', text: 'Route schemas, rejected before the handler' }, b: { status: 'partial', text: 'Middleware you choose' } },
+    { feature: 'Error format', a: { status: 'yes', text: 'RFC 9457 Problem Details' }, b: { status: 'partial', text: 'Your error handler' } },
+    { feature: 'Middleware ecosystem', a: { status: 'no', text: 'Elysia plugins, small' }, b: { status: 'yes', text: 'Enormous' } },
+  ]}
+/>
+
+## Express gives you a chain
+
+```ts
+import express from "express";
+
+const app = express();
+app.use(express.json());
+app.get("/users/:id", (req, res) => {
+  res.json({ id: req.params.id });
+});
+app.listen(3000);
+```
+
+Everything after that — where handlers live, how services are constructed, how
+input is validated, what an error body looks like — is a decision your team
+makes and re-litigates. That freedom is why Express is still everywhere, and
+why two Express codebases rarely look alike.
+
+## AponiaJS gives you a shape
+
+```ts
+import { Controller, Get, Injectable, Module, Param } from "@aponiajs/common";
+import { AponiaFactory } from "@aponiajs/platform-elysia";
+
+@Injectable()
+class UserService {
+  find(id: string) {
+    return { id };
+  }
+}
+
+@Controller("users")
+class UserController {
+  constructor(private readonly users: UserService) {}
+
+  @Get(":id")
+  find(@Param("id") id: string) {
+    return this.users.find(id);
+  }
+}
+
+@Module({ controllers: [UserController], providers: [UserService] })
+class AppModule {}
+
+await (await AponiaFactory.create(AppModule)).listen(3000);
+```
+
+The decisions Express leaves open are made here:
+[modules](/docs/essentials/modules) own boundaries,
+[providers](/docs/essentials/providers) own construction,
+[validation](/docs/essentials/validation) rejects bad input before the handler,
+and [errors](/docs/essentials/errors) answers with a single documented format.
+
+## The honest trade
+
+**Ecosystem.** This is not close. Passport, Multer, and thousands of other
+packages assume Express request and response objects and cannot be reused.
+Whatever middleware you rely on, budget for replacing it with an Elysia plugin
+or writing it yourself.
+
+**Middleware model.** Express middleware is the extension point for
+everything. AponiaJS does not implement middleware, guards, or interceptors —
+cross-cutting behaviour is an Elysia hook, added through
+[native access](/docs/elysia/native-access) or a
+[plugin module](/docs/elysia/plugin-modules).
+
+**Risk.** Express has a decade of production behind it and a stable major
+release. AponiaJS is alpha.
+
+## Which one to pick
+
+<ChoiceCards>
+<Choice title="Choose Express when">
+
+- you deploy to Node, or portability matters more than throughput;
+- specific Express middleware is load-bearing in your application;
+- the team wants the smallest possible framework surface;
+- the service is small enough that structure is not the problem;
+- you are shipping to production now.
+
+</Choice>
+<Choice title="Choose AponiaJS when" tone="aponia">
+
+- Bun is the runtime and Web standard `Request`/`Response` is fine;
+- you want typed validation and a documented error format without assembling
+  them;
+- the codebase is large enough that "where does this go" is a recurring
+  question;
+- alpha software is acceptable for this codebase.
+
+</Choice>
+</ChoiceCards>
+
+<Callout type="info" title="Coming from Express by way of Nest">
+  If Express plus a homegrown structure is what you have, the
+  [NestJS comparison](/docs/compare/nestjs) is likely more useful — it covers
+  the same class model with a production-ready implementation.
+</Callout>
